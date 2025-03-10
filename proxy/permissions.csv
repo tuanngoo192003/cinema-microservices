@@ -1,0 +1,4 @@
+api_uri	permission	role
+/users/list	READ_USER	ADMIN;MANAGER
+/booking/{id}	READ_BOOKING	CUSTOMER
+/booking/list	READ_BOOKING	ADMIN;MANAGER;CUSTOMER

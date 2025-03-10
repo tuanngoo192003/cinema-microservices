@@ -1,7 +1,41 @@
 server {
-    listen       80;
-    server_name  localhost;
-    location / {
+    listen          80;
+    server_name     localhost;
+
+    location /generate_token {
+        content_by_lua_block {
+            local auth = require("auth")
+            local role = "ADMIN"              
+            ngx.say(auth.generate_token(role))
+        }
+    }
+
+    location /login {
         proxy_pass   http://userservice:8000;
+    }
+
+    location /refresh {
+        proxy_pass   http://userservice:8000/refresh;
+    }
+
+    location /users/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://userservice:8000;
+    }
+
+    location /cinema/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001;
+    }
+
+    location /booking/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://bookingservice:8002;
     }
 }
