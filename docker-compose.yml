@@ -1,0 +1,84 @@
+version: "3.8"
+services:
+  userservice:
+    build: backend/userservice
+    env_file:
+      - env/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - userdb
+  
+  userdb:
+    image: postgres
+    restart: always
+    secrets:
+      - db-password
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=userservicedb
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - "5432:5432"
+
+  cinemaservice:
+    build: backend/cinemaservice
+    env_file:
+      - env/.env
+    ports:
+      - "8001:8000"
+    depends_on:
+      - userdb
+  
+  cinemadb:
+    image: postgres
+    restart: always
+    secrets:
+      - db-password
+    volumes:
+      - cinema-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=cinemaservicedb
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - "5433:5433"
+ 
+  bookingservice:
+    build: backend/bookingservice
+    env_file:
+      - env/.env
+    ports:
+      - "8002:8000"
+    depends_on:
+      - userdb
+
+  bookingdb:
+    image: postgres
+    restart: always
+    secrets:
+      - db-password
+    volumes:
+      - booking-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=bookingservicedb
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - "5434:5434"
+  
+  proxy:
+    build: proxy
+    ports:
+      - 80:80
+    depends_on: 
+      - userservice
+      - cinemaservice 
+      - bookingservice
+
+volumes:
+  user-db-data:
+  cinema-db-data:
+  booking-db-data:
+secrets:
+  db-password:
+    file: env/db-password.txt
