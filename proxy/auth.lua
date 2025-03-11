@@ -5,6 +5,12 @@ local _M = {}
 
 local secret_key = "your-secret-key"  -- Change this to a strong key
 
+local permissions_json = {
+    ["/users/list"] = { permission = "READ_USER", role = "ADMIN;MANAGER" },
+    ["/booking/{id}"] = { permission = "READ_BOOKING", role = "CUSTOMER" },
+    ["/booking/list"] = { permission = "READ_BOOKING", role = "ADMIN;MANAGER;CUSTOMER" }
+}
+
 -- Function to check JWT authentication & role-based access
 function _M.check_jwt_role()
     local token = ngx.var.http_Authorization
@@ -20,15 +26,7 @@ function _M.check_jwt_role()
         ngx.exit(ngx.HTTP_UNAUTHORIZED)
     end
 
-    -- Load permissions from shared cache
-    local permission_cache = ngx.shared.permission_cache
-    local permissions_json = permission_cache:get("permissions")
-    if not permissions_json then
-        ngx.log(ngx.ERR, "Permissions not found in cache")
-        ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
-    end
-
-    local permissions = cjson.decode(permissions_json)
+    local permissions = permissions_json
 
     -- Extract requested URI
     local requested_uri = ngx.var.uri

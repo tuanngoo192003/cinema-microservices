@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"user-service/internal/config"
 	"user-service/internal/database"
+	"user-service/internal/handlers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,11 +36,10 @@ func main() {
     r.Use(gin.Recovery())
     r.Use(gin.Logger())
 
-	protected := r.Group("/")
-    {
-		protected.GET("", GetAllUsers) 
-    }
-
+	authHandler := handlers.NewAuthHandler(db, cfg.JWT.Secret)
+	/* apis of userservice */	
+	userApis(authHandler, r, cfg)
+	
 	sererAddr := cfg.Server.Host + ":" + cfg.Server.Port
 	log.Infof("UserService started on %s and listening...", sererAddr)
 
@@ -52,9 +52,17 @@ func main() {
     if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
         log.Fatal("Server failed to start: ", err) 
     }
-
+	log.Info("UserService started and listening...")
 }
 
-func GetAllUsers(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Hello me"})	
+func userApis(authHandler *handlers.AuthHandler, r *gin.Engine, cfg *config.Config) {
+	protected := r.Group("/")
+    {
+		protected.GET("", GetServiceInfo) 
+		protected.GET("login", authHandler.Login)
+    }
+}
+
+func GetServiceInfo(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "UserService started and listening..."})	
 }

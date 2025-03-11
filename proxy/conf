@@ -10,32 +10,36 @@ server {
         }
     }
 
+    location /userservice/info {
+        proxy_pass   http://userservice:8000/ ;
+    }
+
     location /login {
-        proxy_pass   http://userservice:8000;
+        proxy_pass   http://userservice:8000/login ;
     }
 
     location /refresh {
-        proxy_pass   http://userservice:8000/refresh;
+        proxy_pass   http://userservice:8000/refresh ;
     }
 
     location /users/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://userservice:8000;
+        proxy_pass   http://userservice:8000 ;
     }
 
     location /cinema/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001;
+        proxy_pass   http://cinemaservice:8001 ;
     }
 
     location /booking/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://bookingservice:8002;
+        proxy_pass   http://bookingservice:8002 ;
     }
 }
