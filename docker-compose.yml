@@ -8,7 +8,7 @@ services:
       - "8000:8000"
     depends_on:
       - userdb
-  
+        
   userdb:
     image: postgres
     restart: always
@@ -30,7 +30,7 @@ services:
       - "8001:8000"
     depends_on:
       - userdb
-  
+ 
   cinemadb:
     image: postgres
     restart: always
@@ -43,7 +43,7 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     ports:
       - "5433:5433"
- 
+
   bookingservice:
     build: backend/bookingservice
     env_file:
@@ -65,7 +65,7 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     ports:
       - "5434:5434"
-  
+
   proxy:
     build: proxy
     ports:
