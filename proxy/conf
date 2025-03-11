@@ -13,7 +13,28 @@ server {
     location /userservice/info {
         proxy_pass   http://userservice:8000/ ;
     }
+   
+    location /user {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://userservice:8000/user ;
+    }
 
+    location /user/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass http://userservice:8000/user/ ;
+    }
+
+    location /user/existed/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass http://userservice:8000/user/existed ;
+    }
+        
     location /login {
         proxy_pass   http://userservice:8000/login ;
     }
@@ -29,17 +50,104 @@ server {
         proxy_pass   http://userservice:8000 ;
     }
 
-    location /cinema/ {
+    location /cinema/auditorium {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001 ;
+        proxy_pass   http://cinemaservice:8001/auditorium ;
+    }
+
+    location /cinema/auditoriums {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/auditoriums ;
+    }
+
+
+    location /cinema/auditorium/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/auditorium/ ;
+    }
+
+    location /cinema/seats {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/seats ;
+    }
+
+    location /cinema/seat/check/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/seat/check/ ;
+    }
+
+    location /cinema/seat/reserve/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/seat/reserve/ ;
+    }
+
+    location /cinema/movies {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/movies ;
+    }
+
+    location /cinema/movie {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/movie ;
+    }
+
+    location /cinema/movie/ {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/movie/ ;
+    }
+
+    location /cinema/movie-schedule {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/movie-schedule ;
+    }
+
+    location /cinema/schedules {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/schedules ;
     }
 
     location /booking/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://bookingservice:8002 ;
+        proxy_pass   http://bookingservice:8002/booking/ ;
     }
+
+    location /booking {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://bookingservice:8002/booking ;
+    }
+
+
+    location /bookings {
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://bookingservice:8002/bookings ;
+    }
+
 }
