@@ -3,6 +3,7 @@ package main
 import (
 	"cinema-service/internal/config"
 	"cinema-service/internal/database"
+	"cinema-service/internal/handlers"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,10 @@ func main() {
     r.Use(gin.Recovery())
     r.Use(gin.Logger())
 
+	authHandler := handlers.NewAuthHandler(db, cfg.JWT.Secret)
+	/* apis of cinemaservice*/
+	cinemaApis(authHandler, r, cfg)
+
 	sererAddr := cfg.Server.Host + ":" + cfg.Server.Port
 	log.Infof("CinemaService started on %s and listening...", sererAddr)
 
@@ -47,3 +52,29 @@ func main() {
     }
 
 }
+
+func cinemaApis(authHandler *handlers.AuthHandler, r *gin.Engine, cfg *config.Config) {
+	protected := r.Group("/")
+	{
+		protected.GET("", GetServiceInfo)
+	}
+}
+
+func GetServiceInfo(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "CinemaService started and listening..."})
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

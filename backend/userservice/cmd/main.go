@@ -1,10 +1,14 @@
 package main
 
 import (
+_	"io"
+_	"io/ioutil"
 	"net/http"
+	"user-service/internal/client"
 	"user-service/internal/config"
 	"user-service/internal/database"
 	"user-service/internal/handlers"
+	"user-service/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -59,37 +63,15 @@ func userApis(authHandler *handlers.AuthHandler, r *gin.Engine, cfg *config.Conf
 	protected := r.Group("/")
 	{
 		protected.GET("", GetServiceInfo)
-		protected.GET("login", authHandler.Login)
-		protected.GET("/user/:id", TestGetUserByIdProxy)
-		protected.POST("/user", TestCreateUser)
-		protected.PUT("/user", TestUpdateUser)
+		protected.POST("refresh", middleware.ContextMiddleware([]byte(cfg.JWT.Secret)), authHandler.RefreshToken)	
+		protected.POST("login", authHandler.Login)
+		protected.GET("user/:id", authHandler.GetUserById)
+		protected.GET("users", authHandler.GetAllUsers)
+		protected.POST("user", authHandler.CreateUser)
+		protected.PUT("user", authHandler.UpdateUser)	
+		protected.GET("user/existed/:id", authHandler.IsUserExist)	
+		protected.GET("userservice/cinema/health", client.CinemaServiceHealthCheck)
 	}
-}
-
-func TestUpdateUser(c *gin.Context) {
-	var newUser struct {
-		Id       string `json:"id"`
-		Username string `json:"username"`
-	}
-	if err := c.ShouldBindJSON(&newUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-	}
-	c.JSON(http.StatusOK, gin.H{newUser.Id: newUser.Username})
-
-}
-
-func TestCreateUser(c *gin.Context) {
-	var newUser struct {
-		Username string `json:"username"`
-	}
-	if err := c.ShouldBindJSON(&newUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-	}
-	c.JSON(http.StatusOK, gin.H{"message": newUser.Username})
-}
-
-func TestGetUserByIdProxy(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": c.Param("id")})
 }
 
 func GetServiceInfo(c *gin.Context) {

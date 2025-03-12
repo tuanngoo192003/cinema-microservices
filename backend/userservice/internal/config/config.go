@@ -53,7 +53,7 @@ func Load() (*Config, error) {
     cfg.Database.SSLMode = getEnv("USER_DB_SSLMODE", "disable")
 
     //JWT config 
-    cfg.JWT.Secret = getEnv("JWT_SECRET", "your-secret-key")
+    cfg.JWT.Secret = getEnv("JWT_SECRET", "a-string-secret-at-least-256-bits-long")
     cfg.JWT.Tokenexpiry = time.Hour * 24
     cfg.JWT.RefreshExpiry = time.Hour * 168 
 
