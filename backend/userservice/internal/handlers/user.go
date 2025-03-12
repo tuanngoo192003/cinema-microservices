@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"user-service/internal/config"
+	"user-service/internal/constants"
 	"user-service/internal/models"
 
 	"github.com/gin-gonic/gin"
@@ -56,3 +57,142 @@ func (h *AuthHandler) GetAllUsers(c *gin.Context) {
 		TotalPage: int64(totalPage),
 	})
 }
+
+func (h *AuthHandler) GetUserById(c *gin.Context) {
+	log := config.GetLogger()
+	
+	var user models.User
+	if err := h.db.GORM.Where(`user_id = ? `, c.Param("id")).Find(&user).Error; err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return	
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+func (h *AuthHandler) UpdateUser(c *gin.Context) {
+	log := config.GetLogger()
+
+	var user models.UpdateUserRequest
+	if err := c.ShouldBindJSON(&user); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return	
+	}
+
+	tx, err := h.db.DB.Begin()
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start transaction"})
+		return
+	}
+
+	defer func(){
+		if r := recover(); r != nil {
+			tx.Rollback()
+			log.Error("Transaction failed")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Transaction failed"})
+		}
+	}()
+	var userUpdate models.User
+	
+	if user.Email != "" { userUpdate.Email = user.Email }	
+	if user.Status != "" { userUpdate.Status = user.Status }
+	if user.FirstName != "" { userUpdate.FirstName = user.FirstName }
+	if user.LastName != "" { userUpdate.LastName = user.LastName }
+	if user.PhoneNumber != "" { userUpdate.PhoneNumber = user.PhoneNumber }
+	if user.DateOfBirth != "" { userUpdate.DateOfBirth = user.DateOfBirth }
+	if user.IsDeleted {	userUpdate.IsDeleted = user.IsDeleted }
+
+	if err := h.db.GORM.Model(models.User{}).Where(`user_id = ?`, user.UserID).Updates(&userUpdate).Error; 
+	err != nil {
+		log.Error(err.Error())	
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Error("Failed to commit transaction")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to commit transaction"})
+		return
+	}
+
+	c.JSON(http.StatusOK, constants.USER_UPDATED_SUCCESSFULLY)
+}
+
+func (h *AuthHandler) CreateUser(c *gin.Context) {
+	log := config.GetLogger()
+
+	var user models.UserRequest
+	if err := c.ShouldBindJSON(&user); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return	
+	}
+
+	tx, err := h.db.DB.Begin()
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start transaction"})
+		return
+	}
+
+	defer func(){
+		if r := recover(); r != nil {
+			tx.Rollback()
+			log.Error("Transaction failed")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Transaction failed"})
+		}
+	}()
+	var id int64
+	passwordHashed, err := utils.HashPassword(user.Password)
+	if err != nil {
+		tx.Rollback()
+		log.Error("Password hashing failed")
+		c.JSON(http.StatusInternalServerError, "Password hashing failed")
+		return
+	}
+
+	if err := tx.QueryRow(`
+		INSERT INTO users(username, password, status, email, first_name, last_name, date_of_birth, phone_number)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id	
+		`, user.Username, passwordHashed, user.Status, user.Email, user.FirstName, user.LastName, user.DateOfBirth, user.PhoneNumber). 
+		Scan(&id); 
+	err != nil {
+		log.Error(err.Error())	
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Error("Failed to commit transaction")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to commit transaction"})
+		return
+	}
+
+	c.JSON(http.StatusOK, constants.USER_DELETED_SUCCESSFULLY)
+}
+
+func (h *AuthHandler) IsUserExist(c *gin.Context) {
+	log := config.GetLogger()	
+
+	var username string 
+	if err := h.db.GORM.
+		Model(models.User{}).Select("username").Where("user_id = ?", c.Param("id")).First(&username).Error; err != nil {
+		log.Info(err.Error())
+		c.JSON(http.StatusOK, gin.H{"existed": false})
+		return
+	}
+	if username != "" {
+		c.JSON(http.StatusOK, gin.H{"existed": true})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"existed": false})
+	}
+}
+
+
+
+
+
+

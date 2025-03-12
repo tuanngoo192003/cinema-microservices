@@ -58,6 +58,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
     now := time.Now()
 	jwt.WithSubject(user.Username)
     claims := jwt.MapClaims {
+		"username": user.Username,
         "roles": []interface{}{user.Roles.RoleName},
         "iat": now.Unix(),
         "exp": now.Add(h.tokenExpiration).Unix(),
@@ -73,7 +74,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
     c.JSON(http.StatusOK, gin.H{
         "username": user.Username,
-        "role_id": user.Roles.RoleID,
+        "role": user.Roles.RoleName,
         "token": tokenString,
         "expires_in": h.tokenExpiration.Seconds(),
         "token_type": "Bearer",
@@ -118,28 +119,25 @@ func (h *AuthHandler) RefreshToken (c *gin.Context) {
 	log := config.GetLogger()
 	
     /* Get userId from context set by auth middleware */
-    userID, exists := c.Get("user_id")
+    username, exists := c.Get("username")
     if !exists {
 		log.Error("User not authenticated")
         c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
         return 
     }
     
-    now := time.Now()
-    var ( 
-        username string
-        roleID uint
-    ) 
-     
-    err := h.db.GORM.Select("role_id", "username").Where("userID = ?", userID).First(&roleID, &username).Error
+    now := time.Now() 
+    
+	var user models.User
+    err := h.db.GORM.Model(models.User{}).Where("username = ?", username).Preload("roles").Find(&user).Error
     if err != nil {
 		log.Error(err.Error())
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return 
     }
+	jwt.WithSubject(user.Username)
     claims := jwt.MapClaims {
-        "username": username,
-        "role_id": roleID,
+        "roles": []interface{}{user.Roles.RoleName},
         "iat": now.Unix(),
         "exp": now.Add(h.tokenExpiration).Unix(),
     }
