@@ -23,6 +23,7 @@ type User struct {
 	DateOfBirth    string `json:"dateOfBirth"`
 	PhoneNumber    string `json:"phoneNumber" gorm:"size:13"`
 	Email          string `json:"email" gorm:"size:255;not null"`
+	Avatar		   string `json:"avatar" gorm:"size:255"`
 	Roles          Role   `json:"roleId" gorm:"foreignKey:role_id"`
 	IsDeleted      bool   `json:"isDeleted"`
 	CreatedBy      string `json:"createdBy"`
@@ -31,26 +32,13 @@ type User struct {
 	LastModifiedAt string `json:"lastModifiedAt"`
 }
 
-/*
-type Profile struct {
-	ent.Schema
+type RefreshToken struct {
+	TokenID   uint   `json:"tokenId" gorm:"primaryKey;autoIncremented;<-false"`
+	Username  string `json:"username" gorm:"not null"`
+	Token     string `json:"token" gorm:"size:255;not null"`
+	ExpiredAt string `json:"expiredAt"`
+	RoleName  string `json:"roleName" gorm:"not null"`
 }
-
-func (Profile) Fields() []ent.Field {
-	return []ent.Field{
-		field.UUID("uuid", uuid.UUID{}).
-			Default(uuid.New()),
-		field.String("first_name").
-			Optional(),
-		field.String("last_name").
-			Optional(),
-		field.String("phone_number").
-			Optional(),
-		field.Int("user_id").
-			Positive(),
-	}
-}
-*/
 
 type UserRequest struct {
 	Username    string `json:"username" binding:"required"`
@@ -65,13 +53,14 @@ type UserRequest struct {
 }
 
 type UpdateUserRequest struct {
-	UserID		uint   `json:"userId" binding:"required"`
+	UserID      uint   `json:"userId" binding:"required"`
 	Email       string `json:"email" binding:"email"`
 	Status      string `json:"status"`
 	FirstName   string `json:"firstName"`
 	LastName    string `json:"lastName"`
 	DateOfBirth string `json:"dateOfBirth"`
 	PhoneNumber string `json:"phoneNumber"`
+	Avatar		string `json:"avatar"`
 	IsDeleted   bool   `json:"isDeleted"`
 }
 

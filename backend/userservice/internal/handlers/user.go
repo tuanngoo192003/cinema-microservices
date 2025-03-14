@@ -68,7 +68,16 @@ func (h *AuthHandler) GetUserById(c *gin.Context) {
 		return	
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, gin.H{
+		"id": user.UserID,
+		"firstName": user.FirstName,
+		"lastName": user.LastName,
+		"email": user.Email,
+		"dateOfBirth": user.DateOfBirth,
+		"phoneNumber": user.PhoneNumber,
+		"role": user.Roles.RoleName,
+		"avatar": user.Avatar,
+	})
 }
 
 func (h *AuthHandler) UpdateUser(c *gin.Context) {
@@ -96,7 +105,8 @@ func (h *AuthHandler) UpdateUser(c *gin.Context) {
 		}
 	}()
 	var userUpdate models.User
-	
+
+	if user.Avatar != "" { userUpdate.Avatar = user.Avatar }
 	if user.Email != "" { userUpdate.Email = user.Email }	
 	if user.Status != "" { userUpdate.Status = user.Status }
 	if user.FirstName != "" { userUpdate.FirstName = user.FirstName }

@@ -66,6 +66,13 @@ services:
     ports:
       - "5434:5434"
 
+  reactapp:
+    build: frontend
+    volumes:
+      - react-build:/app/dist
+    depends_on:
+      - proxy
+
   proxy:
     build: proxy
     ports:
@@ -79,6 +86,8 @@ volumes:
   user-db-data:
   cinema-db-data:
   booking-db-data:
+  react-build:
+
 secrets:
   db-password:
     file: env/db-password.txt

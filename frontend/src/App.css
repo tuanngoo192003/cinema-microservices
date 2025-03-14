@@ -1,42 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Oxanium:wght@200..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+  --default-background: #fdf9f7;
+  --default-btn-bg-hover: #a86e45;
+  --default-btn-bg: #c58454;
+  --default-btn-text: #fae3d2;
+  --default-text: #1e0c02;
+  --default-link: #9a9696;
+  --default-link-hover: #817e7c;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  background: var(--default-background);
+}
+#root * { /* Apply to all elements inside root */
+  font-family: "Nunito", "Oxanium", "Raleway", sans-serif !important;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Centered container */
+.default-center-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Navigation bar */
+.app-header {
+  position: fixed;  /* Fixes the header at the top */
+  top: 0;           /* Stick to the top */
+  left: 0;          /* Align to the left */
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3.1rem;
+  background: var(--default-btn-text);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.logo img {
+  height: 2rem;
 }
 
-.card {
-  padding: 2em;
+/* Menu */
+.nav-menu {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--default-btn-text);
+  height: 100%;
 }
 
-.read-the-docs {
-  color: #888;
+.nav-menu .ant-menu-item {
+  background: transparent !important; /* Make menu item background transparent */
+  display: flex;
+  align-items: center; /* Center text vertically */
+  height: 100%;
+}
+
+.nav-menu .ant-menu-item a {
+  color: var(--default-text); /* Adjust as needed */
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-menu .ant-menu-item:hover a {
+  color: var(--default-btn-bg-hover); /* Darker text on hover */
+}
+
+.app-theme {
+  background: var(--default-background);
+}
+
+/* Button */
+.app-btn {
+  background: var(--default-btn-bg);
+  color: var(--default-btn-text);
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.app-btn:hover {
+  background-color: var(--default-btn-bg-hover) !important;
+  color: var(--default-btn-text) !important;
+}
+
+.secondary-btn {
+  background: var(--default-link);
+  color: var(--default-btn-text);
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.secondary-btn:hover {
+  background-color: var(--default-link-hover) !important;
+  color: var(--default-btn-text) !important;
+}
+
+/* Input */
+.app-input {
+  background: #fbfbfb !important;
+}
+
+.app-input:hover,
+.app-input:focus,
+.app-input:active {
+  border-color: var(--default-btn-bg-hover) !important;
+  background: #fbfbfb !important;
+  outline: none !important; /* Remove the blue outline */
+  box-shadow: none !important;
+}
+
+/* Checkbox */
+.app-checkbox .ant-checkbox-inner {
+  border-color: var(--default-btn-bg-hover) !important;
+}
+
+.app-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--default-btn-bg-hover) !important;
+  border-color: var(--default-btn-bg-hover) !important;
+}
+
+/* Link */
+.app-link {
+  color: var(--default-link);
+}
+
+.app-link:hover {
+  color: var(--default-link-hover);
+}
+
+/* Icon */
+.icon-default {
+  background: var(--default-btn-bg);
+  color: var(--default-btn-text); /* Ensures the icon is visible */
+  border-radius: 50%; /* Makes it a circle */
+  display: flex; /* Centers the icon */
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* Adjust the size as needed */
+  height: 40px; /* Should be equal to width for a perfect circle */
+  font-size: 20px; /* Adjust icon size */
+  transition: background-color 0.5s ease;
+}
+
+.icon-default:hover {
+  background-color: var(--default-btn-bg-hover) !important;
+  color: var(--default-btn-text) !important;
+}
+
+/* Card */
+.app-card{
+  width: 70%;
 }

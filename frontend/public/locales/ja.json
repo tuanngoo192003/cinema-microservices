@@ -1,0 +1,34 @@
+{
+  "labels": {
+    "home": "ホームページ",
+    "about": "概要",
+    "contact": "コンタクト",
+    "username": "ユーザー名",
+    "email": "メール",
+    "remember": "私を覚えて",
+    "password": "パスワード",
+    "first_name": "名字",
+    "last_name": "姓名",
+    "phone_number": "電話番後",
+    "date_of_birth": "生年月日",
+    "register_here": "アカウントがありません？ここで登録",
+    "login": "ログイン",
+    "back_to_login": "ログインに戻る",
+    "register_form": "登録フォーム",
+    "register": "登録",
+    "english": "英語",
+    "vietnamese": "ベトナム語",
+    "japanese": "日本語"
+  },
+  "messages": {
+    "required":{
+      "username": "ユーザー名を入力してください!",
+      "password": "パスワードを入力してください!",
+      "email": "メールを入力してください!",
+      "first_name": "名字を入力してください!",
+      "last_name": "姓名を入力してください!",
+      "phone_number": "電話番号を入力してください!",
+      "date_of_birth": "生年月日を入力してください!"
+    }
+  }
+}
