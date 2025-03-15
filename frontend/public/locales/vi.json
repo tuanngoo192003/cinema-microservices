@@ -1,0 +1,34 @@
+{
+  "labels": {
+    "home": "Trang chủ",
+    "about": "Về chúng tôi",
+    "contact": "Liên hệ",
+    "username": "Tên đăng nhập",
+    "email": "Email",
+    "remember": "Ghi nhớ tôi",
+    "password": "Mật khẩu",
+    "first_name": "Họ và tên đệm",
+    "last_name": "Tên riêng",
+    "phone_number": "Số điện thoại",
+    "date_of_birth": "Ngày tháng năm sinh",
+    "register_here": "Không có tài khoản? Đăng ký tại đây.",
+    "register": "Đăng ký",
+    "register_form": "Form đăng ký",
+    "login": "Đăng nhập",
+    "back_to_login": "Quay về màn hình đăng nhập",
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt",
+    "japanese": "Tiếng Nhật"
+  },
+  "messages": {
+    "required":{
+      "username": "Tên đăng nhập không được để trống!",
+      "password": "Mật khẩu không được để trống!",
+      "email": "Email không được để trống!",
+      "first_name": "Họ và tên đêm không được để trống!",
+      "last_name": "Tên riêng không được để trống!",
+      "phone_number": "Tên đăng nhập không được để trống!",
+      "date_of_birth": "Ngày tháng năm sinh không được để trống!"
+    }
+  }
+}

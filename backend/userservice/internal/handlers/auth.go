@@ -9,10 +9,15 @@ import (
 	"user-service/internal/database"
 	"user-service/internal/models"
 
-	"github.com/tuanngoo192003/golang-utils/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	"github.com/tuanngoo192003/golang-utils/utils"
 )
+
+type RefreshTokenRequest struct {
+	RefreshToken string `json:"refreshToken"`
+}
 
 type AuthHandler struct {
     db *database.Database
@@ -46,7 +51,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
     }
 
     var user models.User
-    getCredential(&user, h, login, c) 
+	getCredential(&user, h, login, c) 
 
     if !utils.CheckPasswordHash(login.Password, user.Password) {
         log.Error("Invalid credential")
@@ -72,11 +77,15 @@ func (h *AuthHandler) Login(c *gin.Context) {
         return     
     }
 
+	refreshTokenString := uuid.New().String()
+	saveRefreshToken(h, c, refreshTokenString, user.Username, string(user.Roles.RoleName))
+
     c.JSON(http.StatusOK, gin.H{
         "username": user.Username,
         "role": user.Roles.RoleName,
-        "token": tokenString,
-        "expires_in": h.tokenExpiration.Seconds(),
+        "accessToken": tokenString,
+		"refreshToken": refreshTokenString,
+		"expires_in": h.tokenExpiration.Seconds(),
         "token_type": "Bearer",
     })
 }
@@ -125,25 +134,31 @@ func (h *AuthHandler) RefreshToken (c *gin.Context) {
         c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
         return 
     }
+
+	var refreshToken RefreshTokenRequest
+	if err := c.ShouldBindJSON(&refreshToken); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error()}})
+		return
+	}
     
     now := time.Now() 
     
-	var user models.User
-    err := h.db.GORM.Model(models.User{}).Where("username = ?", username).Preload("roles").Find(&user).Error
+	var token models.RefreshToken
+    err := h.db.GORM.Model(models.RefreshToken{}).Where("username = ?", username).Find(&token).Error
     if err != nil {
 		log.Error(err.Error())
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return 
     }
-	jwt.WithSubject(user.Username)
+	jwt.WithSubject(token.Username)
     claims := jwt.MapClaims {
-        "roles": []interface{}{user.Roles.RoleName},
+        "roles": []interface{}{token.RoleName},
         "iat": now.Unix(),
         "exp": now.Add(h.tokenExpiration).Unix(),
     }
 
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    tokenString, err := token.SignedString(h.jwtSecret)
+	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    tokenString, err := newToken.SignedString(h.jwtSecret)
     if err != nil {
 		log.Error("Token generation failed")
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Token generation failed"})
@@ -156,4 +171,50 @@ func (h *AuthHandler) RefreshToken (c *gin.Context) {
         "token_type": "Bearer",
     })
 }
+
+func saveRefreshToken(h *AuthHandler, c *gin.Context, refreshTokenString string, username string, roleName string){	
+	log := config.GetLogger()
+
+	tx, err := h.db.DB.Begin()
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start transaction"})
+		return
+	}
+
+	defer func(){
+		if r := recover(); r != nil {
+			tx.Rollback()
+			log.Error("Transaction failed")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Transaction failed"})
+		}
+	}()
+
+	if _, err := tx.Exec(`DELETE FROM refresh_tokens WHERE username = $1`, username); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})	
+		return
+	}
+
+	expiredAt := time.Now().Add(time.Duration(h.tokenExpiration.Seconds())).Format("2006-01-02 15:04:05")
+	var id uint64
+	if err := tx.QueryRow(`
+		INSERT INTO refresh_tokens (username, token, expired_at, role_name)
+		VALUES ($1, $2, $3, $4) RETURNING token_id
+		`, username, refreshTokenString, expiredAt, roleName).Scan(&id); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})	
+		return
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Error("Failed to commit transaction")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to commit transaction"})
+		return
+	}
+}
+
+
+
+
 

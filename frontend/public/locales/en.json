@@ -1,0 +1,34 @@
+{
+  "labels": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "username": "Username",
+    "email": "Email",
+    "remember": "Remember me",
+    "password": "Password",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "phone_number": "Phone number",
+    "date_of_birth": "Date of birth",
+    "register": "Register",
+    "register_form": "Register form",
+    "register_here": "Don't have account? Register here.",
+    "login": "Login",
+    "back_to_login": "Back to login form",
+    "english": "English",
+    "vietnamese": "Vietnamese",
+    "japanese": "Japanese"
+  },
+  "messages": {
+    "required":{
+      "username": "Please input your username!",
+      "password": "Please input your password!",
+      "email": "Please input your email!",
+      "first_name": "Please input your first name!",
+      "last_name": "Please input your last name!",
+      "phone_number": "Please input your phone number!",
+      "date_of_birth": "Please input your date of birth!"
+    }
+  }
+}
