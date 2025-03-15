@@ -5,4 +5,7 @@ server {
         proxy_pass   http://userservice:8000;
         
     }
+    location /cinema-service/ {
+    proxy_pass http://cinemaservice:8001;
+}
 }

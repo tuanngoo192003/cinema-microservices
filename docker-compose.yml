@@ -27,7 +27,7 @@ services:
     env_file:
       - env/.env
     ports:
-      - "8001:8000"
+      - "8001:8001"
     depends_on:
       - userdb
   
@@ -49,7 +49,7 @@ services:
     env_file:
       - env/.env
     ports:
-      - "8002:8000"
+      - "8002:8002"
     depends_on:
       - userdb
 

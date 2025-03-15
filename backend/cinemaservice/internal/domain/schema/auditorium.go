@@ -3,15 +3,14 @@ package schema
 import (
 	"time"
 
-	_ "github.com/lib/pq"
+	_ "gorm.io/gorm"
 )
 
-type Seat struct {
+type Auditorium struct {
 	ID             uint      `gorm:"primaryKey;not null"`
-	AuthoriumID    uint      `gorm:"column:authorium_id"`
-	SeatCode       string    `gorm:"column:seat_code"`
-	CurrentStatus  string    `gorm:"column:current_status"`
-	CreatedAt      time.Time `gorm:"column:created_at; autoCreateTime"`
+	AuditoriumName string    `gorm:"column:auditorium_name"`
+	Capacity       uint      `gorm:"column:capacity"`
+	CreatedAt      time.Time `gorm:"column:created_at;autoCreateTime"`
 	LastModifiedAt time.Time `gorm:"column:last_modified_at; autoUpdateTime"`
 	LastModifiedBy string    `gorm:"column:last_modified_by"`
 	CreatedBy      string    `gorm:"column:created_by;type:varchar(50)"`
