@@ -1,0 +1,13 @@
+POST http://localhost:8001/cinema-service/auditoriums/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "ID": 1,
+  "authoriumName": "Grand Theater Hall",
+  "capacity": 250,
+  "createdAt": "2025-03-14T10:30:00Z",
+  "lastModifiedAt": "2025-03-14T15:45:00Z",
+  "lastModifiedBy": "admin",
+  "createdBy": "system",
+  "isDeleted": false
+}
