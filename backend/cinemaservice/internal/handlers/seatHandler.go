@@ -26,29 +26,29 @@ func (s *SeatHandler) Search(c *gin.Context) {
 	// Khởi tạo query
 	query := s.db.Model(&schema.Seat{})
 
-	if c.Query("seat_code") != "" {
-		query = query.Where("seat_code = ?", c.Query("seat_code"))
+	if c.Query("seatCode") != "" {
+		query = query.Where("seat_code = ?", c.Query("seatCode"))
 	}
-	if c.Query("authorium_id") != "" {
-		query = query.Where("authorium_id = ?", c.Query("authorium_id"))
+	if c.Query("authoriumId") != "" {
+		query = query.Where("authorium_id = ?", c.Query("authoriumId"))
 	}
 	if c.Query("id") != "" {
 		query = query.Where("id = ?", c.Query("id"))
 	}
-	if c.Query("current_status") != "" {
-		query = query.Where("current_status = ?", c.Query("current_status"))
+	if c.Query("currentStatus") != "" {
+		query = query.Where("currentStatus = ?", c.Query("currentStatus"))
 	}
-	if c.Query("is_deleted") != "" {
-		query = query.Where("is_deleted = ?", c.Query("is_deleted"))
+	if c.Query("isDeleted") != "" {
+		query = query.Where("isDeleted = ?", c.Query("isDeleted"))
 	}
 
 	query = query.Where("created_at BETWEEN ? AND ?",
-		c.DefaultQuery("created_start", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
-		c.DefaultQuery("created_end", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
+		c.DefaultQuery("createdStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
+		c.DefaultQuery("createdEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
 
 	query = query.Where("last_modified_at BETWEEN ? AND ?",
-		c.DefaultQuery("last_modified_start", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
-		c.DefaultQuery("last_modified_end", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
+		c.DefaultQuery("lastModifiedStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
+		c.DefaultQuery("lastModifiedEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
 
 	offset, err := strconv.Atoi(c.DefaultQuery("offset", "0"))
 	if err != nil {
