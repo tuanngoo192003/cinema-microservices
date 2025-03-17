@@ -1,17 +1,18 @@
 package handlers
 
 import (
-	"cinema-service/internal/database"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type AuthHandler struct {
-	db              *database.Database
+	db              *gorm.DB
 	jwtSecret       []byte
 	tokenExpiration time.Duration
 }
 
-func NewAuthHandler(db *database.Database, jwtSecret string) *AuthHandler {
+func NewAuthHandler(db *gorm.DB, jwtSecret string) *AuthHandler {
 	return &AuthHandler{
 		db:              db,
 		jwtSecret:       []byte(jwtSecret),
@@ -19,6 +20,6 @@ func NewAuthHandler(db *database.Database, jwtSecret string) *AuthHandler {
 	}
 }
 
-func (h *AuthHandler) GetDB() *database.Database {
+func (h *AuthHandler) GetDB() *gorm.DB {
 	return h.db
 }
