@@ -82,7 +82,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	saveRefreshToken(h, c, refreshTokenString, user.Username, string(user.Roles.RoleName))
 
     c.JSON(http.StatusOK, gin.H{
-        "username": user.Username,
+		"id": user.UserID, 
+		"username": user.Username,
         "role": user.Roles.RoleName,
         "accessToken": tokenString,
 		"refreshToken": refreshTokenString,

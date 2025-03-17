@@ -31,10 +31,10 @@ export const RefreshTokenApi
 }
 
 export const GetProfileAPI
-    = async (): Promise<IProfile> => {
+    = async (id: number): Promise<IProfile> => {
     return new Promise((resolve, reject) => {
         api
-            .get<IProfile>("user/profile")
+            .get<IProfile>(`/users/${id}`)
             .then((res) => {
                 resolve(res.data)
             })

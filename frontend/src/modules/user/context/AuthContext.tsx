@@ -11,10 +11,10 @@ type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({
     profile: null,
-    loading: true,
-    handleLogin: async ()=> {},
+    loading: false, // Change to false
+    handleLogin: async () => {},
     handleLogout: () => {},
-})
+});
 
 
 

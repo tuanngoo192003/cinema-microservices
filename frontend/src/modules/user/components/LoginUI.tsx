@@ -46,8 +46,8 @@ const LoginForm: React.FC = () => {
                                     name="basic"
                                     layout="vertical"
                                     initialValues={{
-                                        username: "golangintern@2025lab.io",
-                                        password: "vTI123456",
+                                        identifier: "golangintern@2025lab.io",
+                                        password: "VTI123456",
                                         remember: true }}
                                     onFinish={onFinish}
                                     onFinishFailed={onFinishFailed}
@@ -55,7 +55,7 @@ const LoginForm: React.FC = () => {
                                 >
                                     <Form.Item
                                         label={t("labels.username")}
-                                        name="username"
+                                        name="identifier"
                                         rules={[{ required: true, message: t("messages.required.username") }]}
                                     >
                                         <Input className="app-input" />

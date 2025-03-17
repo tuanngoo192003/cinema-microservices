@@ -2,6 +2,7 @@ import {useSnackbar} from "notistack";
 import {ErrorResponse, useNavigate} from "react-router-dom";
 import React, {useCallback, useState} from "react";
 import {IProfile} from "../models/user.ts";
+import Cookies from "js-cookie";
 import {GetProfileAPI, LoginApi} from "../services";
 import {HandleError} from "../../core/services/axios.ts";
 import {AxiosError} from "axios";
@@ -21,38 +22,44 @@ export function AuthContextProvider({children}: AuthProfileProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const [profile, setProfile] = useState<IProfile | null>(null);
 
-    const handleGetProfile = useCallback(async () => {
+    const handleGetProfile = useCallback(async (id: number) => {
+        setLoading(true);
         try {
-            const data = await GetProfileAPI();
+            const data = await GetProfileAPI(id);
             setProfile(data);
         } catch (error) {
             HandleError(error as Error | AxiosError<ErrorResponse>);
             setProfile(null);
             setLoading(false);
 
-            localStorage.removeItem("access_token");
+            Cookies.remove(ACCESS_TOKEN_KEY);
             navigate("/login");
         }
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem(ACCESS_TOKEN_KEY)
-        localStorage.removeItem(REFRESH_TOKEN_KEY)
+        Cookies.remove(ACCESS_TOKEN_KEY)
+        Cookies.remove(REFRESH_TOKEN_KEY)
         setProfile(null);
         navigate("/login");
     };
 
     const handleLogin = async (data: ILoginParams) => {
+        setLoading(true);
         try {
             const res = await LoginApi(data);
             const token = res.accessToken as unknown as string;
-            localStorage.setItem(ACCESS_TOKEN_KEY, token);
-            await handleGetProfile();
+            const refreshToken = res.refreshToken as unknown as string;
+            Cookies.set(ACCESS_TOKEN_KEY, token);
+            Cookies.set(REFRESH_TOKEN_KEY, refreshToken);
+            await handleGetProfile(res.id as unknown as number);
             navigate("/");
         } catch (error) {
             const err = HandleError(error as Error | AxiosError<ErrorResponse>);
             enqueueSnackbar(err.errors["message"], { variant: "error" });
             console.error("Login failed", error);
+        } finally {
+            setLoading(false); // Stop loading after login attempt
         }
     };
 
