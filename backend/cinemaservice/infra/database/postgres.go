@@ -1,7 +1,7 @@
 package database
 
 import (
-	"cinema-service/internal/config"
+	"cinema-service/infra/config"
 	"time"
 
 	_ "github.com/lib/pq"

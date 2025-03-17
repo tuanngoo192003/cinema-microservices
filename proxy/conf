@@ -29,25 +29,25 @@ server {
         proxy_pass   http://cinemaservice:8001/ ;
     }
    
-    location /user {
+    location /users {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://userservice:8000/user ;
+        proxy_pass   http://userservice:8000/users ;
     }
 
-    location /user/ {
+    location /users/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass http://userservice:8000/user/ ;
+        proxy_pass http://userservice:8000/users/ ;
     }
 
-    location /user/existed/ {
+    location /users/existed/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass http://userservice:8000/user/existed/ ;
+        proxy_pass http://userservice:8000/users/existed/ ;
     }
         
     location /login {
@@ -57,90 +57,68 @@ server {
     location /refresh {
         proxy_pass   http://userservice:8000/refresh ;
     }
-
-    location /users {
-        access_by_lua_block {
-            require("auth").check_jwt_role()
-        }
-        proxy_pass   http://userservice:8000/users ;
-    }
-
-    location /cinema/auditorium {
-        access_by_lua_block {
-            require("auth").check_jwt_role()
-        }
-        proxy_pass   http://cinemaservice:8001/auditorium ;
-    }
-
+    
     location /cinema/auditoriums {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/auditoriums ;
+        proxy_pass   http://cinemaservice:8001/cinema/auditoriums ;
     }
 
-
-    location /cinema/auditorium/ {
+    location /cinema/auditoriums/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/auditorium/ ;
+        proxy_pass   http://cinemaservice:8001/cinema/auditorium/ ;
     }
 
     location /cinema/seats {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/seats ;
+        proxy_pass   http://cinemaservice:8001/cinema/seats ;
     }
 
-    location /cinema/seat/check/ {
+    location /cinema/seats/available {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/seat/check/ ;
+        proxy_pass   http://cinemaservice:8001/cinema/seats/available ;
     }
 
-    location /cinema/seat/reserve/ {
+    location /cinema/seats/reservations/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/seat/reserve/ ;
+        proxy_pass   http://cinemaservice:8001/cinema/seats/reservations/ ;
     }
 
     location /cinema/movies {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/movies ;
+        proxy_pass   http://cinemaservice:8001/cinema/movies ;
     }
 
-    location /cinema/movie {
+    location /cinema/movies/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/movie ;
+        proxy_pass   http://cinemaservice:8001/cinema/movies/ ;
     }
 
-    location /cinema/movie/ {
+    location /cinema/movie-schedules {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/movie/ ;
-    }
-
-    location /cinema/movie-schedule {
-        access_by_lua_block {
-            require("auth").check_jwt_role()
-        }
-        proxy_pass   http://cinemaservice:8001/movie-schedule ;
+        proxy_pass   http://cinemaservice:8001/cinema/movie-schedules ;
     }
 
     location /cinema/schedules {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/schedules ;
+        proxy_pass   http://cinemaservice:8001/cinema/schedules ;
     }
 
     location /booking/ {
@@ -149,14 +127,6 @@ server {
         }
         proxy_pass   http://bookingservice:8002/booking/ ;
     }
-
-    location /booking {
-        access_by_lua_block {
-            require("auth").check_jwt_role()
-        }
-        proxy_pass   http://bookingservice:8002/booking ;
-    }
-
 
     location /bookings {
         access_by_lua_block {

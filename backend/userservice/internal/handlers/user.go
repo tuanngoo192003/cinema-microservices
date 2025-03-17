@@ -3,9 +3,10 @@ package handlers
 import (
 	"net/http"
 	"strconv"
-	"user-service/internal/config"
+	"user-service/infra/config"
 	"user-service/internal/constants"
-	"user-service/internal/models"
+	"user-service/internal/domain/entity"
+	"user-service/internal/handlers/payload"
 
 	"github.com/gin-gonic/gin"
 	"github.com/tuanngoo192003/golang-utils/utils"
@@ -14,7 +15,7 @@ import (
 func (h *AuthHandler) GetAllUsers(c *gin.Context) {
 	log := config.GetLogger()
 
-	var users []models.User
+	var users []entity.User
 	search := c.Query("search")
 	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil || page <= 0 {
@@ -25,7 +26,7 @@ func (h *AuthHandler) GetAllUsers(c *gin.Context) {
 		perpage = utils.DEFAULT_PAGE
 	}
 
-	dbQuery := h.db.GORM.Model(models.User{})
+	dbQuery := h.db.GORM.Model(entity.User{})
 	if search == "" {
 		dbQuery.Where(`
 			to_tsvector('english', username || ' ' || email) @@ plainto_tsquery('english', CAST( ? AS TEXT))
@@ -49,7 +50,7 @@ func (h *AuthHandler) GetAllUsers(c *gin.Context) {
 		return 
 	}
 
-	c.JSON(http.StatusOK, models.PaginationResponse[models.User]{
+	c.JSON(http.StatusOK, entity.PaginationResponse[entity.User]{
 		Page: page,
 		Perpage: perpage, 
 		Data: users,
@@ -61,7 +62,7 @@ func (h *AuthHandler) GetAllUsers(c *gin.Context) {
 func (h *AuthHandler) GetUserById(c *gin.Context) {
 	log := config.GetLogger()
 	
-	var user models.User
+	var user entity.User
 	if err := h.db.GORM.Where(`user_id = ? `, c.Param("id")).Find(&user).Error; err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -83,7 +84,7 @@ func (h *AuthHandler) GetUserById(c *gin.Context) {
 func (h *AuthHandler) UpdateUser(c *gin.Context) {
 	log := config.GetLogger()
 
-	var user models.UpdateUserRequest
+	var user payload.UpdateUserRequest
 	if err := c.ShouldBindJSON(&user); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -104,7 +105,7 @@ func (h *AuthHandler) UpdateUser(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Transaction failed"})
 		}
 	}()
-	var userUpdate models.User
+	var userUpdate entity.User
 
 	if user.Avatar != "" { userUpdate.Avatar = user.Avatar }
 	if user.Email != "" { userUpdate.Email = user.Email }	
@@ -115,7 +116,7 @@ func (h *AuthHandler) UpdateUser(c *gin.Context) {
 	if user.DateOfBirth != "" { userUpdate.DateOfBirth = user.DateOfBirth }
 	if user.IsDeleted {	userUpdate.IsDeleted = user.IsDeleted }
 
-	if err := h.db.GORM.Model(models.User{}).Where(`user_id = ?`, user.UserID).Updates(&userUpdate).Error; 
+	if err := h.db.GORM.Model(entity.User{}).Where(`user_id = ?`, user.UserID).Updates(&userUpdate).Error; 
 	err != nil {
 		log.Error(err.Error())	
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -134,7 +135,7 @@ func (h *AuthHandler) UpdateUser(c *gin.Context) {
 func (h *AuthHandler) CreateUser(c *gin.Context) {
 	log := config.GetLogger()
 
-	var user models.UserRequest
+	var user payload.UserRequest
 	if err := c.ShouldBindJSON(&user); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -181,7 +182,7 @@ func (h *AuthHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, constants.USER_DELETED_SUCCESSFULLY)
+	c.JSON(http.StatusOK, constants.USER_CREATED_SUCCESSFULLY)
 }
 
 func (h *AuthHandler) IsUserExist(c *gin.Context) {
@@ -189,7 +190,7 @@ func (h *AuthHandler) IsUserExist(c *gin.Context) {
 
 	var username string 
 	if err := h.db.GORM.
-		Model(models.User{}).Select("username").Where("user_id = ?", c.Param("id")).First(&username).Error; err != nil {
+		Model(entity.User{}).Select("username").Where("user_id = ?", c.Param("id")).First(&username).Error; err != nil {
 		log.Info(err.Error())
 		c.JSON(http.StatusOK, gin.H{"existed": false})
 		return

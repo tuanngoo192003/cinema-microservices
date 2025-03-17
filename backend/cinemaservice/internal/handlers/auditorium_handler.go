@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"cinema-service/internal/config"
-	"cinema-service/internal/domain/schema"
+	"cinema-service/infra/config"
+	"cinema-service/internal/domain/entity"
 	"net/http"
 	"strconv"
 	"time"
@@ -23,7 +23,7 @@ func NewAuditoriumHandler(db *gorm.DB) *AuditoriumsHandler {
 func (a *AuditoriumsHandler) Create(c *gin.Context) {
 	log := config.GetLogger()
 
-	var obj schema.Auditorium
+	var obj entity.Auditorium
 
 	log.Info("Creating new auditorium")
 	err := c.ShouldBindJSON(&obj)
@@ -47,7 +47,7 @@ func (a *AuditoriumsHandler) Create(c *gin.Context) {
 func (a *AuditoriumsHandler) Update(c *gin.Context) {
 	log := config.GetLogger()
 
-	var obj schema.Auditorium
+	var obj entity.Auditorium
 	err := c.ShouldBindJSON(&obj)
 	if err != nil {
 		log.Error(err.Error())
@@ -55,7 +55,7 @@ func (a *AuditoriumsHandler) Update(c *gin.Context) {
 		return
 	}
 
-	find := a.db.First(&schema.Auditorium{}, obj.ID)
+	find := a.db.First(&entity.Auditorium{}, obj.ID)
 	if find.Error != nil {
 		log.Error(find.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
@@ -74,7 +74,7 @@ func (a *AuditoriumsHandler) Update(c *gin.Context) {
 }
 func (a *AuditoriumsHandler) Search(c *gin.Context) {
 	log := config.GetLogger()
-	query := a.db.Model(&schema.Auditorium{})
+	query := a.db.Model(&entity.Auditorium{})
 
 	if c.Query("auditoriumName") != "" {
 		query = query.Where("Auditorium_Name = ?", c.Query("auditoriumName"))
@@ -113,7 +113,7 @@ func (a *AuditoriumsHandler) Search(c *gin.Context) {
 		return
 	}
 
-	var result []schema.Auditorium
+	var result []entity.Auditorium
 	response := query.Offset(offset).Limit(limit).Find(&result)
 	if response.Error != nil {
 		log.Error(response.Error.Error())

@@ -1,3 +1,4 @@
+--userservicedb tables 
 CREATE TABLE roles (
     role_id SERIAL PRIMARY KEY,
     role_name VARCHAR(50) CHECK (role_name IN ('ADMIN', 'MANAGER', 'CUSTOMER')),
@@ -43,3 +44,69 @@ INSERT INTO roles (role_id, role_name, description) VALUES
 
 INSERT INTO users (user_id, email, password, username, role_id) VALUES 
 (1, 'tuan.nguyenhuu@vti.com.vn', '$2a$10$kzZwQiR.CQJ/F80AzAeMFO1/hiAfx56UxxS6C/s6fXX/QbLV0zXIi', 'tuan.nguyenhuu', 1);
+
+
+-- cinemaservicedb tables 
+CREATE TABLE movies (
+    movie_id SERIAL PRIMARY KEY,
+    movie_name VARCHAR(255),
+    description TEXT,
+    release_date DATE,
+    movie_genre VARCHAR(500),
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(50),
+    last_modified_by VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+CREATE TABLE auditoriums (
+    auditorium_id SERIAL PRIMARY KEY,
+    auditorium_name VARCHAR(50),
+    capacity INT,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(50),
+    last_modified_by VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+CREATE TYPE config_type_enum AS ENUM ('A1', 'A2', 'A3', 'A4');
+CREATE TYPE schedule_status_enum AS ENUM ('DRAFT', 'FINAL');
+
+CREATE TABLE movie_schedule (
+    schedule_id SERIAL PRIMARY KEY,
+    movie_id INT REFERENCES movies(movie_id) ON DELETE CASCADE,
+    auditorium_id INT REFERENCES auditoriums(auditorium_id) ON DELETE CASCADE,
+    start_at TIMESTAMP,
+    end_at TIMESTAMP,
+    config_type config_type_enum,
+    schedule_status schedule_status_enum,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(50),
+    last_modified_by VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+CREATE TYPE seat_status_enum AS ENUM ('AVAILABLE', 'RESERVED', 'BOOKED');
+
+CREATE TABLE seats (
+    seat_id SERIAL PRIMARY KEY,
+    auditorium_id INT REFERENCES auditoriums(auditorium_id) ON DELETE CASCADE,
+    seat_code VARCHAR(5),
+    current_status seat_status_enum DEFAULT 'AVAILABLE',
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(50),
+    last_modified_by VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+CREATE TABLE reserved_seat (
+    id SERIAL PRIMARY KEY,
+    schedule_id INT REFERENCES movie_schedule(schedule_id) ON DELETE CASCADE,
+    seat_id INT REFERENCES seats(seat_id) ON DELETE CASCADE,
+    user_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

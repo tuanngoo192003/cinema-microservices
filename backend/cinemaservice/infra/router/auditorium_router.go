@@ -10,8 +10,8 @@ import (
 func SetupAuthoriumRouter(db *gorm.DB, router *gin.RouterGroup) {
 	auditoriumGroup := router.Group("/auditoriums")
 	aHandler := handlers.NewAuditoriumHandler(db)
-	auditoriumGroup.GET("/search", aHandler.Search)
-	auditoriumGroup.POST("/create", aHandler.Create)
-	auditoriumGroup.PUT("/update", aHandler.Update)
+	auditoriumGroup.GET("", aHandler.Search)
+	auditoriumGroup.POST("", aHandler.Create)
+	auditoriumGroup.PUT("", aHandler.Update)
 
 }

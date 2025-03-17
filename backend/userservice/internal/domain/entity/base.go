@@ -1,4 +1,4 @@
-package models
+package entity
 
 type PaginationResponse[T any] struct {
 	Page        int   `json:"page"`
