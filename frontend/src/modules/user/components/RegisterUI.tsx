@@ -2,25 +2,28 @@ import * as React from "react";
 import "../../../App.css"
 import {Col, Form, Card, FormProps, Layout, Row, Input, DatePicker, Button} from "antd";
 import {Content} from "antd/es/layout/layout";
-import {ILoginForm} from "../models/auth.ts";
 import {useTranslation} from "react-i18next";
 import watchingmovie from "../../../assets/watchingmovie.png";
 import {useNavigate} from "react-router-dom";
-
-const onFinish: FormProps<ILoginForm>['onFinish'] = (values) => {
-    console.log('Success', values)
-}
-
-const onFinishFailed: FormProps<ILoginForm>['onFinishFailed'] = (errorInfo) => {
-    console.log('Failed', errorInfo)
-}
+import {IUserParam} from "../models/user.ts";
+//import {useUser} from "../hooks";
 
 export const RegisterForm: React.FC = () => {
+    //const { handleCreateUser } = useUser();
     const { t } = useTranslation();
     const navigate = useNavigate();
     const backToLogin = () => {
         navigate("/login");
     };
+    const onFinish: FormProps<IUserParam>['onFinish'] = (values) => {
+        values.status = "ACTIVE"
+        values.roleId = 3
+        //handleCreateUser(values)
+        console.log('Success', values)
+    }
+    const onFinishFailed: FormProps<IUserParam>['onFinishFailed'] = (errorInfo) => {
+        console.log('Failed', errorInfo)
+    }
     return (
         <>
             <div style={{ minHeight: "100vh" }}>
@@ -58,10 +61,10 @@ export const RegisterForm: React.FC = () => {
                                         </Form.Item>
                                         <Form.Item
                                             label={t("labels.password")}
-                                            name="email"
+                                            name="password"
                                             rules={[{ required: true, message: t("messages.required.password") }]}
                                         >
-                                            <Input className="app-input" />
+                                            <Input.Password className="app-input" />
                                         </Form.Item>
                                         <Form.Item
                                             label={t("labels.first_name")}

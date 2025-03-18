@@ -5,9 +5,10 @@ import (
 	"database/sql"
 	"net/http"
 	"time"
-	"user-service/internal/config"
-	"user-service/internal/database"
-	"user-service/internal/models"
+	"user-service/infra/config"
+	"user-service/infra/database"
+	"user-service/internal/domain/entity"
+	"user-service/internal/handlers/payload"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -41,7 +42,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	//Zap logger 	
 	log := config.GetLogger()
 
-	var login models.LoginRequest 
+	var login payload.LoginRequest 
 
     err := c.ShouldBindJSON(&login); 
     if err != nil {
@@ -50,7 +51,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
         return 
     }
 
-    var user models.User
+    var user entity.User
 	getCredential(&user, h, login, c) 
 
     if !utils.CheckPasswordHash(login.Password, user.Password) {
@@ -81,7 +82,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	saveRefreshToken(h, c, refreshTokenString, user.Username, string(user.Roles.RoleName))
 
     c.JSON(http.StatusOK, gin.H{
-        "username": user.Username,
+		"id": user.UserID, 
+		"username": user.Username,
         "role": user.Roles.RoleName,
         "accessToken": tokenString,
 		"refreshToken": refreshTokenString,
@@ -90,7 +92,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
     })
 }
 
-func getCredential(user *models.User, h *AuthHandler, login models.LoginRequest, c *gin.Context) {
+func getCredential(user *entity.User, h *AuthHandler, login payload.LoginRequest, c *gin.Context) {
 	log := config.GetLogger()
     var err error  
     if utils.IsEmail(user.Email){
@@ -101,7 +103,7 @@ func getCredential(user *models.User, h *AuthHandler, login models.LoginRequest,
             return 
         }
     } else {
-        err = h.db.GORM.Model(models.User{}).Where("username = ?", login.Identifier).Preload("Roles").Find(&user).Error
+        err = h.db.GORM.Model(entity.User{}).Where("username = ?", login.Identifier).Preload("Roles").Find(&user).Error
         if err != nil {
 			log.Error(err.Error())
             c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -143,8 +145,8 @@ func (h *AuthHandler) RefreshToken (c *gin.Context) {
     
     now := time.Now() 
     
-	var token models.RefreshToken
-    err := h.db.GORM.Model(models.RefreshToken{}).Where("username = ?", username).Find(&token).Error
+	var token entity.RefreshToken
+    err := h.db.GORM.Model(entity.RefreshToken{}).Where("username = ?", username).Find(&token).Error
     if err != nil {
 		log.Error(err.Error())
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

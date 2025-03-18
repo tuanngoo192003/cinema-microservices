@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 	"time"
-	"user-service/internal/config"
+	"user-service/infra/config"
 
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"

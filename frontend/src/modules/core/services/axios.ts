@@ -5,7 +5,7 @@ import {IRefreshingTokenParam} from "../../user/models/auth.ts";
 import {RefreshTokenApi} from "../../user/services";
 
 const api = axios.create({
-  baseURL: "/",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 })
 
 export type ErrorResponse = {

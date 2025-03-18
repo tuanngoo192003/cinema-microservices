@@ -3,6 +3,7 @@ import {Avatar, Dropdown, MenuProps, Space} from "antd";
 import {UserOutlined} from "@ant-design/icons";
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {useAuth} from "../../user/hooks";
 
 interface ProfileProps {
     avatarURL: string;
@@ -11,11 +12,12 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({avatarURL, isUserLogin}) => {
     const { t } = useTranslation();
+    const {handleLogout} = useAuth();
     const [url] = useState(avatarURL)
 
     const items: MenuProps['items'] = [
-        { key: "1", label: "My Profile", onClick: () => console.log("My Profile") },
-        { key: "2", label: "Log out", onClick: () => console.log("My Profile") }
+        { key: "1", label: t('labels.profile'), onClick: () => console.log("My Profile") },
+        { key: "2", label: t('labels.logout'), onClick: handleLogout }
     ]
 
     return (

@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"cinema-service/internal/config"
-	"cinema-service/internal/domain/schema"
+	"cinema-service/infra/config"
+	"cinema-service/internal/domain/entity"
 	"net/http"
 	"strconv"
 	"time"
@@ -24,7 +24,7 @@ func (s *SeatHandler) Search(c *gin.Context) {
 	log := config.GetLogger()
 
 	// Khởi tạo query
-	query := s.db.Model(&schema.Seat{})
+	query := s.db.Model(&entity.Seat{})
 
 	if c.Query("seatCode") != "" {
 		query = query.Where("seat_code = ?", c.Query("seatCode"))
@@ -63,7 +63,7 @@ func (s *SeatHandler) Search(c *gin.Context) {
 		return
 	}
 
-	var seats []schema.Seat
+	var seats []entity.Seat
 	response := query.Offset(offset).Limit(limit).Find(&seats)
 
 	if response.Error != nil {

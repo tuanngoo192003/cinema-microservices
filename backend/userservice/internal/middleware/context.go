@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
-	"user-service/internal/config"
+	"user-service/infra/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

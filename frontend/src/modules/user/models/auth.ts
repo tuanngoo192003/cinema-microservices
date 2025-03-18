@@ -10,6 +10,7 @@ export type ILoginParams = {
 }
 
 export type ILoginResponse = {
+    id?: number
     username?: string
     role?: string
     accessToken?: string

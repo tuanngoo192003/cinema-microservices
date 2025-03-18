@@ -29,7 +29,7 @@ services:
     ports:
       - "8001:8001"
     depends_on:
-      - userdb
+      - cinemadb
  
   cinemadb:
     image: postgres
@@ -42,7 +42,7 @@ services:
       - POSTGRES_DB=cinemaservicedb
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     ports:
-      - "5433:5433"
+      - "5433:5432"
 
   bookingservice:
     build: backend/bookingservice
@@ -51,7 +51,7 @@ services:
     ports:
       - "8002:8002"
     depends_on:
-      - userdb
+      - bookingdb
 
   bookingdb:
     image: postgres
@@ -64,7 +64,7 @@ services:
       - POSTGRES_DB=bookingservicedb
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     ports:
-      - "5434:5434"
+      - "5434:5432"
 
   reactapp:
     build: frontend

@@ -2,8 +2,8 @@ package main
 
 import (
 	"cinema-service/infra/router"
-	"cinema-service/internal/config"
-	"cinema-service/internal/database"
+	"cinema-service/infra/config"
+	"cinema-service/infra/database"
 	"cinema-service/internal/handlers"
 	"net/http"
 
@@ -33,7 +33,7 @@ func main() {
 	if cfg.Environment == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	log.Infof("CinemaService started on %s and listening.111111111111111111..")
+	log.Infof("CinemaService started on %s and listening...")
 	/* Initialize router with middleware */
 	r := gin.New()
 	r.Use(gin.Recovery())
