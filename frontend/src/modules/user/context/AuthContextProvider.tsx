@@ -1,6 +1,6 @@
 import {useSnackbar} from "notistack";
 import {ErrorResponse, useNavigate} from "react-router-dom";
-import React, {useCallback, useState} from "react";
+import React, {useState} from "react";
 import {IProfile} from "../models/user.ts";
 import Cookies from "js-cookie";
 import {GetProfileAPI, LoginApi} from "../services";
@@ -9,7 +9,7 @@ import {AxiosError} from "axios";
 import {ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY} from "../../core/constants/storage.ts";
 import {ILoginParams} from "../models/auth.ts";
 import {LoadingPage} from "../../core/components/LoadingPage.tsx";
-import {AuthContext} from "./AuthContext.tsx";
+import {AuthContext} from "./Context.tsx";
 
 interface AuthProfileProps {
     children?: React.ReactNode
@@ -20,27 +20,24 @@ export function AuthContextProvider({children}: AuthProfileProps) {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [profile, setProfile] = useState<IProfile | null>(null);
+    const [profile, setProfile] = useState<IProfile | null>(() => {
+        const storedProfile = localStorage.getItem("profile");
+        return storedProfile ? JSON.parse(storedProfile) : null;
+    });
 
-    const handleGetProfile = useCallback(async (id: number) => {
-        setLoading(true);
-        try {
-            const data = await GetProfileAPI(id);
-            setProfile(data);
-        } catch (error) {
-            HandleError(error as Error | AxiosError<ErrorResponse>);
-            setProfile(null);
-            setLoading(false);
-
-            Cookies.remove(ACCESS_TOKEN_KEY);
-            navigate("/login");
+    const updateProfile = (profileData: IProfile | null) => {
+        if (profileData) {
+            localStorage.setItem("profile", JSON.stringify(profileData));
+        } else {
+            localStorage.removeItem("profile");
         }
-    }, []);
+        setProfile(profileData);
+    };
 
     const handleLogout = () => {
         Cookies.remove(ACCESS_TOKEN_KEY)
         Cookies.remove(REFRESH_TOKEN_KEY)
-        setProfile(null);
+        updateProfile(null);
         navigate("/login");
     };
 
@@ -52,7 +49,9 @@ export function AuthContextProvider({children}: AuthProfileProps) {
             const refreshToken = res.refreshToken as unknown as string;
             Cookies.set(ACCESS_TOKEN_KEY, token);
             Cookies.set(REFRESH_TOKEN_KEY, refreshToken);
-            await handleGetProfile(res.id as unknown as number);
+
+            const profileData = await GetProfileAPI(res.id as unknown as number);
+            updateProfile(profileData);
             navigate("/");
         } catch (error) {
             const err = HandleError(error as Error | AxiosError<ErrorResponse>);

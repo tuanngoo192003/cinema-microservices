@@ -9,4 +9,5 @@ func Setup(db *gorm.DB, g *gin.Engine) {
 	group := g.Group("/cinema")
 	SetupAuthoriumRouter(db, group)
 	SetupSeatRouter(db, group)
+	SetupMovieRouter(db, group)
 }

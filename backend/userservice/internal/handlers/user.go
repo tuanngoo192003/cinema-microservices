@@ -15,7 +15,7 @@ import (
 func (h *AuthHandler) GetAllUsers(c *gin.Context) {
 	log := config.GetLogger()
 
-	var users []entity.User
+	var users []payload.UserResponse
 	search := c.Query("search")
 	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil || page <= 0 {
@@ -43,14 +43,20 @@ func (h *AuthHandler) GetAllUsers(c *gin.Context) {
 
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
-	err = dbQuery.Offset(offset).Limit(perpage).Find(&users).Error
+	err = dbQuery.Model(&entity.User{}).
+		Select(`users.user_id, users.email, users.status, users.first_name, users.last_name, 
+				users.date_of_birth, users.phone_number, users.avatar, roles.role_name`).
+		Joins("left join roles on roles.role_id = users.role_id").
+		Offset(offset).
+		Limit(perpage).
+		Find(&users).Error
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return 
 	}
 
-	c.JSON(http.StatusOK, entity.PaginationResponse[entity.User]{
+	c.JSON(http.StatusOK, payload.PaginationResponse[payload.UserResponse]{
 		Page: page,
 		Perpage: perpage, 
 		Data: users,

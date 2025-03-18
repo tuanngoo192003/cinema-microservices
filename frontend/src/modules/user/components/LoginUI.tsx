@@ -7,7 +7,7 @@ import {Content} from "antd/es/layout/layout";
 import {HomeOutlined} from "@ant-design/icons";
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {useAuth} from "../hooks/useAuth.ts";
+import {useAuth} from "../hooks";
 const { Title } = Typography;
 
 const LoginForm: React.FC = () => {

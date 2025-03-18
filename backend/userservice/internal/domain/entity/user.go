@@ -19,7 +19,8 @@ type User struct {
 	PhoneNumber    string `json:"phoneNumber" gorm:"size:13"`
 	Email          string `json:"email" gorm:"size:255;not null"`
 	Avatar		   string `json:"avatar" gorm:"size:255"`
-	Roles          Role   `json:"roleId" gorm:"foreignKey:role_id"`
+	RoleID		   uint   `json:"roleId"`
+	Roles          Role   `json:"roles" gorm:"foreignKey:RoleID;references:RoleID"`
 	IsDeleted      bool   `json:"isDeleted"`
 	CreatedBy      string `json:"createdBy"`
 	LastModifiedBy string `json:"lastModifiedBy"`

@@ -10,6 +10,8 @@ export type IPaging = {
 
 export type IPagination<T> = {
     data: T[];
-    extra: { [key: string]: string | number };
-    paging: IPaging;
+    page: number;
+    perpage: number;
+    totalPage: number;
+    totalRecord: number;
 };

@@ -6,6 +6,7 @@ import {AppRouter} from "./modules/core/components/AppRouter.tsx";
 import {SnackbarProvider} from "notistack";
 import {AuthContextProvider} from "./modules/user/context/AuthContextProvider.tsx";
 import {BrowserRouter} from "react-router-dom";
+import {UserProvider} from "./modules/user/context/UserContextProvider.tsx";
 
 const App: React.FC = () => (
     <>
@@ -13,7 +14,9 @@ const App: React.FC = () => (
             <SnackbarProvider>
                 <BrowserRouter>
                     <AuthContextProvider>
-                        <AppRouter/>
+                        <UserProvider>
+                            <AppRouter/>
+                        </UserProvider>
                     </AuthContextProvider>
                 </BrowserRouter>
             </SnackbarProvider>
