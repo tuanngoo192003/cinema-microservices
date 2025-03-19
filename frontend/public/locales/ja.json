@@ -34,7 +34,9 @@
       "movie_genre": "ジャンル",
       "duration": "上映時間",
       "release_date": "公開日",
-      "user_list": "ユーザー名簿"
+      "user_list": "ユーザー名簿",
+      "auditorium": "スクリーン番号",
+      "seat": "席番"
     },
     "buttons": {
       "buy_ticket": "チケットを買う"

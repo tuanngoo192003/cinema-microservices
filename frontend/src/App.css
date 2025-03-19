@@ -170,6 +170,16 @@
   color: var(--default-btn-text) !important;
 }
 
+.chair-text {
+  position: absolute;
+  font-size: 0.8rem;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-weight: bold;
+}
+
 /* Card */
 .app-card{
   width: 70%;
@@ -257,3 +267,4 @@
   padding-top: 1rem;
   color: var(--default-link);
 }
+

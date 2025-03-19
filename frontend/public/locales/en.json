@@ -35,7 +35,9 @@
       "movie_genre": "Genre",
       "duration": "Duration",
       "release_date": "Release date",
-      "user_list": "User list"
+      "user_list": "User list",
+      "auditorium": "Auditorium",
+      "seat": "Seats"
     },
     "buttons": {
       "buy_ticket": "Buy ticket"
