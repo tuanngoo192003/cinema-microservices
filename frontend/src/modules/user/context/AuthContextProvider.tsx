@@ -52,7 +52,7 @@ export function AuthContextProvider({children}: AuthProfileProps) {
 
             const profileData = await GetProfileAPI(res.id as unknown as number);
             updateProfile(profileData);
-            navigate("/");
+            navigate("/home");
         } catch (error) {
             const err = HandleError(error as Error | AxiosError<ErrorResponse>);
             enqueueSnackbar(err.errors["message"], { variant: "error" });

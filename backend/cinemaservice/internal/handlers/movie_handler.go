@@ -24,7 +24,7 @@ func NewMoviesHandler(db *gorm.DB) *MoviesHandler {
 func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	log := config.GetLogger()
 
-	var movies []payload.MoviesResponse
+	var movies []payload.MovieResponse
 
 	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil || page <= 0 {
@@ -55,7 +55,7 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 		c.DefaultQuery("releaseStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
 		c.DefaultQuery("releaseEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
 	}
-	query = query.Where("isDeleted = ?", c.Query("isDeleted"))
+	query = query.Where("is_deleted = ?", false)
 
 	var count int64
 	if err := query.Count(&count).Error; err != nil {
@@ -78,7 +78,7 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 		return 
 	}
 
-	c.JSON(http.StatusOK, payload.PaginationResponse[payload.MoviesResponse]{
+	c.JSON(http.StatusOK, payload.PaginationResponse[payload.MovieResponse]{
 		Page: page,
 		Perpage: perpage, 
 		Data: movies,
@@ -91,16 +91,34 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 	log := config.GetLogger()
 
-	var movie payload.MoviesRequest 
+	var movie payload.MovieRequest 
 	if err := c.ShouldBindJSON(&movie); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error}})
 		return
 	}
 
-	response := h.db.Model(&entity.Movie{}).Create(&movie)
+	var ( 
+		parsedDate time.Time
+		err		   error	
+	)
+
+	if parsedDate, err = time.Parse("2006-01-02", movie.ReleaseDate); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error}})
+		return
+	}
+	movieEntity := entity.Movie{
+		MovieName: movie.MovieName,
+		Description: movie.Description,
+		ReleaseDate: parsedDate,
+		MovieGenre: movie.MovieGenre,
+	}
+
+	response := h.db.Model(entity.Movie{}).Create(&movieEntity)
 
 	if response.Error != nil {
+		log.Error(response.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
 		return
 	}
@@ -111,7 +129,7 @@ func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 	log := config.GetLogger()
 
-	var movie payload.MoviesRequest
+	var movie payload.UpdateMovieRequest
 	err := c.ShouldBindJSON(&movie)
 	if err != nil {
 		log.Error(err.Error())

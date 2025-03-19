@@ -1,13 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Oxanium:wght@200..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 
 :root {
-  --default-background: #fdf9f7;
-  --default-btn-bg-hover: #a86e45;
-  --default-btn-bg: #c58454;
-  --default-btn-text: #fae3d2;
-  --default-text: #1e0c02;
-  --default-link: #9a9696;
-  --default-link-hover: #817e7c;
+  --default-background: #efe3d9;
+  --default-btn-bg-hover: #5d3723;
+  --default-btn-bg: #865437;
+  --default-btn-text: #d4b8a2;
+  --default-text: #190b06;
+  --default-link: #bcb7b3;
+  --default-link-hover: #787573;
 }
 
 #root {
@@ -29,15 +29,30 @@
 /* Navigation bar */
 .app-header {
   position: fixed;  /* Fixes the header at the top */
-  top: 0;           /* Stick to the top */
-  left: 0;          /* Align to the left */
+  top: 0;
+  left: 0;
   width: 100%;
   z-index: 1000;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* ✅ Center everything */
   height: 3.1rem;
   background: var(--default-btn-text);
+}
+
+/* Flex container to keep logo and menu centered */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ Keep logo & menu in the middle */
+  width: auto;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem; /* ✅ Reduce spacing */
 }
 
 .logo img {
@@ -46,28 +61,28 @@
 
 /* Menu */
 .nav-menu {
-  flex-grow: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  background: var(--default-btn-text);
+  justify-content: center; /* ✅ Center items */
+  background: transparent;
   height: 100%;
 }
 
 .nav-menu .ant-menu-item {
-  background: transparent !important; /* Make menu item background transparent */
+  background: transparent !important;
   display: flex;
-  align-items: center; /* Center text vertically */
+  align-items: center;
   height: 100%;
+  margin: 0 0.5rem; /* ✅ Reduce spacing between menu items */
 }
 
 .nav-menu .ant-menu-item a {
-  color: var(--default-text); /* Adjust as needed */
+  color: var(--default-text);
   transition: color 0.3s ease-in-out;
 }
 
 .nav-menu .ant-menu-item:hover a {
-  color: var(--default-btn-bg-hover); /* Darker text on hover */
+  color: var(--default-btn-bg-hover);
 }
 
 .app-theme {
@@ -158,4 +173,87 @@
 /* Card */
 .app-card{
   width: 70%;
+}
+
+.booking-card{
+  background: var(--default-link);
+  transition: background-color 0.5s ease;
+}
+
+.booking-card:hover{
+  background: var(--default-link-hover);
+}
+
+/* Footer Styles */
+.app-footer {
+  background: var(--default-btn-bg);
+  color: var(--default-text);
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-brand .footer-title {
+  color: var(--default-btn-bg-hover);
+}
+
+.footer-text {
+  color: var(--default-link);
+}
+
+.footer-links {
+  text-align: center;
+}
+
+.footer-link {
+  display: block;
+  color: var(--default-text);
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.footer-link:hover {
+  color: var(--default-link-hover);
+}
+
+/* Social Media Icons */
+.footer-socials {
+  text-align: center;
+}
+
+.social-icon {
+  font-size: 24px;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Icon Hover Effects */
+.facebook:hover {
+  transform: scale(1.1);
+  color: #1877F2;
+}
+
+.instagram:hover {
+  transform: scale(1.1);
+  color: #E1306C;
+}
+
+.youtube:hover {
+  transform: scale(1.1);
+  color: #FF0000;
+}
+
+/* Copyright */
+.footer-copyright {
+  text-align: center;
+  margin-top: 2rem;
+  border-top: 1px solid var(--default-link);
+  padding-top: 1rem;
+  color: var(--default-link);
 }

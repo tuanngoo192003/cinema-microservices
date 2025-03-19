@@ -36,8 +36,8 @@ const processExpiredTokenRequests = (error: unknown) => {
 const publicUrls = [/login/, /refresh/, /register/]
 
 const logout = () => {
-  localStorage.removeItem(ACCESS_TOKEN_KEY)
-  localStorage.removeItem(REFRESH_TOKEN_KEY)
+  Cookies.remove(ACCESS_TOKEN_KEY)
+  Cookies.remove(REFRESH_TOKEN_KEY)
 }
 
 api.interceptors.request.use((config) => {

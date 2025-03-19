@@ -6,14 +6,36 @@ import {useTranslation} from "react-i18next";
 import watchingmovie from "../../../assets/watchingmovie.png";
 import {useNavigate} from "react-router-dom";
 import {IUserParam} from "../models/user.ts";
-//import {useUser} from "../hooks";
+import {useEffect, useState} from "react";
+import Cookies from "js-cookie";
+import {ACCESS_TOKEN_KEY} from "../../core/constants/storage.ts";
+import {HOME, LOGIN} from "../../core/constants/redirectURI.ts";
 
 export const RegisterForm: React.FC = () => {
-    //const { handleCreateUser } = useUser();
     const { t } = useTranslation();
     const navigate = useNavigate();
+
+    const [isUserLogin, setIsUserLogin] = useState(!!Cookies.get(ACCESS_TOKEN_KEY));
+
+    useEffect(() => {
+        const checkAuth = () => {
+            setIsUserLogin(!!Cookies.get(ACCESS_TOKEN_KEY));
+        };
+
+        window.addEventListener("storage", checkAuth);
+        return () => {
+            window.removeEventListener("storage", checkAuth);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (isUserLogin && location.pathname === LOGIN) {
+            navigate(HOME, { replace: true });
+        }
+    }, [isUserLogin, location.pathname, navigate]);
+
     const backToLogin = () => {
-        navigate("/login");
+        navigate(LOGIN);
     };
     const onFinish: FormProps<IUserParam>['onFinish'] = (values) => {
         values.status = "ACTIVE"

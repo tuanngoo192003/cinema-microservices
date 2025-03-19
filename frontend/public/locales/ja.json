@@ -1,8 +1,16 @@
 {
+  "common": {
+    "start_at": "開始時間: ",
+    "end_at": "終了時間: ",
+    "seat_left": "空いている席: "
+  },
+  "footer": {
+    "footer_slogan": "あなたの最高の映画体験",
+    "privacy_policy": "プライバシーポリシー",
+    "follow": "フォローしてください"
+  },
   "labels": {
     "home": "ホームページ",
-    "about": "概要",
-    "contact": "コンタクト",
     "username": "ユーザー名",
     "email": "メール",
     "remember": "私を覚えて",
@@ -17,13 +25,27 @@
     "back_to_login": "ログインに戻る",
     "register_form": "登録フォーム",
     "register": "登録",
-    "logout": "ログアウト",
-    "profile": "プロファイル",
     "view_detail": "詳しく見る",
     "delete": "消す",
     "english": "英語",
     "vietnamese": "ベトナム語",
-    "japanese": "日本語"
+    "japanese": "日本語",
+    "titles": {
+      "movie_genre": "ジャンル",
+      "duration": "上映時間",
+      "release_date": "公開日",
+      "user_list": "ユーザー名簿"
+    },
+    "buttons": {
+      "buy_ticket": "チケットを買う"
+    },
+    "menu": {
+      "user_list": "ユーザー名簿",
+      "logout": "ログアウト",
+      "profile": "プロファイル",
+      "about": "概要",
+      "contact": "コンタクト"
+    }
   },
   "messages": {
     "required":{
@@ -35,6 +57,7 @@
       "phone_number": "電話番号を入力してください!",
       "date_of_birth": "生年月日を入力してください!",
       "success": "成功しました"
-    }
+    },
+    "no_schedule": "この日はスケジュールがありません!"
   }
 }

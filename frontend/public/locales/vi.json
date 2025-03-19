@@ -1,8 +1,16 @@
 {
+  "common": {
+    "start_at": "Bắt đầu lúc: ",
+    "end_at": "Kết thúc khi: ",
+    "seat_left": "Số ghế còn lại: "
+  },
+  "footer": {
+    "footer_slogan": "Trải nghiệm phim ảnh tốt nhất của bạn",
+    "privacy_policy": "Chính sách bảo mật",
+    "follow": "Theo dõi chúng tôi tại"
+  },
   "labels": {
     "home": "Trang chủ",
-    "about": "Về chúng tôi",
-    "contact": "Liên hệ",
     "username": "Tên đăng nhập",
     "email": "Email",
     "remember": "Ghi nhớ tôi",
@@ -17,13 +25,32 @@
     "register_form": "Form đăng ký",
     "login": "Đăng nhập",
     "back_to_login": "Quay về màn hình đăng nhập",
-    "logout": "Đăng xuất",
-    "profile": "Thông tin cá nhân",
     "view_detail": "Xem chi tiết",
     "delete": "Xóa",
     "english": "Tiếng Anh",
     "vietnamese": "Tiếng Việt",
-    "japanese": "Tiếng Nhật"
+    "japanese": "Tiếng Nhật",
+    "titles": {
+      "movie_genre": "Thể loại",
+      "duration": "Thời lượng",
+      "release_date": "Ngày ra mắt",
+      "user_list": "Danh sách người dùng"
+    },
+    "buttons": {
+      "buy_ticket": "Mua vé"
+    },
+    "menu": {
+      "user_list": "Danh sách người dùng",
+      "logout": "Đăng xuất",
+      "profile": "Thông tin cá nhân",
+      "about": "Về chúng tôi",
+      "contact": "Liên hệ"
+    }
+  },
+  "titles": {
+    "movie_genre": "Thể loại",
+    "duration": "Thời lượng",
+    "user_list": "Danh sách người dùng"
   },
   "messages": {
     "required":{
@@ -35,6 +62,7 @@
       "phone_number": "Tên đăng nhập không được để trống!",
       "date_of_birth": "Ngày tháng năm sinh không được để trống!",
       "success": "Thành công"
-    }
+    },
+    "no_schedule": "Không có lịch chiếu vào ngày này!"
   }
 }

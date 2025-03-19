@@ -9,8 +9,34 @@ import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "../hooks";
 const { Title } = Typography;
+import { useNavigate, useLocation } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {ACCESS_TOKEN_KEY} from "../../core/constants/storage.ts";
+import Cookies from "js-cookie";
+import {HOME, LOGIN, REGISTER} from "../../core/constants/redirectURI.ts";
 
 const LoginForm: React.FC = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [isUserLogin, setIsUserLogin] = useState(!!Cookies.get(ACCESS_TOKEN_KEY));
+
+    useEffect(() => {
+        const checkAuth = () => {
+            setIsUserLogin(!!Cookies.get(ACCESS_TOKEN_KEY));
+        };
+        window.addEventListener("storage", checkAuth);
+        return () => {
+            window.removeEventListener("storage", checkAuth);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (isUserLogin && location.pathname === LOGIN) {
+            navigate(HOME, { replace: true });
+        }
+    }, [isUserLogin, location.pathname, navigate]);
+
+
     const { t } = useTranslation();
     const { handleLogin } = useAuth();
     const onFinish: FormProps<ILoginForm>['onFinish'] = (values) => {
@@ -23,7 +49,7 @@ const LoginForm: React.FC = () => {
     return (
         <>
             <div style={{ position: "absolute", zIndex: 999, top: 20, right: 20 }}>
-                <Link to="/"><HomeOutlined className="icon-default" /></Link>
+                <Link to={HOME}><HomeOutlined className="icon-default" /></Link>
             </div>
             <Layout className="app-theme" style={{ minHeight: "100vh", overflow: "hidden" }}>
                 <Content>
@@ -75,7 +101,7 @@ const LoginForm: React.FC = () => {
                                             width: "100%"
                                         }}>
                                             <Checkbox className="app-checkbox" >{t("labels.remember")}</Checkbox>
-                                            <Link className="app-link" to="/register" >{t("labels.register_here")}</Link>
+                                            <Link className="app-link" to={REGISTER} >{t("labels.register_here")}</Link>
                                         </div>
                                     </Form.Item>
                                     <Form.Item>

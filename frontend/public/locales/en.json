@@ -1,8 +1,16 @@
 {
+  "common": {
+    "start_at": "Start at: ",
+    "end_at": "End at: ",
+    "seat_left": "Seats left: "
+  },
+  "footer": {
+    "footer_slogan": "Your best movie experience",
+    "privacy_policy": "Privacy Policy",
+    "follow": "Follow us on"
+  },
   "labels": {
     "home": "Home",
-    "about": "About",
-    "contact": "Contact",
     "username": "Username",
     "email": "Email",
     "remember": "Remember me",
@@ -17,13 +25,28 @@
     "register_here": "Don't have account? Register here.",
     "login": "Login",
     "back_to_login": "Back to login form",
-    "logout": "Log out",
-    "profile": "Profile",
+
     "view_detail": "View details",
     "delete": "Delete",
     "english": "English",
     "vietnamese": "Vietnamese",
-    "japanese": "Japanese"
+    "japanese": "Japanese",
+    "titles": {
+      "movie_genre": "Genre",
+      "duration": "Duration",
+      "release_date": "Release date",
+      "user_list": "User list"
+    },
+    "buttons": {
+      "buy_ticket": "Buy ticket"
+    },
+    "menu": {
+      "user_list": "User list",
+      "logout": "Log out",
+      "profile": "Profile",
+      "about": "About",
+      "contact": "Contact"
+    }
   },
   "messages": {
     "required":{
@@ -35,6 +58,7 @@
       "phone_number": "Please input your phone number!",
       "date_of_birth": "Please input your date of birth!",
       "success": "Successfully"
-    }
+    },
+    "no_schedule": "No schedule available at this date!"
   }
 }

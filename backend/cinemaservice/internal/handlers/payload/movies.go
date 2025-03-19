@@ -1,19 +1,24 @@
 package payload
 
-import "time"
-
-type MoviesRequest struct {
-	ID             uint      `gorm:"primaryKey;not null"`
-	MovieName      string    `gorm:"column:movie_name"`
-	Description    string    `gorm:"column:description"`
-	ReleaseDate    time.Time `gorm:"column:release_date"`
-	MovieGenre     string    `gorm:"column:movie_genre"`
+type MovieRequest struct {
+	MovieName      string    `json:"movie_name"`
+	Description    string    `json:"description"`
+	ReleaseDate    string	 `json:"release_date"`
+	MovieGenre     string    `json:"movie_genre"`
 }
 
-type MoviesResponse struct {
-	ID             uint      `gorm:"primaryKey;not null"`
-	MovieName      string    `gorm:"column:movie_name"`
-	Description    string    `gorm:"column:description"`
-	ReleaseDate    time.Time `gorm:"column:release_date"`
-	MovieGenre     string    `gorm:"column:movie_genre"`
+type UpdateMovieRequest struct {
+	ID             uint      `json:"id"`
+	MovieName      string    `json:"movie_name"`
+	Description    string    `json:"description"`
+	ReleaseDate    string    `json:"release_date"`
+	MovieGenre     string    `json:"movie_genre"`
+}
+
+type MovieResponse struct {
+	ID             uint      `json:"id"`
+	MovieName      string    `json:"movie_name"`
+	Description    string    `json:"description"`
+	ReleaseDate    string	 `json:"release_date"`
+	MovieGenre     string    `json:"movie_genre"`
 }

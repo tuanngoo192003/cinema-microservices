@@ -8,6 +8,7 @@ import {LanguagePicker} from "./LanguagePicker.tsx";
 import {useTranslation} from "react-i18next";
 import {Profile} from "./Profile.tsx";
 import {useEffect, useState} from "react";
+import {HOME} from "../constants/redirectURI.ts";
 
 interface IMainLayoutProps {
     children: React.ReactNode;
@@ -32,13 +33,13 @@ export const NavBar = ({ children }: IMainLayoutProps) => {
                 {/* Navigation Menu */}
                 <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]} className="nav-menu">
                     <Menu.Item key="1">
-                        <Link to="/">{t('labels.home')}</Link>
+                        <Link to={HOME}>{t('labels.home')}</Link>
                     </Menu.Item>
                     <Menu.Item key="2">
-                        <Link to="/about">{t('labels.about')}</Link>
+                        <Link to={HOME}>{t('labels.menu.about')}</Link>
                     </Menu.Item>
                     <Menu.Item key="3">
-                        <Link to="/contact">{t('labels.contact')}</Link>
+                        <Link to={HOME}>{t('labels.menu.contact')}</Link>
                     </Menu.Item>
                     <Menu.Item key="4">
                         <LanguagePicker/>
