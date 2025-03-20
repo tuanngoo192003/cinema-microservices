@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import "../../../App.css"
-import {Button, Card, Col, Divider, Image, Layout, Row} from "antd";
+import {Button, Card, Col, Divider, Image, Layout, Row, Typography} from "antd";
 import {Content} from "antd/es/layout/layout";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faCouch, faClock, faCalendarDay, faTv, faBoxesStacked } from "@fortawesome/free-solid-svg-icons";
@@ -8,30 +8,38 @@ import chinatsu from "../../../assets/千夏.jpg";
 import Title from "antd/es/typography/Title";
 import {useTranslation} from "react-i18next";
 import {AppFooter} from "../../core/components/AppFooter.tsx";
+import {ConfirmBookingUI} from "./ConfirmBooking.tsx";
 
 const rows = "ABCDEFGHIJ".split(""); // A to J
 const columns = Array.from({ length: 12 }, (_, i) => i + 1);
 
 export const BookingUI: React.FC = () => {
-    const [seats, setSeats] = useState<{ id: string; status: "available" | "reserved" | "booked" }[]>(
+    const [seats, setSeats] = useState<{ id: string; status: "AVAILABLE" | "RESERVED" | "BOOKED" }[]>(
         rows.flatMap((row) =>
             columns.map((col) => ({
                 id: `${row}${col}`,
-                status: "available", // Default status
+                status: "AVAILABLE", // Default status
             }))
         )
     );
     console.log(setSeats)
     const { t } = useTranslation();
-    const mock = {
+    const [mock, setMock] = useState({
         imageSrc: chinatsu,
         title: "Title 1",
         genre: "Romcom",
         duration: "120p",
         start_at: "23:45",
         auditorium: "P6",
-        seat: "A1, A2, A3"
-    }
+        seat: ["A1", "A2", "A3"]
+    });
+
+    const appendSeat = (seatCode: string) => {
+        setMock((prevMock) => ({
+            ...prevMock,
+            seat: [...prevMock.seat, seatCode] // Create a new array to trigger re-render
+        }));
+    };
     return (
         <>
             <Layout>
@@ -58,21 +66,21 @@ export const BookingUI: React.FC = () => {
                                             A
                                         </p>
                                     </div>
-                                    <p>Available</p>
+                                    <p>{t('labels.available')}</p>
                                     <div style={{position: "relative", width: "2rem", height: "2rem"}}>
                                         <FontAwesomeIcon icon={faCouch} style={{fontSize: "2rem", color: "#866d37"}}/>
                                         <p className="chair-text" style={{color: "black"}}>
                                             R
                                         </p>
                                     </div>
-                                    <p>Reserved</p>
+                                    <p>{t('labels.reserved')}</p>
                                     <div style={{position: "relative", width: "2rem", height: "2rem"}}>
                                         <FontAwesomeIcon icon={faCouch} style={{fontSize: "2rem", color: "#9f1f1f"}}/>
                                         <p className="chair-text" style={{color: "white"}}>
                                             B
                                         </p>
                                     </div>
-                                    <p>Booked</p>
+                                    <p>{t('labels.booked')}</p>
                                 </div>
 
                                 {/* Seats Layout */}
@@ -110,11 +118,12 @@ export const BookingUI: React.FC = () => {
                                                                 icon={faCouch}
                                                                 style={{
                                                                     fontSize: "1.5rem",
-                                                                    color: seat?.status === "available" ? "#bcb7b3"
-                                                                        : seat?.status === "reserved" ? "#866d37"
+                                                                    color: seat?.status === "AVAILABLE" ? "#bcb7b3"
+                                                                        : seat?.status === "RESERVED" ? "#866d37"
                                                                             : "#9f1f1f",
                                                                     cursor: "pointer",
                                                                 }}
+                                                                onClick={() => appendSeat(row+col.toString())}
                                                             />
                                                             <p style={{
                                                                 position: "absolute",
@@ -122,7 +131,7 @@ export const BookingUI: React.FC = () => {
                                                                 top: "50%",
                                                                 left: "50%",
                                                                 transform: "translate(-50%, -50%)",
-                                                                color: seat?.status === "booked" ? "white" : "black",
+                                                                color: seat?.status === "BOOKED" ? "white" : "black",
                                                                 fontWeight: "bold",
                                                             }}>
                                                                 {row}{col}
@@ -177,21 +186,21 @@ export const BookingUI: React.FC = () => {
                                                 <Title level={5} style={{ marginBottom: 0 }}>
                                                     <FontAwesomeIcon icon={faCalendarDay} /> &nbsp; {t("common.start_at")} :
                                                 </Title>
-                                                <Title level={5} style={{ marginBottom: 0 }}>{mock.start_at}</Title>
+                                                <Typography.Text>{mock.start_at}</Typography.Text>
                                             </div>
 
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                                 <Title level={5} style={{ marginBottom: 0 }}>
                                                     <FontAwesomeIcon icon={faTv} /> &nbsp; {t("labels.titles.auditorium")} :
                                                 </Title>
-                                                <Title level={5} style={{ marginBottom: 0 }}>{mock.auditorium}</Title>
+                                                <Typography.Text>{mock.auditorium}</Typography.Text>
                                             </div>
 
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                                 <Title level={5} style={{ marginBottom: 0 }}>
                                                     <FontAwesomeIcon icon={faBoxesStacked} /> &nbsp; {t("labels.titles.seat")} :
                                                 </Title>
-                                                <Title level={5} style={{ marginBottom: 0 }}>{mock.seat}</Title>
+                                                <Typography.Text>{mock.seat.join(", ")}</Typography.Text>
                                             </div>
                                         </div>
                                     </Col>
@@ -203,11 +212,9 @@ export const BookingUI: React.FC = () => {
                                     align="middle"
                                     style={{marginTop: "1rem"}}
                                 >
-                                    <Button className="app-btn">
-                                        続く
-                                    </Button>
+                                    <ConfirmBookingUI/>
                                     <Button className="secondary-btn">
-                                        Back
+                                        {t('labels.buttons.back')}
                                     </Button>
                                 </Row>
                             </Card>
