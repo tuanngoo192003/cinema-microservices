@@ -25,8 +25,10 @@
     "register_here": "Don't have account? Register here.",
     "login": "Login",
     "back_to_login": "Back to login form",
-
     "view_detail": "View details",
+    "available": "Available",
+    "reserved": "Reserved",
+    "booked": "Booked",
     "delete": "Delete",
     "english": "English",
     "vietnamese": "Vietnamese",
@@ -35,10 +37,14 @@
       "movie_genre": "Genre",
       "duration": "Duration",
       "release_date": "Release date",
-      "user_list": "User list"
+      "user_list": "User list",
+      "auditorium": "Auditorium",
+      "seat": "Seats"
     },
     "buttons": {
-      "buy_ticket": "Buy ticket"
+      "buy_ticket": "Buy ticket",
+      "continue": "Continue",
+      "back": "Back"
     },
     "menu": {
       "user_list": "User list",

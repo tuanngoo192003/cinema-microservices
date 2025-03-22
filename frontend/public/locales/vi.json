@@ -26,6 +26,9 @@
     "login": "Đăng nhập",
     "back_to_login": "Quay về màn hình đăng nhập",
     "view_detail": "Xem chi tiết",
+    "available": "Trống",
+    "reserved": "Đang giữ",
+    "booked": "Đã bán",
     "delete": "Xóa",
     "english": "Tiếng Anh",
     "vietnamese": "Tiếng Việt",
@@ -34,10 +37,14 @@
       "movie_genre": "Thể loại",
       "duration": "Thời lượng",
       "release_date": "Ngày ra mắt",
-      "user_list": "Danh sách người dùng"
+      "user_list": "Danh sách người dùng",
+      "auditorium": "Phòng chiếu số",
+      "seat": "Ghế"
     },
     "buttons": {
-      "buy_ticket": "Mua vé"
+      "buy_ticket": "Mua vé",
+      "continue": "Tiếp tục",
+      "back": "Quay lại"
     },
     "menu": {
       "user_list": "Danh sách người dùng",

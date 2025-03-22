@@ -6,7 +6,8 @@ import {UserList} from "../../user/components/UserListUI.tsx";
 import {Page404} from "./404.tsx";
 import {HomeUI} from "../../cinema/components/HomeUI.tsx";
 import {MovieDetailsUI} from "../../cinema/components/MovieDetailsUI.tsx";
-import {HOME, LOGIN, MOVIE_DETAILS, PAGE404, REGISTER, USER_LIST} from "../constants/redirectURI.ts";
+import {BOOKING, HOME, LOGIN, MOVIE_DETAILS, PAGE404, REGISTER, USER_LIST} from "../constants/redirectURI.ts";
+import {BookingUI} from "../../booking/components/BookingUI.tsx";
 
 export const AppRouter = () => (
     <Routes>
@@ -24,6 +25,7 @@ export const AppRouter = () => (
             <Route path={REGISTER} element={<RegisterForm/>} />
             <Route path={USER_LIST} element={<UserList/>} />
             <Route path={MOVIE_DETAILS} element={<MovieDetailsUI/>} />
+            <Route path={BOOKING} element={<BookingUI/>} />
         </Route>
     </Routes>
 )
