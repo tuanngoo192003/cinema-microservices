@@ -72,7 +72,7 @@ func (a *AuditoriumsHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": obj})
 
 }
-func (a *AuditoriumsHandler) Search(c *gin.Context) {
+func (a *AuditoriumsHandler) ListAuditoriums(c *gin.Context) {
 	log := config.GetLogger()
 	query := a.db.Model(&entity.Auditorium{})
 

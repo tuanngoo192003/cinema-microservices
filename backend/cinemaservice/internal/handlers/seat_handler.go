@@ -21,7 +21,7 @@ type SeatHandler struct {
 func NewSeatHandler(db *gorm.DB) *SeatHandler {
 	return &SeatHandler{db}
 }
-func (s *SeatHandler) Search(c *gin.Context) {
+func (s *SeatHandler) ListSeats(c *gin.Context) {
 	log := config.GetLogger()
 
 	// Khởi tạo query
@@ -76,24 +76,25 @@ func (s *SeatHandler) Search(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": seats})
 }
 
-func (s *SeatHandler) Create(c *gin.Context) {
-	log := config.GetLogger()
+/* Deprecated */
+// func (s *SeatHandler) Create(c *gin.Context) {
+// 	log := config.GetLogger()
 
-	var seat payload.CreateSeatRequest
-	if err := c.ShouldBindJSON(&seat); err != nil {
-		log.Error(err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+// 	var seat payload.CreateSeatRequest
+// 	if err := c.ShouldBindJSON(&seat); err != nil {
+// 		log.Error(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-	if err := s.db.Create(&seat).Error; err != nil {
-		log.Error(err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+// 	if err := s.db.Create(&seat).Error; err != nil {
+// 		log.Error(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": seat})
-}
+// 	c.JSON(http.StatusOK, gin.H{"data": seat})
+// }
 
 func (s *SeatHandler) Update(c *gin.Context) {
 	log := config.GetLogger()

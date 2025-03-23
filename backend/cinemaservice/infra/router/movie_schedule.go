@@ -8,7 +8,7 @@ import (
 )
 
 func SetupMovieScheduleRouter(db *gorm.DB, router *gin.RouterGroup) {
-	movieGroup := router.Group("/movies")
+	movieGroup := router.Group("/movie-schedules")
 	h := handlers.NewMovieScheduleHandler(db)
 	movieGroup.GET("", h.ListMovieSchedules)
 	movieGroup.GET("/:id", h.GetMovieSchedule)

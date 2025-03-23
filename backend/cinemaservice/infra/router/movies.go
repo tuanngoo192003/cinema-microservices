@@ -9,8 +9,8 @@ import (
 
 func SetupMovieRouter(db *gorm.DB, router *gin.RouterGroup) {
 	movieGroup := router.Group("/movies")
-	aHandler := handlers.NewMoviesHandler(db)
-	movieGroup.GET("/search", aHandler.Search)
-	movieGroup.POST("/create", aHandler.CreateMovie)
-	movieGroup.PUT("/update", aHandler.UpdateMovie)
+	h := handlers.NewMoviesHandler(db)
+	movieGroup.GET("", h.ListMovies)
+	movieGroup.POST("", h.CreateMovie)
+	movieGroup.PUT("", h.UpdateMovie)
 }

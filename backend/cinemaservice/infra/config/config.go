@@ -46,7 +46,7 @@ func Load() (*Config, error) {
 	cfg.Server.WriteTimeout = time.Second * 15
 
 	//Database config
-	cfg.Database.Host = getEnv("CINEMA_DB_HOST", "localhost")
+	cfg.Database.Host = getEnv("CINEMA_DB_HOST", "host.docker.internal")
 	cfg.Database.Port = getEnv("CINEMA_DB_PORT", "5432")
 	cfg.Database.User = getEnv("CINEMA_DB_USER", "postgres")
 	cfg.Database.Password = getEnv("CINEMA_DB_PASSWORD", "postgres")

@@ -22,9 +22,10 @@ func NewMoviesHandler(db *gorm.DB) *MoviesHandler {
 	return &MoviesHandler{db}
 }
 
-func (m *MoviesHandler) Search(c *gin.Context) {
+func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	log := config.GetLogger()
-	query := m.db.Model(&entity.Movie{})
+
+	var movies []payload.MovieResponse
 
 	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil || page <= 0 {
@@ -32,13 +33,15 @@ func (m *MoviesHandler) Search(c *gin.Context) {
 	}
 	perpage, err := strconv.Atoi(c.Query("perpage"))
 	if err != nil || page <= 0 {
-		perpage = 15
+		perpage = utils.DEFAULT_PAGE
 	}
 
 	movieName := c.Query("movieName")
 	releaseStart := c.Query("releaseStart")
 	releaseEnd := c.Query("releaseEnd")
 	movieGenre := c.Query("movieGenre")
+
+	query := h.db.Model(&entity.Seat{})
 
 	if movieName != "" {
 		query = query.Where(`
@@ -48,7 +51,6 @@ func (m *MoviesHandler) Search(c *gin.Context) {
 	if movieGenre != "" {
 		query = query.Where("movie_genre IN ( ? ) ", movieName)
 	}
-
 	if releaseStart != "" && releaseEnd != "" {
 		query = query.Where("release_date BETWEEN ? AND ?",
 			c.DefaultQuery("releaseStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
@@ -57,7 +59,6 @@ func (m *MoviesHandler) Search(c *gin.Context) {
 	query = query.Where("is_deleted = ?", false)
 
 	var count int64
-
 	if err := query.Count(&count).Error; err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -66,20 +67,12 @@ func (m *MoviesHandler) Search(c *gin.Context) {
 
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
-
-	var movies []entity.Movie
-
-	err = query.
+	err = query.Model(&entity.Movie{}).
+		Select(`users.user_id, users.email, users.status, users.first_name, users.last_name, 
+				users.date_of_birth, users.phone_number, users.avatar, roles.role_name`).
 		Offset(offset).
 		Limit(perpage).
 		Find(&movies).Error
-
-	movieResponse := make([]payload.MovieResponse, min(count, int64(perpage)))
-
-	for i := range movies {
-		payload.MapStruct(movies[i], &movieResponse[i])
-	}
-
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -89,7 +82,7 @@ func (m *MoviesHandler) Search(c *gin.Context) {
 	c.JSON(http.StatusOK, payload.PaginationResponse[payload.MovieResponse]{
 		Page:        page,
 		Perpage:     perpage,
-		Data:        movieResponse,
+		Data:        movies,
 		TotalRecord: count,
 		TotalPage:   int64(totalPage),
 	})
@@ -99,24 +92,39 @@ func (m *MoviesHandler) Search(c *gin.Context) {
 func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 	log := config.GetLogger()
 
-	var createMovieDTO payload.CreateMovieRequest
-	if err := c.ShouldBindJSON(&createMovieDTO); err != nil {
+	var movie payload.CreateMovieRequest
+	if err := c.ShouldBindJSON(&movie); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error}})
 		return
 	}
-	var movie entity.Movie
-	payload.MapStruct(createMovieDTO, &movie)
 
-	if err := h.db.Create(&movie).Error; err != nil {
+	var (
+		parsedDate time.Time
+		err        error
+	)
+
+	if parsedDate, err = time.Parse("2006-01-02", movie.ReleaseDate); err != nil {
 		log.Error(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error}})
 		return
 	}
-	var movieResponse payload.MovieResponse
-	payload.MapStruct(createMovieDTO, &movieResponse)
+	movieEntity := entity.Movie{
+		MovieName:   movie.MovieName,
+		Description: movie.Description,
+		ReleaseDate: parsedDate,
+		MovieGenre:  movie.MovieGenre,
+	}
 
-	c.JSON(http.StatusCreated, gin.H{"data": movie})
+	response := h.db.Model(entity.Movie{}).Create(&movieEntity)
+
+	if response.Error != nil {
+		log.Error(response.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
+		return
+	}
+	log.Info("Created new auditorium: ", movie)
+	c.JSON(http.StatusOK, gin.H{"data": movie})
 }
 
 func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
@@ -139,9 +147,6 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 	}
 	if movie.MovieGenre != "" {
 		movieUpdate.MovieGenre = movie.MovieGenre
-	}
-	if !movie.ReleaseDate.IsZero() {
-		movieUpdate.ReleaseDate = movie.ReleaseDate
 	}
 
 	if err := h.db.Model(entity.Movie{}).Where(`movie_id = ?`, movie.ID).Updates(&movieUpdate).Error; err != nil {
