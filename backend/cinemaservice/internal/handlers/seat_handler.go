@@ -3,6 +3,7 @@ package handlers
 import (
 	"cinema-service/infra/config"
 	"cinema-service/internal/domain/entity"
+	"cinema-service/internal/handlers/payload"
 	"net/http"
 	"strconv"
 	"time"
@@ -73,4 +74,50 @@ func (s *SeatHandler) Search(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": seats})
+}
+
+func (s *SeatHandler) Create(c *gin.Context) {
+	log := config.GetLogger()
+
+	var seat payload.CreateSeatRequest
+	if err := c.ShouldBindJSON(&seat); err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := s.db.Create(&seat).Error; err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": seat})
+}
+
+func (s *SeatHandler) Update(c *gin.Context) {
+	log := config.GetLogger()
+
+	var req payload.UpdateSeatRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	find := s.db.First(&entity.MovieSchedule{}, req.ID)
+	if find.Error != nil {
+		log.Error(find.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
+		return
+	}
+	var obj entity.Seat
+	payload.MapStruct(req, &obj)
+
+	if err := s.db.Save(&obj).Error; err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": obj})
 }

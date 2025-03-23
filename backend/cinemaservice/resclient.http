@@ -1,36 +1,129 @@
-POST http://localhost:80/cinema-service/auditoriums/create HTTP/1.1
+POST http://localhost:80/cinemaservice/info/auditoriums/create HTTP/1.1
 Content-Type: application/json
 
-{
-  
-    
-    "AuditoriumName": "Grand Theater Hall",
-    "Capacity": 250,
-    "CreatedAt": "2025-03-15T19:31:21.718333033Z",
-    "LastModifiedAt": "2025-03-15T19:31:21.718333033Z",
-    "LastModifiedBy": "admin",
-    "CreatedBy": "system",
-    "IsDeleted": false
+{  
+    "auditoriumName": "grand Theater Hall",
+    "capacity": 250,
+    "createdAt": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedAt": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedBy": "admin",
+    "createdBy": "system",
+    "isDeleted": false
 }
 
 
 ###
-PUT http://localhost:80/cinema-service/auditoriums/update HTTP/1.1
+PUT http://localhost:80/cinemaservice/info/auditoriums/update HTTP/1.1
 Content-Type: application/json
 
 {
-   "ID": 351,
-    "AuditoriumName": "conga",
-    "Capacity": 250,
-    "CreatedAt": "2025-03-15T19:31:21.718333033Z",
-    "LastModifiedAt": "2025-03-15T19:31:21.718333033Z",
-    "LastModifiedBy": "fd",
-    "CreatedBy": "system",
-    "IsDeleted": false
+   "id": 2,
+    "auditoriumName": "conga",
+    "capacity": 250,
+    "createdAt": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedAt": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedBy": "fd",
+    "createdBy": "system",
+    "isDeleted": false
+}
+###
+GET http://localhost:80/cinemaservice/info/auditoriums/search?isDelete=false&auditoriumName= HTTP/1.1
+
+
+// MOVIES
+
+###
+GET http://localhost:80/cinemaservice/info/movies/search?isDelete=false&movieName=The HTTP/1.1
+
+###
+POST http://localhost:80/cinemaservice/info/movies/create HTTP/1.1
+Content-Type: application/json
+
+{
+   "movieName": "The numb",
+    "description": "The Avengers is a team of superheroes, appearing in American comic books published by Marvel Comics.",
+    "releaseDate": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedBy": "admin",
+    "movieGenre": "Action",
+    "createdBy": "system"
 }
 
 ###
-GET http://localhost:80/cinema-service/auditoriums/search?isDelete=false  HTTP/1.1
+PUT http://localhost:80/cinemaservice/info/movies/update HTTP/1.1
+Content-Type: application/json
+
+{
+   "id": 1,
+    "description": "The Avengers is a team of superheroes, appearing in American comic books published by Marvel Comics.",
+    "releaseDate": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedBy": "admin",
+    "movieGenre": "Action"
+}
+/// SCHEDULES
+###
+POST http://localhost:80/cinemaservice/info/schedule/create HTTP/1.1
+Content-Type: application/json
+
+{
+   "auditoriumId": 1,
+    "movieId": 1,
+    "showTime": "2025-03-15T19:31:21.718333033Z",
+    "createdAt": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedAt": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedBy": "admin",
+    "createdBy": "system",
+    "isDeleted": false
+}
+
+###
+PUT http://localhost:80/cinemaservice/info/schedule/update HTTP/1.1
+Content-Type: application/json
+
+{
+   "id": 1,
+    "auditoriumId": 1,
+    "movieId": 1,
+    "lastModifiedBy": "tao",
+
+}
+
+###
+GET http://localhost:80/cinemaservice/info/schedule/search?isDelete=false  HTTP/1.1
+
+
+
+// SEATS
+###
+POST http://localhost:80/cinemaservice/info/seats/create HTTP/1.1
+Content-Type: application/json
+
+{
+    "auditoriumId": 1,
+   "seatCode": "A1",
+    "lastModifiedBy": "admin",
+    "createdBy": "system",
+}
+
+###
+PUT http://localhost:80/cinemaservice/info/seats/update HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": 1,
+     "auditoriumId": 1,
+     "seatCode": "A1",
+     "lastModifiedBy": "tao",
+}
+
+###
+GET http://localhost:80/cinemaservice/info/seats/search?authoriumId=2  HTTP/1.1
+
+
+
+
+
+
+
 
 
 
