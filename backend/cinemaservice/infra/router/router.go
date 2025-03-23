@@ -10,5 +10,5 @@ func Setup(db *gorm.DB, g *gin.Engine) {
 	SetupAuthoriumRouter(db, group)
 	SetupSeatRouter(db, group)
 	SetupMovieRouter(db, group)
-	SetupScheduleRouter(db, group)
+	SetupMovieScheduleRouter(db, group)
 }

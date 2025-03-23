@@ -26,6 +26,9 @@
     "register_form": "登録フォーム",
     "register": "登録",
     "view_detail": "詳しく見る",
+    "available": "空き",
+    "reserved": "予約済み",
+    "booked": "完売",
     "delete": "消す",
     "english": "英語",
     "vietnamese": "ベトナム語",
@@ -34,10 +37,14 @@
       "movie_genre": "ジャンル",
       "duration": "上映時間",
       "release_date": "公開日",
-      "user_list": "ユーザー名簿"
+      "user_list": "ユーザー名簿",
+      "auditorium": "スクリーン番号",
+      "seat": "席番"
     },
     "buttons": {
-      "buy_ticket": "チケットを買う"
+      "buy_ticket": "チケットを買う",
+      "continue": "続く",
+      "back": "戻る"
     },
     "menu": {
       "user_list": "ユーザー名簿",
