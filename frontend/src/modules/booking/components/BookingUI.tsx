@@ -31,7 +31,7 @@ import useModal from "../hooks/useModal.ts";
 import { MovieDetailResponse } from "../models/Movie.ts";
 import { GetMovieDetail } from "../services/index.ts";
 
-export const BookingUI: React.FC = () => {
+const BookingUI: React.FC = () => {
   const [movieDetail, setMovieDetail] = useState<MovieDetailResponse | null>(
     null
   );
@@ -389,3 +389,5 @@ export const BookingUI: React.FC = () => {
     </>
   );
 };
+
+export default BookingUI;
