@@ -1,7 +1,13 @@
+import { HttpStatusCode } from "axios";
 import { IPagination } from "../../../core/models/core";
-import { Auditorium, SearchRequest } from "../models/Auditorium";
+import {
+  Auditorium,
+  CreateRequest,
+  Response,
+  SearchRequest,
+} from "../models/Auditorium";
 
-const data: Auditorium[] = [
+let data: Auditorium[] = [
   {
     auditorium_id: 1,
     auditorium_name: "Main Hall",
@@ -139,5 +145,52 @@ export const GetAuditoriumsList = (
         }),
       1000
     );
+  });
+};
+
+export const CreateAuditorium = (
+  request: CreateRequest
+): Promise<Response<string>> => {
+  return new Promise((resolve) => {
+    console.log(`Call API with request: ${JSON.stringify(request)}`);
+
+    const newAuditorium: Auditorium = {
+      auditorium_id: data.length + 1,
+      auditorium_name: request.auditorium_name,
+      capacity: request.rows * request.columns,
+      created_by: "Nguyen Dinh Son",
+      last_modified_by: "Nguyen Dinh Son",
+      created_at: new Date().toISOString(),
+      last_modified_at: new Date().toISOString(),
+      is_deleted: false,
+    };
+
+    data = [...data, newAuditorium];
+
+    setTimeout(
+      () =>
+        resolve({
+          data: "paginatedData",
+          status: HttpStatusCode.Ok,
+          message: "Create success",
+        }),
+      1000
+    );
+  });
+};
+
+export const GetAuditoriumByID = (
+  id: number
+): Promise<Response<Auditorium | undefined>> => {
+  return new Promise((resolve) => {
+    console.log(`Call API with request: ${id}`);
+
+    const auditorium = data.find((d) => d.auditorium_id === id);
+    const response: Response<Auditorium | undefined> = {
+      message: auditorium ? "Get success" : "Get fail",
+      status: auditorium ? HttpStatusCode.Ok : HttpStatusCode.NotFound,
+      data: auditorium,
+    };
+    setTimeout(() => resolve(response), 1000);
   });
 };

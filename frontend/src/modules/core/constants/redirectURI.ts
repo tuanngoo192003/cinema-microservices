@@ -19,3 +19,6 @@ export const BOOKING = "/booking/:id";
 export const ADMIN_AUDITORIUMS = "/admin/auditoriums";
 export const ADMIN_USERS = "/admin/users";
 export const ADMIN_AUDITORIUMS_CREATE = "/admin/auditoriums/create";
+export const ADMIN_AUDITORIUMS_UPDATE = "/admin/auditoriums/:id";
+export const ADMIN_AUDITORIUMS_UPDATE_FORMAT = (id: number) =>
+  `/admin/auditoriums/${id}`;

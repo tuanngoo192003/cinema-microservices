@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { GetAuditoriumsList } from "../services";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_AUDITORIUMS_CREATE } from "../../../core/constants/redirectURI";
+import EditButton from "./EditButton";
 
 type DataType = Auditorium;
 
@@ -52,12 +53,7 @@ const columns: TableProps<DataType>["columns"] = [
   {
     title: "Action",
     key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.auditorium_name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
+    render: (_, { auditorium_id }) => <EditButton id={auditorium_id} />,
   },
 ];
 

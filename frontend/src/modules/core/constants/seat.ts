@@ -26,3 +26,7 @@ const alphabet = [
   "Y",
   "Z",
 ];
+
+export const getRows = (rows: number) => {
+  return alphabet.slice(0, rows).join("");
+};

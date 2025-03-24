@@ -1,20 +1,43 @@
 import { Button, Form, Input, InputNumber, Typography } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getRows } from "../../../core/constants/seat";
 import SeatList from "./SeatList";
-import { CreateAuditorium } from "../services";
+import { CreateAuditorium, GetAuditoriumByID } from "../services";
 import { HttpStatusCode } from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ADMIN_AUDITORIUMS } from "../../../core/constants/redirectURI";
+import { LoadingPage } from "../../../core/components/LoadingPage";
 
-export default function AuditoriumCreate() {
+export default function AuditoriumUpdate() {
+  const { id } = useParams<{ id: string }>();
   const [rowCount, setRowCount] = useState<number>(1);
   const [colCount, setColCount] = useState<number>(1);
+  const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
   const rows = getRows(rowCount).split("");
   const columns = Array.from({ length: colCount }, (_, i) => i + 1);
+
+  useEffect(() => {
+    const fetchAuditorium = async () => {
+      try {
+        if (!id) return;
+        const response = await GetAuditoriumByID(Number(id));
+        if (response.data) {
+          setName(response.data.auditorium_name);
+          setRowCount(5);
+          setColCount(5);
+        }
+      } catch (error) {
+        console.error("Failed to fetch auditorium:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAuditorium();
+  }, [id]);
 
   const handleCreate = async () => {
     if (name) {
@@ -33,10 +56,12 @@ export default function AuditoriumCreate() {
     }
   };
 
+  if (loading) return <LoadingPage />;
+
   return (
     <>
       <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
-        Create Auditorium
+        Update Auditorium
       </Typography.Title>
       <Form
         labelCol={{ span: 4 }}

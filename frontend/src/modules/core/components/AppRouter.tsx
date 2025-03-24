@@ -6,6 +6,7 @@ import AdminSideBar from "./AdminSideBar.tsx";
 import {
   ADMIN_AUDITORIUMS,
   ADMIN_AUDITORIUMS_CREATE,
+  ADMIN_AUDITORIUMS_UPDATE,
   ADMIN_USERS,
   BOOKING,
   HOME,
@@ -32,6 +33,9 @@ const UsersList = lazy(
 );
 const AuditoriumCreate = lazy(
   () => import("../../admin/auditoriums/components/AuditoriumCreate.tsx")
+);
+const AuditoriumUpdate = lazy(
+  () => import("../../admin/auditoriums/components/AuditoriumUpdate.tsx")
 );
 
 export const AppRouter = () => (
@@ -63,6 +67,7 @@ export const AppRouter = () => (
       >
         <Route path={ADMIN_AUDITORIUMS} element={<AuditoriumsList />} />
         <Route path={ADMIN_AUDITORIUMS_CREATE} element={<AuditoriumCreate />} />
+        <Route path={ADMIN_AUDITORIUMS_UPDATE} element={<AuditoriumUpdate />} />
         <Route path={ADMIN_USERS} element={<UsersList />} />
       </Route>
     </Routes>
