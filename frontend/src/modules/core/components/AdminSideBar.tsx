@@ -63,7 +63,22 @@ const configs: MenuConfig[] = [
     navigateTo: "/admin/auditoriums",
     breadcrumbItem: ["Admin", "Auditoriums", "List"],
   },
+  {
+    key: "/admin/auditoriums/create",
+    navigateTo: "/admin/auditoriums/create",
+    breadcrumbItem: ["Admin", "Auditoriums", "Create"],
+  },
 ];
+
+const routeMap: Record<string, string> = {
+  "/admin/users": "/admin/users",
+  "/admin/movies": "/admin/movies",
+  "/admin/auditoriums": "/admin/auditoriums",
+};
+
+const matchedKey = Object.keys(routeMap).find((key) =>
+  location.pathname.startsWith(key)
+);
 
 export default function AdminSideBar({ children }: Props) {
   const [collapsed, setCollapsed] = useState(false);
@@ -90,7 +105,7 @@ export default function AdminSideBar({ children }: Props) {
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
-          defaultSelectedKeys={[location.pathname]}
+          defaultSelectedKeys={[matchedKey ?? location.pathname]}
           mode="inline"
           items={items}
           onClick={handleMenuClick}

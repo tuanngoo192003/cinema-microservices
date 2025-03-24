@@ -18,3 +18,4 @@ export const BOOKING = "/booking/:id";
 
 export const ADMIN_AUDITORIUMS = "/admin/auditoriums";
 export const ADMIN_USERS = "/admin/users";
+export const ADMIN_AUDITORIUMS_CREATE = "/admin/auditoriums/create";
