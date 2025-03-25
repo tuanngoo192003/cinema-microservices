@@ -50,6 +50,8 @@ INSERT INTO users (user_id, email, password, username, role_id) VALUES
 CREATE TABLE movies (
     movie_id SERIAL PRIMARY KEY,
     movie_name VARCHAR(255),
+    image_url VARCHAR(50),
+    duration INT,
     description TEXT,
     release_date DATE,
     movie_genre VARCHAR(500),
