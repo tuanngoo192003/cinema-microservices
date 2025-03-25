@@ -37,10 +37,10 @@ func (s *SeatHandler) ListSeats(c *gin.Context) {
 		query = query.Where("id = ?", c.Query("id"))
 	}
 	if c.Query("currentStatus") != "" {
-		query = query.Where("currentStatus = ?", c.Query("currentStatus"))
+		query = query.Where("current_status = ?", c.Query("currentStatus"))
 	}
 	if c.Query("isDeleted") != "" {
-		query = query.Where("isDeleted = ?", c.Query("isDeleted"))
+		query = query.Where("is_deleted = ?", c.Query("isDeleted"))
 	}
 
 	query = query.Where("created_at BETWEEN ? AND ?",

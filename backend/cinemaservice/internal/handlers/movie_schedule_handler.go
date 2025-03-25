@@ -11,7 +11,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/tuanngoo192003/golang-utils/utils"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -36,13 +35,13 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 	}
 
 	format := time.RFC3339
-	startAtTime, err := time.Parse(movieSchedule.StartAt, format)
+	startAtTime, err := time.Parse(format, movieSchedule.StartAt)
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
 		return
 	}
-	endAtTime, err := time.Parse(movieSchedule.EndAt, format)
+	endAtTime, err := time.Parse(format, movieSchedule.EndAt)
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
@@ -56,19 +55,7 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 		ScheduleStatus: movieSchedule.ScheduleStatus,
 	}
 
-	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{
-		SkipDefaultTransaction: true,
-	})
-	if err != nil {
-		log.Error(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{
-			"error":   err.Error(),
-			"message": "Failed to start sqlite",
-		}})
-		return
-	}
-
-	tx := db.Session(&gorm.Session{SkipDefaultTransaction: true})
+	tx := h.db.Begin()
 	if err := tx.Error; err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{
@@ -175,11 +162,11 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 	}
 	if c.Query("id") != "" {
 		res, _ := strconv.Atoi(c.Query("id"))
-		query = query.Where("ID = ?", res)
+		query = query.Where("schedule_id = ?", res)
 	}
 	if c.Query("isDeleted") != "" {
 
-		query = query.Where("Is_Deleted = ?", c.Query("isDeleted"))
+		query = query.Where("is_deleted = ?", c.Query("isDeleted"))
 	}
 	if c.Query("createdBy") != "" {
 
@@ -255,7 +242,7 @@ func (h *MovieScheduleHander) GetMovieSchedule(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, payload.GetByIDMovieScheduleResponse{
-		ID: movieSchedule.ID,
+		ID: movieSchedule.MovieScheduleID,
 		Movie: payload.MovieResponse{
 			MovieID:     movieSchedule.Movie.MovieID,
 			MovieName:   movieSchedule.Movie.MovieName,

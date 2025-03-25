@@ -21,8 +21,8 @@ server {
         proxy_pass   http://userservice:8000/ ;
     }
 
-    location /userservice/cinema/health {
-        proxy_pass   http://userservice:8000/userservice/cinema/health ;
+    location users/userservice/cinema/health {
+        proxy_pass   http://userservice:8000/users/userservice/cinema/health ;
     }
 
     location /cinemaservice/info/ {

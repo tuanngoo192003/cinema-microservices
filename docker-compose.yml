@@ -28,6 +28,8 @@ services:
       - env/.env
     ports:
       - "8001:8001"
+    volumes:
+      - cinema-sqlite-data:/root/data
     depends_on:
       - cinemadb
  
@@ -86,6 +88,7 @@ volumes:
   user-db-data:
   cinema-db-data:
   booking-db-data:
+  cinema-sqlite-data:
   react-build:
 
 secrets:

@@ -13,3 +13,7 @@ type ReservedSeat struct {
 	User_id     uint      `gorm:"column:user_id"`
 	CreatedAt   time.Time `gorm:"column:created_at; autoCreateTime"`
 }
+
+func (ReservedSeat) TableName() string {
+	return "reserved_seat"
+}
