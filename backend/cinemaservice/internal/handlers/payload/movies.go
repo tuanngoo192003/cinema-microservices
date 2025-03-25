@@ -1,24 +1,30 @@
 package payload
 
-type MovieRequest struct {
-	MovieName      string    `json:"movie_name"`
-	Description    string    `json:"description"`
-	ReleaseDate    string	 `json:"release_date"`
-	MovieGenre     string    `json:"movie_genre"`
+import "time"
+
+type CreateMovieRequest struct {
+	MovieName   string `json:"movieName"`
+	Description string `json:"description"`
+	ReleaseDate string `json:"releaseDate"`
+	MovieGenre  string `json:"movieGenre"`
 }
 
 type UpdateMovieRequest struct {
-	ID             uint      `json:"id"`
-	MovieName      string    `json:"movie_name"`
-	Description    string    `json:"description"`
-	ReleaseDate    string    `json:"release_date"`
-	MovieGenre     string    `json:"movie_genre"`
+	ID          uint   `json:"id"`
+	MovieName   string `json:"movieName"`
+	Description string `json:"description"`
+	ReleaseDate string `json:"releaseDate"`
+	MovieGenre  string `json:"movieGenre"`
 }
 
 type MovieResponse struct {
-	ID             uint      `json:"id"`
-	MovieName      string    `json:"movie_name"`
+	MovieID        uint      `json:"movieId"`
+	MovieName      string    `json:"movieName"`
 	Description    string    `json:"description"`
-	ReleaseDate    string	 `json:"release_date"`
-	MovieGenre     string    `json:"movie_genre"`
+	ReleaseDate    time.Time `json:"releaseDate"`
+	LastModifiedBy string    `json:"lastModifiedBy"`
+	MovieGenre     string    `json:"movieGenre"`
+	CreatedAt      time.Time `json:"createdAt"`
+	LastModifiedAt time.Time `json:"lastModifiedAt"`
+	CreatedBy      string    `json:"createdBy"`
 }

@@ -31,6 +31,6 @@ func NewDatabase(connectionString string) (*gorm.DB, error) {
 	sqlDB.SetMaxOpenConns(25)                 // Limit maximum simulaneous connections
 	sqlDB.SetMaxIdleConns(5)                  //Keep some connection ready
 	sqlDB.SetConnMaxLifetime(5 * time.Minute) //Refresh connection periodically
-	Migrate(gorm)
+	//Migrate(gorm)
 	return gorm, nil
 }

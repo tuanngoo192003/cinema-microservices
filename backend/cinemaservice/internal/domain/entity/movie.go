@@ -18,3 +18,7 @@ type Movie struct {
 	IsDeleted      bool      `gorm:"column:is_deleted"`
 	MovieGenre     string    `gorm:"column:movie_genre"`
 }
+
+func (Movie) TableName() string {
+	return "movies"
+}

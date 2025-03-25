@@ -3,6 +3,7 @@ package handlers
 import (
 	"cinema-service/infra/config"
 	"cinema-service/internal/domain/entity"
+	"cinema-service/internal/handlers/payload"
 	"net/http"
 	"strconv"
 	"time"
@@ -20,7 +21,7 @@ type SeatHandler struct {
 func NewSeatHandler(db *gorm.DB) *SeatHandler {
 	return &SeatHandler{db}
 }
-func (s *SeatHandler) Search(c *gin.Context) {
+func (s *SeatHandler) ListSeats(c *gin.Context) {
 	log := config.GetLogger()
 
 	// Khởi tạo query
@@ -36,10 +37,10 @@ func (s *SeatHandler) Search(c *gin.Context) {
 		query = query.Where("id = ?", c.Query("id"))
 	}
 	if c.Query("currentStatus") != "" {
-		query = query.Where("currentStatus = ?", c.Query("currentStatus"))
+		query = query.Where("current_status = ?", c.Query("currentStatus"))
 	}
 	if c.Query("isDeleted") != "" {
-		query = query.Where("isDeleted = ?", c.Query("isDeleted"))
+		query = query.Where("is_deleted = ?", c.Query("isDeleted"))
 	}
 
 	query = query.Where("created_at BETWEEN ? AND ?",
@@ -73,4 +74,51 @@ func (s *SeatHandler) Search(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": seats})
+}
+
+/* Deprecated */
+// func (s *SeatHandler) Create(c *gin.Context) {
+// 	log := config.GetLogger()
+
+// 	var seat payload.CreateSeatRequest
+// 	if err := c.ShouldBindJSON(&seat); err != nil {
+// 		log.Error(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	if err := s.db.Create(&seat).Error; err != nil {
+// 		log.Error(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusOK, gin.H{"data": seat})
+// }
+
+func (s *SeatHandler) Update(c *gin.Context) {
+	log := config.GetLogger()
+
+	var req payload.UpdateSeatRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	find := s.db.First(&entity.MovieSchedule{}, req.ID)
+	if find.Error != nil {
+		log.Error(find.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
+		return
+	}
+	var obj entity.Seat
+	payload.MapStruct(req, &obj)
+
+	if err := s.db.Save(&obj).Error; err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": obj})
 }

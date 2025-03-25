@@ -1,13 +1,14 @@
 package handlers
 
 import (
-	"github.com/tuanngoo192003/golang-utils/utils"
 	"cinema-service/infra/config"
 	"cinema-service/internal/domain/entity"
 	"cinema-service/internal/handlers/payload"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/tuanngoo192003/golang-utils/utils"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -41,7 +42,7 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	movieGenre := c.Query("movieGenre")
 
 	query := h.db.Model(&entity.Seat{})
-	
+
 	if movieName != "" {
 		query = query.Where(`
 			to_tsvector('english', movie_name) @@ plainto_tsquery('english', CAST( ? AS TEXT))
@@ -52,8 +53,8 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	}
 	if releaseStart != "" && releaseEnd != "" {
 		query = query.Where("release_date BETWEEN ? AND ?",
-		c.DefaultQuery("releaseStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
-		c.DefaultQuery("releaseEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
+			c.DefaultQuery("releaseStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
+			c.DefaultQuery("releaseEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
 	}
 	query = query.Where("is_deleted = ?", false)
 
@@ -75,15 +76,15 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return 
+		return
 	}
 
 	c.JSON(http.StatusOK, payload.PaginationResponse[payload.MovieResponse]{
-		Page: page,
-		Perpage: perpage, 
-		Data: movies,
+		Page:        page,
+		Perpage:     perpage,
+		Data:        movies,
 		TotalRecord: count,
-		TotalPage: int64(totalPage),
+		TotalPage:   int64(totalPage),
 	})
 
 }
@@ -91,16 +92,16 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 	log := config.GetLogger()
 
-	var movie payload.MovieRequest 
+	var movie payload.CreateMovieRequest
 	if err := c.ShouldBindJSON(&movie); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error}})
 		return
 	}
 
-	var ( 
+	var (
 		parsedDate time.Time
-		err		   error	
+		err        error
 	)
 
 	if parsedDate, err = time.Parse("2006-01-02", movie.ReleaseDate); err != nil {
@@ -109,10 +110,10 @@ func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 		return
 	}
 	movieEntity := entity.Movie{
-		MovieName: movie.MovieName,
+		MovieName:   movie.MovieName,
 		Description: movie.Description,
 		ReleaseDate: parsedDate,
-		MovieGenre: movie.MovieGenre,
+		MovieGenre:  movie.MovieGenre,
 	}
 
 	response := h.db.Model(entity.Movie{}).Create(&movieEntity)
@@ -138,9 +139,15 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 	}
 
 	var movieUpdate entity.Movie
-	if movie.MovieName != "" { movieUpdate.MovieName = movie.MovieName }
-	if movie.Description != "" { movieUpdate.Description = movie.Description }
-	if movie.MovieGenre != "" { movieUpdate.MovieGenre = movie.MovieGenre }
+	if movie.MovieName != "" {
+		movieUpdate.MovieName = movie.MovieName
+	}
+	if movie.Description != "" {
+		movieUpdate.Description = movie.Description
+	}
+	if movie.MovieGenre != "" {
+		movieUpdate.MovieGenre = movie.MovieGenre
+	}
 
 	if err := h.db.Model(entity.Movie{}).Where(`movie_id = ?`, movie.ID).Updates(&movieUpdate).Error; err != nil {
 		log.Error(err.Error)
@@ -150,4 +157,3 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": movieUpdate})
 }
-

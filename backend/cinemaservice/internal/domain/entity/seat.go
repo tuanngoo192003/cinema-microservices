@@ -7,8 +7,8 @@ import (
 )
 
 type Seat struct {
-	ID             uint      `gorm:"primaryKey;not null"`
-	AuthoriumID    uint      `gorm:"column:authorium_id"`
+	SeatID         uint      `gorm:"column:seat_id;primaryKey;not null"`
+	AuthoriumID    uint      `gorm:"column:auditorium_id"`
 	SeatCode       string    `gorm:"column:seat_code"`
 	CurrentStatus  string    `gorm:"column:current_status"`
 	CreatedAt      time.Time `gorm:"column:created_at; autoCreateTime"`
@@ -16,4 +16,8 @@ type Seat struct {
 	LastModifiedBy string    `gorm:"column:last_modified_by"`
 	CreatedBy      string    `gorm:"column:created_by;type:varchar(50)"`
 	IsDeleted      bool      `gorm:"column:is_deleted"`
+}
+
+func (Seat) TableName() string {
+	return "seats"
 }

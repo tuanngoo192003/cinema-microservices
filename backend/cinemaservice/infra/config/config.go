@@ -40,13 +40,13 @@ func Load() (*Config, error) {
 	cfg := &Config{}
 
 	//Server config
-	cfg.Server.Host = getEnv("CINEMA_SERVER_HOST", "localhost")
+	cfg.Server.Host = getEnv("CINEMA_SERVER_HOST", "")
 	cfg.Server.Port = getEnv("CINEMA_SERVER_PORT", "8001")
 	cfg.Server.ReadTimeout = time.Second * 15
 	cfg.Server.WriteTimeout = time.Second * 15
 
 	//Database config
-	cfg.Database.Host = getEnv("CINEMA_DB_HOST", "localhost")
+	cfg.Database.Host = getEnv("CINEMA_DB_HOST", "cinemadb")
 	cfg.Database.Port = getEnv("CINEMA_DB_PORT", "5432")
 	cfg.Database.User = getEnv("CINEMA_DB_USER", "postgres")
 	cfg.Database.Password = getEnv("CINEMA_DB_PASSWORD", "postgres")

@@ -10,5 +10,7 @@ import (
 func SetupSeatRouter(db *gorm.DB, router *gin.RouterGroup) {
 	seatGroup := router.Group("/seats")
 	sHandler := handlers.NewSeatHandler(db)
-	seatGroup.GET("/available", sHandler.Search)
+	seatGroup.GET("", sHandler.ListSeats)
+	// seatGroup.POST("/create", sHandler.Create)
+	seatGroup.PUT("", sHandler.Update)
 }

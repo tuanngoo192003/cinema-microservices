@@ -55,7 +55,7 @@ func (a *AuditoriumsHandler) Update(c *gin.Context) {
 		return
 	}
 
-	find := a.db.First(&entity.Auditorium{}, obj.ID)
+	find := a.db.First(&entity.Auditorium{}, obj.AuditoriumID)
 	if find.Error != nil {
 		log.Error(find.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
@@ -72,12 +72,12 @@ func (a *AuditoriumsHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": obj})
 
 }
-func (a *AuditoriumsHandler) Search(c *gin.Context) {
+func (a *AuditoriumsHandler) ListAuditoriums(c *gin.Context) {
 	log := config.GetLogger()
 	query := a.db.Model(&entity.Auditorium{})
 
 	if c.Query("auditoriumName") != "" {
-		query = query.Where("Auditorium_Name = ?", c.Query("auditoriumName"))
+		query = query.Where("auditorium_name = ?", c.Query("auditoriumName"))
 	}
 	if c.Query("capacity") != "" {
 		res, _ := strconv.Atoi(c.Query("capacity"))
@@ -85,14 +85,14 @@ func (a *AuditoriumsHandler) Search(c *gin.Context) {
 	}
 	if c.Query("id") != "" {
 		res, _ := strconv.Atoi(c.Query("id"))
-		query = query.Where("ID = ?", res)
+		query = query.Where("auditorium_id = ?", res)
 	}
 	if c.Query("isDeleted") != "" {
 
-		query = query.Where("Is_Deleted = ?", c.Query("isDeleted"))
+		query = query.Where("is_deleted = ?", c.Query("isDeleted"))
 	}
 	const timeFormat = "2006-01-02 15:04:05"
-	query = query.Where("created_At BETWEEN ? AND ?",
+	query = query.Where("created_at BETWEEN ? AND ?",
 		c.DefaultQuery("createdStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
 		c.DefaultQuery("createdEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
 

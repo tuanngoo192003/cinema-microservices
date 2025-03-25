@@ -21,11 +21,11 @@ server {
         proxy_pass   http://userservice:8000/ ;
     }
 
-    location /userservice/cinema/health {
-        proxy_pass   http://userservice:8000/userservice/cinema/health ;
+    location users/userservice/cinema/health {
+        proxy_pass   http://userservice:8000/users/userservice/cinema/health ;
     }
 
-    location /cinemaservice/info {
+    location /cinemaservice/info/ {
         proxy_pass   http://cinemaservice:8001/ ;
     }
    
@@ -187,11 +187,11 @@ server {
         proxy_pass   http://cinemaservice:8001/cinema/movie-schedules ;
     }
 
-    location /cinema/schedules {
+    location /cinema/movie-schedules/ {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/cinema/schedules ;
+        proxy_pass   http://cinemaservice:8001/cinema/movie-schedules/ ;
     }
 
     location /booking/ {
