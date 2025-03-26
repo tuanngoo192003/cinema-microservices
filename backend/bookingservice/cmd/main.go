@@ -1,8 +1,8 @@
 package main
 
 import (
-	"booking-service/internal/config"
-	"booking-service/internal/database"
+	"booking-service/infrastructure/config"
+	"booking-service/infrastructure/database"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
