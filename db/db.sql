@@ -50,6 +50,8 @@ INSERT INTO users (user_id, email, password, username, role_id) VALUES
 CREATE TABLE movies (
     movie_id SERIAL PRIMARY KEY,
     movie_name VARCHAR(255),
+    image_url VARCHAR(50),
+    duration INT,
     description TEXT,
     release_date DATE,
     movie_genre VARCHAR(500),
@@ -93,6 +95,7 @@ CREATE TYPE seat_status_enum AS ENUM ('AVAILABLE', 'RESERVED', 'BOOKED');
 
 CREATE TABLE seats (
     seat_id SERIAL PRIMARY KEY,
+    schedule_id INT REFERENCES movie_schedule(schedule_id), 
     auditorium_id INT REFERENCES auditoriums(auditorium_id) ON DELETE CASCADE,
     seat_code VARCHAR(5),
     current_status seat_status_enum DEFAULT 'AVAILABLE',

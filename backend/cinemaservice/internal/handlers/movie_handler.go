@@ -22,6 +22,30 @@ func NewMoviesHandler(db *gorm.DB) *MoviesHandler {
 	return &MoviesHandler{db}
 }
 
+func (h *MoviesHandler) GetMovieByID(c *gin.Context) {
+	log := config.GetLogger()
+
+	var movie entity.Movie
+	id := c.Param("id")
+	if id == "" {
+		log.Error("Id is not found!")
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": "Id is not found!"}})
+		return
+	}
+	if err := h.db.Where(` movie_id = ? `, id).Find(&movie).Error; err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": payload.MovieResponse{
+		MovieID:    movie.MovieID,
+		MovieName:  movie.MovieName,
+		Duration:   movie.Duration,
+		ImageURL:   movie.ImageURL,
+		MovieGenre: movie.MovieGenre,
+	}})
+}
+
 func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	log := config.GetLogger()
 
@@ -41,7 +65,7 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	releaseEnd := c.Query("releaseEnd")
 	movieGenre := c.Query("movieGenre")
 
-	query := h.db.Model(&entity.Seat{})
+	query := h.db.Model(&entity.Movie{})
 
 	if movieName != "" {
 		query = query.Where(`
@@ -68,8 +92,8 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 	err = query.Model(&entity.Movie{}).
-		Select(`users.user_id, users.email, users.status, users.first_name, users.last_name, 
-				users.date_of_birth, users.phone_number, users.avatar, roles.role_name`).
+		Select(`movie_id, movie_name, image_url, description, release_date, 
+				movie_genre`).
 		Offset(offset).
 		Limit(perpage).
 		Find(&movies).Error
@@ -148,6 +172,13 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 	if movie.MovieGenre != "" {
 		movieUpdate.MovieGenre = movie.MovieGenre
 	}
+	if movie.ImageURL != "" {
+		movieUpdate.ImageURL = movie.ImageURL
+	}
+	if movie.Duration > 0 {
+		movieUpdate.Duration = movie.Duration
+	}
+	movieUpdate.IsDeleted = movie.IsDeleted
 
 	if err := h.db.Model(entity.Movie{}).Where(`movie_id = ?`, movie.ID).Updates(&movieUpdate).Error; err != nil {
 		log.Error(err.Error)
