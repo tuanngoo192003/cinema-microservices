@@ -47,7 +47,7 @@ func NewUnauthorized(root error, msg, log, key string) *AppError {
 
 func NewCustomError(root error, msg, key string) *AppError {
 	if root == nil {
-		return NewErrorResponse(root, msg, root.Error(), key)
+		return NewErrorResponse(root, msg, msg, key)
 	}
 
 	return NewErrorResponse(errors.New(msg), msg, msg, key)
