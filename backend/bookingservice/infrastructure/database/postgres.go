@@ -1,7 +1,7 @@
 package database
 
 import (
-	"booking-service/internal/config"
+	"booking-service/infrastructure/config"
 	"database/sql"
 	"time"
 
