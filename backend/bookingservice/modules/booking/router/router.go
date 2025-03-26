@@ -2,6 +2,7 @@ package router
 
 import (
 	"booking-service/components/appctx"
+	"booking-service/modules/booking/transport"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,5 +10,6 @@ import (
 func RegisterRouter(group *gin.RouterGroup, appContext appctx.AppContext) {
 	booking := group.Group("/booking")
 
-	booking.POST("")
+	booking.POST("", transport.HanleCreateBookingRequest(appContext))
+	booking.GET("/user/:id", transport.HandleGetMyBooking(appContext))
 }

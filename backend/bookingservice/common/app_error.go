@@ -140,4 +140,5 @@ func ErrRecordNotFound(entity string) *AppError {
 
 var (
 	RecordNotFound = errors.New("record not found")
+	FailedToConvertID = errors.New("failed to convert InsertedID to ObjectID")
 )

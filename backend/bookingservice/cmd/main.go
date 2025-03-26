@@ -1,8 +1,11 @@
 package main
 
 import (
+	"booking-service/components/appctx"
 	"booking-service/infrastructure/config"
 	"booking-service/infrastructure/database"
+	"booking-service/modules/booking/router"
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,12 +21,14 @@ func main() {
 		log.Fatal("Failed to load config: ", err)	 
     }
 
+	connectionString := "mongodb+srv://dinhson1032001:dinhson1032001@dihson103.pckvrmm.mongodb.net/?retryWrites=true&w=majority&appName=dihson103"
+	client, err := database.GetMongoDbClient(connectionString)
+	if err != nil {
+		log.Fatal("❌ Error:", err)
+	}
+	defer client.Disconnect(context.Background())
 
-	db, err := database.NewDatabase(cfg.GetDSN())
-    if err != nil {
-        log.Fatal("Failed to connect to database", err)
-    }
-    defer db.DB.Close()
+	appContext := appctx.NewAppContext(client)
 
     //Set gin mode
     if cfg.Environment == "production" {
@@ -34,6 +39,10 @@ func main() {
 	r := gin.New()
     r.Use(gin.Recovery())
     r.Use(gin.Logger())
+
+	v1 := r.Group("/api/v1")
+
+	router.RegisterRouter(v1, appContext)
 
 
 	sererAddr := cfg.Server.Host + ":" + cfg.Server.Port
