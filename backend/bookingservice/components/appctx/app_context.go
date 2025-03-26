@@ -1,19 +1,21 @@
 package appctx
 
-import "gorm.io/gorm"
+import (
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
 type AppContext interface {
-	GetMainDbConnection() *gorm.DB
+	GetMainDbConnection() *mongo.Client
 }
 
 type appCtx struct {
-	db *gorm.DB
+	client *mongo.Client;
 }
 
-func NewAppContext(db *gorm.DB) *appCtx {
-	return &appCtx{db: db}
+func NewAppContext(client *mongo.Client) *appCtx {
+	return &appCtx{client}
 }
 
-func (ctx *appCtx) GetMainDbConnection() *gorm.DB {
-	return ctx.db
+func (ctx *appCtx) GetMainDbConnection() *mongo.Client {
+	return ctx.client
 }
