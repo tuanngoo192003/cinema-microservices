@@ -11,8 +11,6 @@ interface MovieProps {
 } 
 
 export const MovieContextProvider: React.FC<{children: React.ReactNode}> = ({children}: MovieProps) => {
-    const { enqueueSnackbar } = useSnackbar();
-    const navigate = useNavigate();
     const [movies, setMovies] = useState<IPagination<IMovieItem> | null>(null);
     const [movie, setMovie] = useState<IMovie | null>(null);
     const [loading, setLoading] = useState<boolean>(false)

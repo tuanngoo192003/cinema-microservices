@@ -4,7 +4,7 @@ import {Button, Image, Layout} from "antd";
 import {Content} from "antd/es/layout/layout";
 import {useTranslation} from "react-i18next";
 import Title from "antd/es/typography/Title";
-import {MOVIE_DETAILS_FORMAT} from "../../core/constants/redirectURI.ts";
+import {MOVIE_DETAILS_FORMAT_URI} from "../../core/constants/redirectURI.ts";
 import { IMovieItem } from "../models/movie.ts";
 
 
@@ -26,7 +26,7 @@ export const MovieItemUI: React.FC<IMovieItem> = ({ movieId, movieName, duration
                     <div style={{ marginTop: "1rem" }}>
                         <div>
                             <Title level={3}>
-                                <a href={MOVIE_DETAILS_FORMAT(1)}>{movieName ? movieName : "青いの箱"}</a>
+                                <a href={MOVIE_DETAILS_FORMAT_URI(1)}>{movieName ? movieName : "青いの箱"}</a>
                             </Title>
                             <Title level={5} style={{ marginBottom: 0 }}>
                                 {t("labels.titles.movie_genre")} : {movieGenre}

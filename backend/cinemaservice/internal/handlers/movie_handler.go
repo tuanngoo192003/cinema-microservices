@@ -32,7 +32,7 @@ func (h *MoviesHandler) GetMovieByID(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": "Id is not found!"}})
 		return
 	}
-	if err := h.db.Where(`movie_id = ?`, id).Scan(&movie).Error; err != nil {
+	if err := h.db.Where(` movie_id = ? `, id).Find(&movie).Error; err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
 		return
@@ -65,7 +65,7 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	releaseEnd := c.Query("releaseEnd")
 	movieGenre := c.Query("movieGenre")
 
-	query := h.db.Model(&entity.Seat{})
+	query := h.db.Model(&entity.Movie{})
 
 	if movieName != "" {
 		query = query.Where(`

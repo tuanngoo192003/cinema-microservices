@@ -1,6 +1,10 @@
 import { useContext } from "react"
-import { CinemaContext } from "../context/Context"
+import { CinemaContext, MovieScheduleContext } from "../context/Context"
 
 export const useMovie = () => {
     return useContext(CinemaContext)
+}
+
+export const useMovieSchedule = () => {
+    return useContext(MovieScheduleContext)
 }

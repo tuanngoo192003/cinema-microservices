@@ -108,7 +108,7 @@ const MovieDetailsUI: React.FC = () => {
                 </div>
               </Col>
               <Col xs={24} md={24}>
-                <MovieSchedulesUI id={1} />
+                <MovieSchedulesUI movieId={mockMovieDetails.movieId} />
               </Col>
             </Row>
           </Content>

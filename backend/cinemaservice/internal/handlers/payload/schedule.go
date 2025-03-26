@@ -13,16 +13,13 @@ type CreateScheduleRequest struct {
 }
 
 type ScheduleResponse struct {
-	ID             uint
+	ScheduleID     uint
 	MovieID        uint
 	AuditoriumID   uint
 	StartAt        time.Time
 	EndAt          time.Time
-	CreatedAt      time.Time
-	LastModifiedAt time.Time
-	LastModifiedBy string
-	CreatedBy      string
 	ScheduleStatus string
+	SeatLeft       int
 }
 
 type UpdateScheduleRequest struct {

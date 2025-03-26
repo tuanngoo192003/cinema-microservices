@@ -68,12 +68,12 @@ services:
     ports:
       - "5434:5432"
 
-  reactapp:
-    build: frontend
-    volumes:
-      - react-build:/app/dist
-    depends_on:
-      - proxy
+  # reactapp:
+  #   build: frontend
+  #   volumes:
+  #     - react-build:/app/dist
+  #   depends_on:
+  #     - proxy
 
   proxy:
     build: proxy
@@ -89,7 +89,7 @@ volumes:
   cinema-db-data:
   booking-db-data:
   cinema-sqlite-data:
-  react-build:
+  # react-build:
 
 secrets:
   db-password:
