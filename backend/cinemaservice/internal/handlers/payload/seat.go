@@ -3,17 +3,17 @@ package payload
 import "time"
 
 type SeatReponse struct {
-	ID             uint
-	AuthoriumID    uint
-	SeatCode       string
-	CurrentStatus  string
-	CreatedAt      time.Time
-	LastModifiedAt time.Time
-	LastModifiedBy string
-	CreatedBy      string
+	ID             uint      `json:"seatId"`
+	AuditoriumID   uint      `json:"auditoriumId"`
+	SeatCode       string    `json:"seatCode"`
+	CurrentStatus  string    `json:"currentStatus"`
+	CreatedAt      time.Time `json:"createdAt"`
+	LastModifiedAt time.Time `json:"lastModifiedAt"`
+	LastModifiedBy string    `json:"lastModifiedBy"`
+	CreatedBy      string    `json:"createdBy"`
 }
 type CreateSeatRequest struct {
-	AuthoriumID    uint
+	AuditoriumID   uint
 	SeatCode       string
 	CurrentStatus  string
 	LastModifiedBy string
@@ -21,8 +21,7 @@ type CreateSeatRequest struct {
 }
 
 type UpdateSeatRequest struct {
-	ID             uint `json:"id" binding:"required"`
-	AuthoriumID    uint
+	AuditoriumID   uint
 	SeatCode       string
 	CurrentStatus  string
 	LastModifiedBy string

@@ -123,6 +123,9 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 	log := config.GetLogger()
 
 	var movie payload.UpdateMovieRequest
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
 	err := c.ShouldBindJSON(&movie)
 	if err != nil {
 		log.Error(err.Error())
@@ -130,25 +133,14 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 		return
 	}
 
-	var movieUpdate entity.Movie
-	if movie.MovieName != "" {
-		movieUpdate.MovieName = movie.MovieName
-	}
-	if movie.Description != "" {
-		movieUpdate.Description = movie.Description
-	}
-	if movie.MovieGenre != "" {
-		movieUpdate.MovieGenre = movie.MovieGenre
-	}
-	if !movie.ReleaseDate.IsZero() {
-		movieUpdate.ReleaseDate = movie.ReleaseDate
-	}
-
-	if err := h.db.Model(entity.Movie{}).Where(`movie_id = ?`, movie.ID).Updates(&movieUpdate).Error; err != nil {
+	var obj entity.Movie
+	payload.MapStruct(movie, &obj)
+	obj.ID = uint(id)
+	if err := h.db.Model(entity.Movie{}).Where(`movie_id = ?`, id).Updates(&obj).Error; err != nil {
 		log.Error(err.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": movieUpdate})
+	c.JSON(http.StatusOK, gin.H{"data": obj})
 }

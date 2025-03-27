@@ -3,6 +3,7 @@ package handlers
 import (
 	"cinema-service/infra/config"
 	"cinema-service/internal/domain/entity"
+	"cinema-service/internal/handlers/payload"
 	"net/http"
 	"strconv"
 	"time"
@@ -22,56 +23,64 @@ func NewAuditoriumHandler(db *gorm.DB) *AuditoriumsHandler {
 }
 func (a *AuditoriumsHandler) Create(c *gin.Context) {
 	log := config.GetLogger()
-
-	var obj entity.Auditorium
-
-	log.Info("Creating new auditorium")
-	err := c.ShouldBindJSON(&obj)
+	var req payload.AuditoriumRequest
+	err := c.ShouldBindJSON(&req)
 
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	response := a.db.Create(&obj)
-
-	if response.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
+	var obj entity.Auditorium
+	payload.MapStruct(req, &obj)
+	result := a.db.Create(&obj)
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
 		return
 	}
-	log.Info("Created new auditorium: ", obj)
-	c.JSON(http.StatusOK, gin.H{"data": obj})
+	var response payload.AuditoriumResponse
+	payload.MapStruct(obj, &response)
+
+	log.Info("Created new auditorium: ", response)
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
 
 func (a *AuditoriumsHandler) Update(c *gin.Context) {
 	log := config.GetLogger()
 
+	var req payload.AuditoriumRequest
+
+	id, _ := strconv.Atoi(c.Query("id"))
+	err := c.ShouldBindJSON(&req)
 	var obj entity.Auditorium
-	err := c.ShouldBindJSON(&obj)
+	payload.MapStruct(req, &obj)
+	obj.ID = uint(id)
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	find := a.db.First(&entity.Auditorium{}, obj.ID)
+	find := a.db.First(&entity.Auditorium{}, obj)
 	if find.Error != nil {
 		log.Error(find.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
 		return
 	}
 
-	reponse := a.db.Save(obj)
-	if reponse.Error != nil {
-		log.Error(reponse.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": reponse.Error.Error()})
+	result := a.db.Save(&obj)
+	if result.Error != nil {
+		log.Error(result.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
 		return
 	}
+	var response payload.AuditoriumResponse
+	payload.MapStruct(obj, &response)
 
-	c.JSON(http.StatusOK, gin.H{"data": obj})
+	c.JSON(http.StatusOK, gin.H{"data": response})
 
 }
+
 func (a *AuditoriumsHandler) Search(c *gin.Context) {
 	log := config.GetLogger()
 	query := a.db.Model(&entity.Auditorium{})
@@ -113,12 +122,19 @@ func (a *AuditoriumsHandler) Search(c *gin.Context) {
 		return
 	}
 
-	var result []entity.Auditorium
-	response := query.Offset(offset).Limit(limit).Find(&result)
-	if response.Error != nil {
-		log.Error(response.Error.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
+	var obj []entity.Auditorium
+
+	result := query.Offset(offset).Limit(limit).Find(&obj)
+	if result.Error != nil {
+		log.Error(result.Error.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": result})
+	var response []payload.AuditoriumResponse
+	for _, auditorium := range obj {
+		var res payload.AuditoriumResponse
+		payload.MapStruct(auditorium, &res)
+		response = append(response, res)
+	}
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }

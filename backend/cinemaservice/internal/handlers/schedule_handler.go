@@ -37,6 +37,7 @@ func (a *ScheduleHandler) Create(c *gin.Context) {
 		return
 	}
 
+	a.db = a.db.Model(&entity.MovieSchedule{})
 	response := a.db.Create(&schedule)
 
 	if response.Error != nil {
@@ -50,6 +51,7 @@ func (a *ScheduleHandler) Update(c *gin.Context) {
 	log := config.GetLogger()
 
 	var req payload.UpdateScheduleRequest
+	id, _ := strconv.Atoi(c.Param("id"))
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		log.Error(err.Error())
@@ -57,7 +59,7 @@ func (a *ScheduleHandler) Update(c *gin.Context) {
 		return
 	}
 
-	find := a.db.First(&entity.MovieSchedule{}, req.ID)
+	find := a.db.First(&entity.MovieSchedule{}, id)
 	if find.Error != nil {
 		log.Error(find.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
@@ -65,6 +67,7 @@ func (a *ScheduleHandler) Update(c *gin.Context) {
 	}
 	var obj entity.MovieSchedule
 	payload.MapStruct(req, &obj)
+	obj.ID = uint(id)
 
 	reponse := a.db.Save(obj)
 	if reponse.Error != nil {
@@ -92,16 +95,21 @@ func (a *ScheduleHandler) Delete(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
 		return
 	}
+	var obj entity.MovieSchedule
+	obj.ID = uint(id)
+	obj.IsDeleted = true
+	result := a.db.Save(&obj)
 
-	var obj payload.ScheduleResponse
-	response := a.db.Delete(&obj, id)
-	if response.Error != nil {
-		log.Error(response.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
+	if result.Error != nil {
+		log.Error(result.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": obj})
+	var response payload.ScheduleResponse
+	payload.MapStruct(obj, &response)
+
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
 
 func (a *ScheduleHandler) Search(c *gin.Context) {
@@ -171,22 +179,30 @@ func (a *ScheduleHandler) Search(c *gin.Context) {
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 
-	var result []payload.ScheduleResponse
-	response := query.Offset(offset).Limit(perpage).Find(&result)
+	var obj []payload.ScheduleResponse
+	result := query.Offset(offset).Limit(perpage).Find(&obj)
 
-	if response.Error != nil {
-		log.Error(response.Error.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
+	if result.Error != nil {
+		log.Error(result.Error.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
 		return
 	}
+	var response []payload.ScheduleResponse
+	for _, auditorium := range obj {
+		payload.MapStruct(auditorium, &response)
+		var temp payload.ScheduleResponse
+		payload.MapStruct(auditorium, &temp)
+		response = append(response, temp)
+	}
+	//
 
 	c.JSON(http.StatusOK, payload.PaginationResponse[payload.ScheduleResponse]{
 		Page:        page,
 		Perpage:     perpage,
-		Data:        result,
+		Data:        response,
 		TotalRecord: count,
 		TotalPage:   int64(totalPage),
 	})
 
-	c.JSON(http.StatusOK, gin.H{"data": result})
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }

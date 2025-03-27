@@ -10,9 +10,9 @@ import (
 func SetupScheduleRouter(db *gorm.DB, router *gin.RouterGroup) {
 	scheduleGroup := router.Group("/schedule")
 	sHandler := handlers.NewScheduleHandler(db)
-	scheduleGroup.GET("/search", sHandler.Search)
-	scheduleGroup.POST("/create", sHandler.Create)
-	scheduleGroup.PUT("/update", sHandler.Update)
-	scheduleGroup.DELETE("/delete", sHandler.Delete)
+	scheduleGroup.GET("", sHandler.Search)
+	scheduleGroup.POST("", sHandler.Create)
+	scheduleGroup.PUT("/:id", sHandler.Update)
+	scheduleGroup.DELETE("", sHandler.Delete)
 
 }

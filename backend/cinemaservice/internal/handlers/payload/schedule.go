@@ -13,20 +13,19 @@ type CreateScheduleRequest struct {
 }
 
 type ScheduleResponse struct {
-	ID             uint
-	MovieID        uint
-	AuditoriumID   uint
-	StartAt        time.Time
-	EndAt          time.Time
-	CreatedAt      time.Time
-	LastModifiedAt time.Time
-	LastModifiedBy string
-	CreatedBy      string
-	ScheduleStatus string
+	ID             uint      `json:"scheduleId"`
+	MovieID        uint      `json:"movieId"`
+	AuditoriumID   uint      `json:"auditoriumId"`
+	StartAt        time.Time `json:"startAt"`
+	EndAt          time.Time `json:"endAt"`
+	CreatedAt      time.Time `json:"createdAt"`
+	LastModifiedAt time.Time `json:"lastModifiedAt"`
+	LastModifiedBy string    `json:"lastModifiedBy"`
+	CreatedBy      string    `json:"createdBy"`
+	ScheduleStatus string    `json:"scheduleStatus"`
 }
 
 type UpdateScheduleRequest struct {
-	ID             uint `json:"id" binding:"required"`
 	MovieID        uint
 	AuditoriumID   uint
 	StartAt        time.Time

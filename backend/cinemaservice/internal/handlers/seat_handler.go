@@ -30,8 +30,8 @@ func (s *SeatHandler) Search(c *gin.Context) {
 	if c.Query("seatCode") != "" {
 		query = query.Where("seat_code = ?", c.Query("seatCode"))
 	}
-	if c.Query("authoriumId") != "" {
-		query = query.Where("authorium_id = ?", c.Query("authoriumId"))
+	if c.Query("auditoriumId") != "" {
+		query = query.Where("auditorium_id = ?", c.Query("auditoriumId"))
 	}
 	if c.Query("id") != "" {
 		query = query.Where("id = ?", c.Query("id"))
@@ -64,21 +64,28 @@ func (s *SeatHandler) Search(c *gin.Context) {
 		return
 	}
 
-	var seats []entity.Seat
-	response := query.Offset(offset).Limit(limit).Find(&seats)
+	var obj []entity.Seat
+	result := query.Offset(offset).Limit(limit).Find(&obj)
 
-	if response.Error != nil {
-		log.Error(response.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
+	if result.Error != nil {
+		log.Error(result.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
 		return
 	}
+	var response []payload.SeatReponse
+	for i := range obj {
+		var temp payload.SeatReponse
+		payload.MapStruct(obj[i], &temp)
+		response = append(response, temp)
 
-	c.JSON(http.StatusOK, gin.H{"data": seats})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
 
 func (s *SeatHandler) Create(c *gin.Context) {
 	log := config.GetLogger()
-
+	s.db.Model(&entity.Seat{})
 	var seat payload.CreateSeatRequest
 	if err := c.ShouldBindJSON(&seat); err != nil {
 		log.Error(err)
@@ -97,22 +104,25 @@ func (s *SeatHandler) Create(c *gin.Context) {
 
 func (s *SeatHandler) Update(c *gin.Context) {
 	log := config.GetLogger()
-
+	s.db.Model(&entity.Seat{})
 	var req payload.UpdateSeatRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	find := s.db.First(&entity.MovieSchedule{}, req.ID)
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	find := s.db.First(&entity.MovieSchedule{}, id)
 	if find.Error != nil {
 		log.Error(find.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
 		return
 	}
 	var obj entity.Seat
-	payload.MapStruct(req, &obj)
 
+	payload.MapStruct(req, &obj)
+	obj.ID = uint(id)
 	if err := s.db.Save(&obj).Error; err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
