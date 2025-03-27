@@ -4,6 +4,8 @@ import "time"
 
 type CreateMovieRequest struct {
 	MovieName   string `json:"movieName"`
+	ImageURL    string `json:"imageURL"`
+	Duration    int    `json:"duration"`
 	Description string `json:"description"`
 	ReleaseDate string `json:"releaseDate"`
 	MovieGenre  string `json:"movieGenre"`
@@ -12,19 +14,20 @@ type CreateMovieRequest struct {
 type UpdateMovieRequest struct {
 	ID          uint   `json:"id"`
 	MovieName   string `json:"movieName"`
+	ImageURL    string `json:"imageURL"`
+	Duration    int    `json:"duration"`
 	Description string `json:"description"`
 	ReleaseDate string `json:"releaseDate"`
 	MovieGenre  string `json:"movieGenre"`
+	IsDeleted   bool   `json:"isDeleted"`
 }
 
 type MovieResponse struct {
-	MovieID        uint      `json:"movieId"`
-	MovieName      string    `json:"movieName"`
-	Description    string    `json:"description"`
-	ReleaseDate    time.Time `json:"releaseDate"`
-	LastModifiedBy string    `json:"lastModifiedBy"`
-	MovieGenre     string    `json:"movieGenre"`
-	CreatedAt      time.Time `json:"createdAt"`
-	LastModifiedAt time.Time `json:"lastModifiedAt"`
-	CreatedBy      string    `json:"createdBy"`
+	MovieID     uint      `json:"movieId"`
+	MovieName   string    `json:"movieName"`
+	ImageURL    string    `json:"movieURL"`
+	Duration    int       `json:"duration"`
+	Description string    `json:"description"`
+	ReleaseDate time.Time `json:"releaseDate"`
+	MovieGenre  string    `json:"movieGenre"`
 }

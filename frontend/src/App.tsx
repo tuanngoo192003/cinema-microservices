@@ -7,6 +7,8 @@ import {SnackbarProvider} from "notistack";
 import {AuthContextProvider} from "./modules/user/context/AuthContextProvider.tsx";
 import {BrowserRouter} from "react-router-dom";
 import {UserProvider} from "./modules/user/context/UserContextProvider.tsx";
+import { MovieContextProvider } from "./modules/cinema/context/MovieContextProvider.tsx";
+import { MovieScheduleContextProvider } from "./modules/cinema/context/MovieScheduleContextProvider.tsx";
 
 const App: React.FC = () => (
     <>
@@ -15,7 +17,11 @@ const App: React.FC = () => (
                 <BrowserRouter>
                     <AuthContextProvider>
                         <UserProvider>
-                            <AppRouter/>
+                            <MovieContextProvider>
+                                <MovieScheduleContextProvider>
+                                    <AppRouter/>
+                                </MovieScheduleContextProvider>
+                            </MovieContextProvider>
                         </UserProvider>
                     </AuthContextProvider>
                 </BrowserRouter>

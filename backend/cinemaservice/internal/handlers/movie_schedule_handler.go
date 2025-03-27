@@ -77,7 +77,7 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 		return
 	}
 
-	seats := generateSeats(movieScheduleEntity.AuditoriumID)
+	seats := generateSeats(movieScheduleEntity.AuditoriumID, movieScheduleEntity.ScheduleID)
 	response = tx.Create(seats)
 	if err := response.Error; err != nil {
 		log.Error(err.Error())
@@ -94,12 +94,13 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": movieScheduleEntity})
 }
 
-func generateSeats(auditoriumID uint) (seats []entity.Seat) {
+func generateSeats(auditoriumID uint, scheduleID uint) (seats []entity.Seat) {
 	char := 'A'
 	for i := 0; i < 10; i++ {
 		for j := 1; j <= 12; j++ {
 			seat := entity.Seat{
 				AuthoriumID:   auditoriumID,
+				ScheduleID:    scheduleID,
 				CurrentStatus: "AVAILABLE",
 				SeatCode:      fmt.Sprintf("%c%d", char, j),
 			}
@@ -154,48 +155,37 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 	}
 
 	if c.Query("movieId") != "" {
-		query = query.Where("movieId = ?", c.Query("movie_id"))
+		query = query.Where(" movie_id = ? ", c.Query("movieId"))
 	}
 	if c.Query("auditoriumUd") != "" {
 		res, _ := strconv.Atoi(c.Query("auditoriumId"))
-		query = query.Where("auditorium_id = ?", res)
+		query = query.Where(" auditorium_id = ? ", res)
 	}
 	if c.Query("id") != "" {
 		res, _ := strconv.Atoi(c.Query("id"))
-		query = query.Where("schedule_id = ?", res)
+		query = query.Where(" schedule_id = ? ", res)
 	}
-	if c.Query("isDeleted") != "" {
-
-		query = query.Where("is_deleted = ?", c.Query("isDeleted"))
+	layout := time.RFC3339
+	if c.Query("startAt") != "" {
+		startAt, err := time.Parse(layout, c.Query("startAt"))
+		if err != nil {
+			log.Error("Invalid startAt format:", err)
+			c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": "Invalid date format"}})
+			return
+		}
+		query = query.Where(" start_at >= ? ", startAt)
 	}
-	if c.Query("createdBy") != "" {
-
-		query = query.Where("created_by = ?", c.Query("createdBy"))
+	if c.Query("endAt") != "" {
+		endAt, err := time.Parse(layout, c.Query("endAt"))
+		if err != nil {
+			log.Error("Invalid endAt format:", err)
+			c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": "Invalid date format"}})
+			return
+		}
+		query = query.Where(" end_at <= ? ", endAt)
 	}
-	if c.Query("lastModifiedBy") != "" {
-		query = query.Where("last_modified_by = ?", c.Query("lastModifiedBy"))
-	}
 
-	const timeFormat = "2006-01-02 15:04:05"
-
-	query = query.Where("start_at BETWEEN ? AND ?",
-		c.DefaultQuery("startUpper", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
-		c.DefaultQuery("startLower", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
-
-	query = query.Where("end_at BETWEEN ? AND ?",
-		c.DefaultQuery("endUpper", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
-		c.DefaultQuery("endLower", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
-
-	query = query.Where("last_modified_at BETWEEN ? AND ?",
-		c.DefaultQuery("lastModifiedStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
-		c.DefaultQuery("lastModifiedEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
-	query = query.Where("created_At BETWEEN ? AND ?",
-		c.DefaultQuery("createdStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
-		c.DefaultQuery("createdEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
-
-	query = query.Where("last_modified_at BETWEEN ? AND ?",
-		c.DefaultQuery("lastModifiedStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
-		c.DefaultQuery("lastModifiedEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
+	query = query.Where(" is_deleted = false ")
 
 	var count int64
 	if err := query.Count(&count).Error; err != nil {
@@ -208,7 +198,13 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 
 	var result []payload.ScheduleResponse
-	response := query.Offset(offset).Limit(perpage).Find(&result)
+	response := query.
+		Select("s.schedule_id", "s.movie_id", "s.auditorium_id", "s.start_at", "s.end_at", "s.schedule_status",
+			"(SELECT COUNT(*) FROM seats WHERE seats.schedule_id = s.schedule_id AND seats.current_status = 'AVAILABLE') AS seat_left").
+		Table("movie_schedule AS s").
+		Offset(offset).
+		Limit(perpage).
+		Find(&result)
 
 	if response.Error != nil {
 		log.Error(response.Error.Error())
@@ -223,8 +219,6 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 		TotalRecord: count,
 		TotalPage:   int64(totalPage),
 	})
-
-	c.JSON(http.StatusOK, gin.H{"data": result})
 }
 
 func (h *MovieScheduleHander) GetMovieSchedule(c *gin.Context) {
@@ -236,13 +230,13 @@ func (h *MovieScheduleHander) GetMovieSchedule(c *gin.Context) {
 		return
 	}
 	var movieSchedule entity.MovieSchedule
-	if err := h.db.Model(&entity.MovieSchedule{}).Where(`movie_schedule_id = ?`, id).Preload("movie").Scan(&movieSchedule); err != nil {
+	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("movie").Find(&movieSchedule); err != nil {
 		log.Error(err.Error)
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
 		return
 	}
 	c.JSON(http.StatusOK, payload.GetByIDMovieScheduleResponse{
-		ID: movieSchedule.MovieScheduleID,
+		ID: movieSchedule.ScheduleID,
 		Movie: payload.MovieResponse{
 			MovieID:     movieSchedule.Movie.MovieID,
 			MovieName:   movieSchedule.Movie.MovieName,
