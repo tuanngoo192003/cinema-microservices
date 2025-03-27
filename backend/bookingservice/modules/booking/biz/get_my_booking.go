@@ -7,15 +7,15 @@ import (
 	"context"
 )
 
-type IGetMyBookingStorage interface {
-	GetBookingByUserId(ctx context.Context, userId int) ([]models.Booking, error)
+type IGetMyBookingRepository interface {
+	GetMyBooking(ctx context.Context, userId int) ([]models.Booking, error)
 }
 
 type getMyBookingBiz struct {
-	storage IGetMyBookingStorage
+	repository IGetMyBookingRepository
 }
 
-func NewGetMyBookingBiz(storage IGetMyBookingStorage) *getMyBookingBiz {
+func NewGetMyBookingBiz(storage IGetMyBookingRepository) *getMyBookingBiz {
 	return &getMyBookingBiz{storage}
 }
 
@@ -23,7 +23,7 @@ func (biz *getMyBookingBiz) Invoke (
 	ctx context.Context,
 	input *helper.GetMyBookingInput,
 ) (*helper.GetMyBookingOutput, error) {
-	data, err := biz.storage.GetBookingByUserId(ctx, input.Id)
+	data, err := biz.repository.GetMyBooking(ctx, input.Id)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(models.EntityName, err)
 	}

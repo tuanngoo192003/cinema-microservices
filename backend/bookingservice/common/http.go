@@ -10,7 +10,6 @@ import (
 	"time"
 )
 
-// APIRequest defines the request parameters
 type APIRequest struct {
 	Method  string
 	URL     string
@@ -19,48 +18,46 @@ type APIRequest struct {
 	Timeout time.Duration
 }
 
-// SendAPIRequest sends an HTTP request and returns the response
-func SendAPIRequest(ctx context.Context, reqData APIRequest) ([]byte, int, error) {
-	// Convert body to JSON if not nil
+func SendAPIRequest[T any](ctx context.Context, reqData APIRequest) (*T, error) {
 	var bodyReader io.Reader
 	if reqData.Body != nil {
 		jsonData, err := json.Marshal(reqData.Body)
 		if err != nil {
-			return nil, 0, err
+			return nil, err
 		}
 		bodyReader = bytes.NewBuffer(jsonData)
 	}
 
-	// Create HTTP request
 	req, err := http.NewRequestWithContext(ctx, reqData.Method, reqData.URL, bodyReader)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
-	// Set headers
 	req.Header.Set("Content-Type", "application/json")
 	for key, value := range reqData.Headers {
 		req.Header.Set(key, value)
 	}
 
-	// Create HTTP client with timeout
 	client := &http.Client{Timeout: reqData.Timeout}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
-	// Read response body
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, resp.StatusCode, err
+		return nil, err
 	}
 
-	// Check for non-2xx status codes
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return respBody, resp.StatusCode, errors.New("API request failed with status: " + resp.Status)
+		return nil, errors.New("API request failed with status: " + resp.Status)
 	}
 
-	return respBody, resp.StatusCode, nil
+	var result T
+	if err := json.Unmarshal(respBody, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }

@@ -10,16 +10,16 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type IBookingCreateStorage interface {
-	CreateBooking(ctx context.Context, booking *models.Booking) (string, error) 
+type IBookingCreateRepository interface {
+	Create(ctx context.Context, booking *models.Booking) (string, error) 
 }
 
 type bookingCreateBiz struct {
-	storage IBookingCreateStorage
+	repository IBookingCreateRepository
 }
 
-func NewBookingCreateBiz(storage IBookingCreateStorage) *bookingCreateBiz {
-	return &bookingCreateBiz{storage}
+func NewBookingCreateBiz(repository IBookingCreateRepository) *bookingCreateBiz {
+	return &bookingCreateBiz{repository}
 }
 
 func (biz *bookingCreateBiz) Invoke(
@@ -33,14 +33,14 @@ func (biz *bookingCreateBiz) Invoke(
 		UserID: 1,
 		ScheduleID: input.Data.ScheduleID,
 		TotalPrice: 45,
-		SeatIDs: []int{1, 2},
+		SeatIDs: input.Data.SeatIDs,
 		Status: "Pending",
 		CreatedAt: now,
 		UpdatedAt: now,
 		UpdatedBy: 1,
 	}
 
-	id, err := biz.storage.CreateBooking(ctx, &createData)
+	id, err := biz.repository.Create(ctx, &createData)
 	if err != nil {
 		return nil, common.ErrCannotCreateEntity(models.EntityName, err)
 	}
