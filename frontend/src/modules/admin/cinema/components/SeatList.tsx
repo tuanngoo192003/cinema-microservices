@@ -12,7 +12,7 @@ export default function SeatList({ rows, columns }: Props) {
     <Layout className="app-theme">
       <Content>
         {rows.map((row) => (
-          <Row key={row} gutter={[4, 4]} justify="center" align="middle" style={{ height: "100vh" }}>
+          <Row key={row} gutter={[4, 4]} justify="center" align="middle" style={{ height: "20vh" }}>
             {columns.map((col) => {
               return <SeatUI col={col} row={row} />;
             })}

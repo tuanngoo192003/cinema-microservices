@@ -23,8 +23,11 @@ const UserList: React.FC = () => {
 
   useEffect(() => {
     handleGetUserList("tuan.nguyenhuu", currentPage, pageSize);
-    setUserPagination(users)
   }, [currentPage, pageSize]);
+
+  useEffect(() => {
+    setUserPagination(users)
+  }, [users])
 
   const handleTableChange = (pagination: any) => {
     setCurrentPage(pagination.current);

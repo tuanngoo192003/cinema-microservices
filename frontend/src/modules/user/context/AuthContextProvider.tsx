@@ -58,6 +58,7 @@ export function AuthContextProvider({children}: AuthProfileProps) {
             const err = HandleError(error as Error | AxiosError<ErrorResponse>);
             enqueueSnackbar(err.errors["message"], { variant: "error" });
             console.error("Login failed", error);
+            handleLogout()
         } finally {
             setLoading(false); // Stop loading after login attempt
         }

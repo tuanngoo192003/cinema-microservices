@@ -25,11 +25,11 @@ const mockMovieDetails = {
 } as unknown as IMovie;
 
 const MovieDetailsUI: React.FC = () => {
-  const { movie, loading, handleGetMovieDetail } = useMovie()
+  const { movie, loading, handleGetMovieDetail } = useMovie();
   const { id } = useParams();
   useEffect(() => {
-    handleGetMovieDetail(id as unknown as number)
-  }, [id])
+    handleGetMovieDetail(id as unknown as number);
+  }, [id]);
   console.log(id);
   const { t } = useTranslation();
   return (
@@ -63,7 +63,7 @@ const MovieDetailsUI: React.FC = () => {
                 }}
               >
                 <Image
-                  src={mockMovieDetails.imageURL}
+                  src={movie?.imageURL}
                   alt={""}
                   style={{
                     borderRadius: "12px",
@@ -90,25 +90,26 @@ const MovieDetailsUI: React.FC = () => {
                   {" "}
                   {/* Reduce default spacing */}
                   <Title level={3} style={{ marginBottom: "0.5rem" }}>
-                    <a href={MOVIE_DETAILS}>{mockMovieDetails.movieName}</a>
+                    <a href={MOVIE_DETAILS}>{movie?.movieName}</a>
                   </Title>
-                  <p style={{ marginBottom: "0.5rem" }}>
-                    {mockMovieDetails.description}
-                  </p>
+                  <p style={{ marginBottom: "0.5rem" }}>{movie?.description}</p>
                   <Title level={5} style={{ marginBottom: "0.25rem" }}>
-                    {t("labels.titles.movie_genre")} : {mockMovieDetails.movieGenre}
+                    {t("labels.titles.movie_genre")} : {movie?.movieGenre}
                   </Title>
                   <Title level={5} style={{ marginBottom: "0.25rem" }}>
-                    {t("labels.titles.release_date")} :{" "}
-                    {mockMovieDetails.releaseDate}
+                    {t("labels.titles.release_date")} : {movie?.releaseDate}
                   </Title>
                   <Title level={5} style={{ marginTop: "0.25rem" }}>
-                    {t("labels.titles.duration")} : {mockMovieDetails.duration}
+                    {t("labels.titles.duration")} : {movie?.duration}p
                   </Title>
                 </div>
               </Col>
               <Col xs={24} md={24}>
-                <MovieSchedulesUI movieId={mockMovieDetails.movieId} />
+                {movie?.movieId ? (
+                  <MovieSchedulesUI movieId={movie?.movieId} />
+                ) : (
+                  <></>
+                )}
               </Col>
             </Row>
           </Content>

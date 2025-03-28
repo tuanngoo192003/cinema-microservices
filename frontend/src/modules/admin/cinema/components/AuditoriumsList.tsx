@@ -70,6 +70,9 @@ export default function AuditoriumsList() {
 
   useEffect(() => {
     handleGetAuditoriumList(currentPage, pageSize, auditoriumName)
+  }, [auditoriumName, currentPage, pageSize])
+
+  useEffect(() => {
     setAuditoriumPagination(auditoriums)
   }, [auditoriums])
 
@@ -97,14 +100,14 @@ export default function AuditoriumsList() {
           >
             <Content>
               <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
-                List Auditoriums
+                {t('labels.titles.list_auditorium')}
               </Typography.Title>
               <Space style={{ marginBottom: 16 }}>
                 <Button
-                  type="primary"
+                  className="app-btn"
                   onClick={() => navigate(ADMIN_AUDITORIUMS_CREATE)}
                 >
-                  Create
+                  {t('labels.buttons.create')}
                 </Button>
               </Space>
               <Table<IAuditorium>
@@ -123,8 +126,8 @@ export default function AuditoriumsList() {
               >
                 <Table.Column
                   title={t("labels.auditorium_name")}
-                  dataIndex="auditoriumName"
-                  key="auditoriumName"
+                  dataIndex="auditorium_name"
+                  key="auditorium_name"
                 />
                 <Table.Column
                   title={t("labels.capacity")}

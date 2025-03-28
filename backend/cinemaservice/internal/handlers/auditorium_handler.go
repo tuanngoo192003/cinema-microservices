@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/tuanngoo192003/golang-utils/utils"
 	"gorm.io/gorm"
 )
 
@@ -110,27 +111,42 @@ func (a *AuditoriumsHandler) ListAuditoriums(c *gin.Context) {
 		c.DefaultQuery("lastModifiedStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
 		c.DefaultQuery("lastModifiedEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
 
-	offset, err := strconv.Atoi(c.DefaultQuery("offset", "0"))
+	page, err := strconv.Atoi(c.DefaultQuery("page", "0"))
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	perpage, err := strconv.Atoi(c.DefaultQuery("perpage", "15"))
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var result []entity.Auditorium
-	response := query.Offset(offset).Limit(limit).Find(&result)
+	var count int64
+	if err := query.Count(&count).Error; err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	offset := utils.GetOffset(page, &perpage)
+	totalPage := utils.GetTotalPage(float32(count), &perpage)
+
+	var result []payload.AuditoriumResponse
+	response := query.Select(`auditorium_id, auditorium_name, rows, cols`).Offset(offset).Limit(perpage).Find(&result)
 	if response.Error != nil {
 		log.Error(response.Error.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": result})
+	c.JSON(http.StatusOK, payload.PaginationResponse[payload.AuditoriumResponse]{
+		Page:        page,
+		Perpage:     perpage,
+		Data:        result,
+		TotalRecord: count,
+		TotalPage:   int64(totalPage),
+	})
 }
 
 func (a *AuditoriumsHandler) GetAuditoriumByID(c *gin.Context) {

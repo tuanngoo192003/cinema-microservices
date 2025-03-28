@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   DesktopOutlined,
   InsertRowBelowOutlined,
@@ -9,12 +9,13 @@ import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import reactLogo from "../../../assets/react.svg";
+import "../../../App.css"
 import { Header } from "antd/es/layout/layout";
 import { LanguagePicker } from "./LanguagePicker";
 import { Profile } from "./Profile";
 import { useTranslation } from "react-i18next";
 import { HOME } from "../constants/redirectURI";
-import { IProfile } from "../../user/models/user";
+import { AppFooter } from "./AppFooter";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -94,7 +95,6 @@ export default function AdminSideBar({ children }: Props) {
   } = theme.useToken();
   const navigate = useNavigate();
   const location = useLocation();
-  const [currentProfile, setCurrentProfile] = useState<IProfile | null>(null)
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     const config = configs.find((c) => c.key === e.key);
@@ -104,15 +104,7 @@ export default function AdminSideBar({ children }: Props) {
   };
 
   const { t } = useTranslation();
-  const [isUserLogin, setIsUserLogin] = useState<boolean>(false);
 
-  useEffect(() => {
-    const profile = localStorage.getItem("profile");
-    if (profile) {
-      setCurrentProfile(JSON.parse(profile) as IProfile);
-    }
-    setIsUserLogin(!!profile);
-  }, []);
 
   return (
     <Layout style={{ minHeight: "100vh", marginTop: "3.1rem" }}>
@@ -136,18 +128,19 @@ export default function AdminSideBar({ children }: Props) {
             <LanguagePicker />
           </Menu.Item>
           <Menu.Item key="5">
-            <Profile avatarURL="sadfasfd" isUserLogin={isUserLogin} userRole={currentProfile?.role} />
+            <Profile />
           </Menu.Item>
         </Menu>
       </Header>
       <Sider
+        style={{background: "#403C3AFF"}}
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
         <div className="demo-logo-vertical" />
         <Menu
-          theme="dark"
+          className="side-menu"
           defaultSelectedKeys={[matchedKey ?? location.pathname]}
           mode="inline"
           items={items}
@@ -174,9 +167,7 @@ export default function AdminSideBar({ children }: Props) {
             {children}
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        <AppFooter/>
       </Layout>
     </Layout>
   );

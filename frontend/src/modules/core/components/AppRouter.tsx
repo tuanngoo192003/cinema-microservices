@@ -73,6 +73,8 @@ export const AppRouter = () => (
         <Route path={ADMIN_AUDITORIUMS_UPDATE} element={<AuditoriumUpdate />} />
         <Route path={ADMIN_USERS} element={<UsersList />} />
       </Route>
+
+      <Route path="*" element={<Page404 />} />
     </Routes>
   </Suspense>
 );

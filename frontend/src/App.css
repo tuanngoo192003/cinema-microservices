@@ -4,7 +4,7 @@
   --default-background: #efe3d9;
   --default-btn-bg-hover: #5d3723;
   --default-btn-bg: #865437;
-  --default-btn-text: #d4b8a2;
+  --default-btn-text: #efe7e0;
   --default-text: #190b06;
   --default-link: #bcb7b3;
   --default-link-hover: #787573;
@@ -37,7 +37,7 @@
   align-items: center;
   justify-content: center; /* ✅ Center everything */
   height: 3.1rem;
-  background: var(--default-btn-text);
+  background: #e8cab9;
 }
 
 /* Flex container to keep logo and menu centered */
@@ -83,6 +83,23 @@
 
 .nav-menu .ant-menu-item:hover a {
   color: var(--default-btn-bg-hover);
+}
+
+.side-menu {
+  background-color: #403C3AFF;
+}
+
+.side-menu .ant-menu-item {
+  color: #fff !important; /* White text */
+}
+
+.side-menu .ant-menu-item:hover {
+  background-color: #2a2a3e !important; /* Slightly lighter on hover */
+}
+
+.side-menu .ant-menu-item-selected {
+  background-color: #4a4a6e !important; /* Selected item background */
+  color: #fff !important;
 }
 
 .app-theme {

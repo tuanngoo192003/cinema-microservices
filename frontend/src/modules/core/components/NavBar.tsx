@@ -7,9 +7,7 @@ import { Link } from "react-router-dom";
 import { LanguagePicker } from "./LanguagePicker.tsx";
 import { useTranslation } from "react-i18next";
 import { Profile } from "./Profile.tsx";
-import { useEffect, useState } from "react";
 import { HOME } from "../constants/redirectURI.ts";
-import { IProfile } from "../../user/models/user.ts";
 
 interface IMainLayoutProps {
     children: React.ReactNode;
@@ -17,17 +15,7 @@ interface IMainLayoutProps {
 
 export const NavBar = ({ children }: IMainLayoutProps) => {
     const { t } = useTranslation();
-    const [isUserLogin, setIsUserLogin] = useState<boolean>(false);
-    const [currentProfile, setCurrentProfile] = useState<IProfile | null>(null)
 
-    // Check profile existence on component mount
-    useEffect(() => {
-        const profile = localStorage.getItem("profile");
-        if (profile) {
-            setCurrentProfile(JSON.parse(profile) as IProfile);
-        }
-        setIsUserLogin(!!profile);
-    }, []);
     return (
         <>
             <Header className="app-header">
@@ -50,7 +38,7 @@ export const NavBar = ({ children }: IMainLayoutProps) => {
                         <LanguagePicker />
                     </Menu.Item>
                     <Menu.Item key="5">
-                        <Profile avatarURL="sadfasfd" isUserLogin={isUserLogin} userRole={currentProfile?.role} />
+                        <Profile />
                     </Menu.Item>
                 </Menu>
             </Header>

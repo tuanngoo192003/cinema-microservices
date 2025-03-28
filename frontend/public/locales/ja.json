@@ -30,6 +30,10 @@
     "reserved": "予約済み",
     "booked": "完売",
     "delete": "消す",
+    "auditorium_name": "オーディトリアム名",
+    "capacity": "収容人数",
+    "num_rows": "席の行数",
+    "num_cols": "席の列数",
     "english": "英語",
     "vietnamese": "ベトナム語",
     "japanese": "日本語",
@@ -39,21 +43,30 @@
       "release_date": "公開日",
       "user_list": "ユーザー名簿",
       "auditorium": "スクリーン番号",
-      "seat": "席番"
+      "seat": "席番",
+      "list_auditorium": "オーディトリアムのリスト"
     },
     "buttons": {
       "buy_ticket": "チケットを買う",
       "continue": "続く",
       "back": "戻る",
-      "save": "保存"
+      "save": "保存",
+      "create": "作成"
     },
     "menu": {
       "user_list": "ユーザー名簿",
       "logout": "ログアウト",
       "profile": "プロファイル",
       "about": "概要",
-      "contact": "コンタクト"
+      "contact": "コンタクト",
+      "admin_dashboard": "アドミンのダッシュボード"
     }
+  },
+  "titles": {
+    "movie_genre": "ジャンル",
+    "duration": "上映時間",
+    "user_list": "ユーザーのリスト",
+    "preview": "プレビュー"
   },
   "messages": {
     "required":{

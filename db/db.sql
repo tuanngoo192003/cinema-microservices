@@ -45,7 +45,6 @@ INSERT INTO roles (role_id, role_name, description) VALUES
 INSERT INTO users (user_id, email, password, username, role_id) VALUES 
 (1, 'tuan.nguyenhuu@vti.com.vn', '$2a$10$kzZwQiR.CQJ/F80AzAeMFO1/hiAfx56UxxS6C/s6fXX/QbLV0zXIi', 'tuan.nguyenhuu', 1);
 
-
 -- cinemaservicedb tables 
 CREATE TABLE movies (
     movie_id SERIAL PRIMARY KEY,

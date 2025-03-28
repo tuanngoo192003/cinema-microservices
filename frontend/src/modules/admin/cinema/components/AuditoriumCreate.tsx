@@ -1,19 +1,30 @@
-import { Button, Form, Input, InputNumber, Layout, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  InputNumber,
+  Layout,
+  Typography,
+} from "antd";
 import { useState } from "react";
-import "../../../../App.css"
+import "../../../../App.css";
 import { getRows } from "../../../core/constants/seat";
 import { useAuditorium } from "../hooks";
 import { IAuditoriumParam } from "../models/Auditorium";
 import SeatList from "./SeatList";
 import { useTranslation } from "react-i18next";
 import { Content } from "antd/es/layout/layout";
+import { useNavigate } from "react-router-dom";
+import { ADMIN_AUDITORIUMS } from "../../../core/constants/redirectURI";
 
 export default function AuditoriumCreate() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [rowCount, setRowCount] = useState<number>(1);
   const [colCount, setColCount] = useState<number>(1);
   const [name, setName] = useState("");
-  const { handleCreateAuditorium } = useAuditorium()
+  const { handleCreateAuditorium } = useAuditorium();
   const rows = getRows(rowCount).split("");
   const columns = Array.from({ length: colCount }, (_, i) => i + 1);
   const createAuditorium = () => {
@@ -25,44 +36,58 @@ export default function AuditoriumCreate() {
 
     handleCreateAuditorium(body);
   };
+  const backToAuditoriumList = () => {
+    navigate( ADMIN_AUDITORIUMS )
+  }
 
   return (
     <>
-      <Layout className="app-theme" style={{ minHeight: "100vh", overflow: "hidden" }}>
+      <Layout
+        className="app-theme"
+        style={{ minHeight: "100vh", overflow: "hidden" }}
+      >
         <Content>
-          <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
-            Create Auditorium
-          </Typography.Title>
-          <Form
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 14 }}
-            layout="vertical"
-            style={{ maxWidth: 1000 }}
-          >
-            <Form.Item label="Auditorium's name">
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
-            </Form.Item>
-            <Form.Item label="Rows number">
-              <InputNumber
-                min={1}
-                max={26}
-                value={rowCount}
-                onChange={(value) => setRowCount(value || 1)}
-              />
-            </Form.Item>
-            <Form.Item label="Columns number">
-              <InputNumber
-                min={1}
-                max={50}
-                value={colCount}
-                onChange={(value) => setColCount(value || 1)}
-              />
-            </Form.Item>
-          </Form>
-          <SeatList columns={columns} rows={rows} />
-          <Button className="app-btn" onClick={createAuditorium}>
-            {t('labels.buttons.save')}
-          </Button>
+          <Card>
+            <Typography.Title
+              style={{ textAlign: "center", marginBottom: "24px" }}
+            >
+              Create Auditorium
+            </Typography.Title>
+            <Form
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 14 }}
+              layout="vertical"
+              style={{ maxWidth: 1000 }}
+            >
+              <Form.Item label={t('labels.auditorium_name')}>
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </Form.Item>
+              <Form.Item label={t('labels.num_rows')}>
+                <InputNumber
+                  min={1}
+                  max={26}
+                  value={rowCount}
+                  onChange={(value) => setRowCount(value || 1)}
+                />
+              </Form.Item>
+              <Form.Item label={t('labels.num_cols')}>
+                <InputNumber
+                  min={1}
+                  max={50}
+                  value={colCount}
+                  onChange={(value) => setColCount(value || 1)}
+                />
+              </Form.Item>
+            </Form>
+              {t('titles.preview')}
+            <SeatList columns={columns} rows={rows} />
+            <Button className="app-btn" onClick={createAuditorium}>
+              {t("labels.buttons.save")}
+            </Button>
+            <Button className="secondary-btn" onClick={backToAuditoriumList}>
+              {t('labels.buttons.back')}
+            </Button>
+          </Card>
         </Content>
       </Layout>
     </>

@@ -38,11 +38,13 @@ func (h *MoviesHandler) GetMovieByID(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": payload.MovieResponse{
-		MovieID:    movie.MovieID,
-		MovieName:  movie.MovieName,
-		Duration:   movie.Duration,
-		ImageURL:   movie.ImageURL,
-		MovieGenre: movie.MovieGenre,
+		MovieID:     movie.MovieID,
+		MovieName:   movie.MovieName,
+		Description: movie.Description,
+		Duration:    movie.Duration,
+		ImageURL:    movie.ImageURL,
+		ReleaseDate: movie.ReleaseDate,
+		MovieGenre:  movie.MovieGenre,
 	}})
 }
 
