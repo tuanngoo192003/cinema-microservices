@@ -77,7 +77,17 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 		return
 	}
 
-	seats := generateSeats(movieScheduleEntity.AuditoriumID, movieScheduleEntity.ScheduleID)
+	auditorium, err := getAuditoriumByID(movieScheduleEntity.AuditoriumID, h.db)
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{
+			"error":   err.Error(),
+			"message": "AuditoriumID is not valid",
+		}})
+		tx.Rollback()
+		return
+	}
+	seats := generateSeats(auditorium.AuditoriumID, movieScheduleEntity.ScheduleID, int(auditorium.Rows), int(auditorium.Cols))
 	response = tx.Create(seats)
 	if err := response.Error; err != nil {
 		log.Error(err.Error())
@@ -94,10 +104,10 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": movieScheduleEntity})
 }
 
-func generateSeats(auditoriumID uint, scheduleID uint) (seats []entity.Seat) {
+func generateSeats(auditoriumID uint, scheduleID uint, rows int, cols int) (seats []entity.Seat) {
 	char := 'A'
-	for i := 0; i < 10; i++ {
-		for j := 1; j <= 12; j++ {
+	for i := 0; i < cols; i++ {
+		for j := 1; j <= rows; j++ {
 			seat := entity.Seat{
 				AuthoriumID:   auditoriumID,
 				ScheduleID:    scheduleID,
@@ -109,6 +119,13 @@ func generateSeats(auditoriumID uint, scheduleID uint) (seats []entity.Seat) {
 		char++ // Move to the next row (A → B → C → ... → J)
 	}
 	return seats
+}
+
+func getAuditoriumByID(auditoriumID uint, db *gorm.DB) (ent *entity.Auditorium, err error) {
+	if err = db.Select("auditorium_id", "rows", "cols").Where(` auditorium_id = ? `, auditoriumID).Find(ent).Error; err != nil {
+		return nil, err
+	}
+	return
 }
 
 func (h *MovieScheduleHander) UpdateMovieSchedule(c *gin.Context) {

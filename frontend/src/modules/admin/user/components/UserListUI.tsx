@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, Divider, Layout, Radio, Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
-import { useUser } from "../hooks";
-import { IProfile } from "../models/user.ts";
+import { IProfile } from "../../../user/models/user.ts";
 import { UserOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { LoadingPage } from "../../core/components/LoadingPage.tsx";
+import { LoadingPage } from "../../../core/components/LoadingPage.tsx";
 import dayjs from "dayjs";
 import { Content } from "antd/es/layout/layout";
 import Title from "antd/es/typography/Title";
+import { IPagination } from "../../../core/models/core.ts";
+import { useUser } from "../hooks/index.ts";
 
 const UserList: React.FC = () => {
   const { users, loading, handleGetUserList } = useUser();
+  const [ userPagination, setUserPagination ] = useState<IPagination<IProfile> | null>(null)
   const [selectionType, setSelectionType] = useState<"checkbox" | "radio">(
     "checkbox"
   );
@@ -21,6 +23,7 @@ const UserList: React.FC = () => {
 
   useEffect(() => {
     handleGetUserList("tuan.nguyenhuu", currentPage, pageSize);
+    setUserPagination(users)
   }, [currentPage, pageSize]);
 
   const handleTableChange = (pagination: any) => {
@@ -70,12 +73,12 @@ const UserList: React.FC = () => {
               pagination={{
                 current: currentPage,
                 pageSize: pageSize,
-                total: users?.totalRecord || 0, // Total records from API
+                total: userPagination?.totalRecord || 0, // Total records from API
                 showSizeChanger: true,
                 pageSizeOptions: ["5", "10", "20"],
               }}
               loading={loading}
-              dataSource={users?.data || []}
+              dataSource={userPagination?.data || []}
               rowKey="id"
               onChange={handleTableChange} // Handle pagination
               onRow={(record) => ({

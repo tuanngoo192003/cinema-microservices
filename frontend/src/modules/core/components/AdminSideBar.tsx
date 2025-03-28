@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DesktopOutlined,
   InsertRowBelowOutlined,
@@ -7,7 +7,14 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import reactLogo from "../../../assets/react.svg";
+import { Header } from "antd/es/layout/layout";
+import { LanguagePicker } from "./LanguagePicker";
+import { Profile } from "./Profile";
+import { useTranslation } from "react-i18next";
+import { HOME } from "../constants/redirectURI";
+import { IProfile } from "../../user/models/user";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -87,6 +94,7 @@ export default function AdminSideBar({ children }: Props) {
   } = theme.useToken();
   const navigate = useNavigate();
   const location = useLocation();
+  const [currentProfile, setCurrentProfile] = useState<IProfile | null>(null)
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     const config = configs.find((c) => c.key === e.key);
@@ -95,8 +103,43 @@ export default function AdminSideBar({ children }: Props) {
     }
   };
 
+  const { t } = useTranslation();
+  const [isUserLogin, setIsUserLogin] = useState<boolean>(false);
+
+  useEffect(() => {
+    const profile = localStorage.getItem("profile");
+    if (profile) {
+      setCurrentProfile(JSON.parse(profile) as IProfile);
+    }
+    setIsUserLogin(!!profile);
+  }, []);
+
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh", marginTop: "3.1rem" }}>
+      <Header className="app-header">
+        {/* Logo */}
+        <div className="logo">
+          <img src={reactLogo} alt="Logo" />
+        </div>
+        {/* Navigation Menu */}
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]} className="nav-menu">
+          <Menu.Item key="1">
+            <Link to={HOME}>{t('labels.home')}</Link>
+          </Menu.Item>
+          <Menu.Item key="2">
+            <Link to={HOME}>{t('labels.menu.about')}</Link>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Link to={HOME}>{t('labels.menu.contact')}</Link>
+          </Menu.Item>
+          <Menu.Item key="4">
+            <LanguagePicker />
+          </Menu.Item>
+          <Menu.Item key="5">
+            <Profile avatarURL="sadfasfd" isUserLogin={isUserLogin} userRole={currentProfile?.role} />
+          </Menu.Item>
+        </Menu>
+      </Header>
       <Sider
         collapsible
         collapsed={collapsed}

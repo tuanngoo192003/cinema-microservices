@@ -65,7 +65,8 @@ CREATE TABLE movies (
 CREATE TABLE auditoriums (
     auditorium_id SERIAL PRIMARY KEY,
     auditorium_name VARCHAR(50),
-    capacity INT,
+    rows INT,
+    cols INT,
     is_deleted BOOLEAN DEFAULT FALSE,
     created_by VARCHAR(50),
     last_modified_by VARCHAR(50),

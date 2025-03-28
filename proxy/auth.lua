@@ -17,8 +17,8 @@ local permissions = {
     ["/cinema/seats/reservations/{id}"] = { permission = "WRITE_SEAT_RESERVE", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
     ["/cinema/movies"] = { permission = "READ_MOVIES", role = { "ADMIN", "MANAGER", "CUSTOMER" } }, 
     ["/cinema/movies/{id}"] = { permission = "READ_MOVIE", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
-    ["/cinema/movie-schedules"] = { permission = "WRITE_MOVIE_SCHEDULE", role = { "ADMIN", "MANAGER" } },
-    ["/cinema/movie-schedules/{id}"] = { permission = "READ_MOVIE_SCHEDULES", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
+    ["/cinema/schedules"] = { permission = "WRITE_MOVIE_SCHEDULE", role = { "ADMIN", "MANAGER" } },
+    ["/cinema/schedules/{id}"] = { permission = "READ_MOVIE_SCHEDULES", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
     ["/booking/{id}"] = { permission = "READ_BOOKING", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
     ["/booking"] = { permission = "WRITE_BOOKING", role = { "CUSTOMER" } },
 }

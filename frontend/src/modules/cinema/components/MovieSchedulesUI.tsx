@@ -57,7 +57,7 @@ export const MovieSchedulesUI: React.FC<MovieSchedulesProps> = ({ movieId }) => 
 
     useEffect(() => {
         handleGetMovieSchedules(movieId, currentPage, pageSize, startAt, endAt)
-        setMovieSchedulesTab(transformMovieSchedules(movieSchedules?.data as unknown as IMovieSchedule[]))
+        //setMovieSchedulesTab(transformMovieSchedules(movieSchedules?.data as unknown as IMovieSchedule[]))
     }, [movieId])
     const { t } = useTranslation();
     const navigage = useNavigate()
@@ -91,9 +91,9 @@ export const MovieSchedulesUI: React.FC<MovieSchedulesProps> = ({ movieId }) => 
                                                 filteredSchedules.map((schedule, index) => (
                                                     <Col key={index} xs={12} md={6}>
                                                     <Card className="booking-card" onClick={() => navigage(BOOKING_FORMAT_URI(1), {replace: true})}>
-                                                        {t("common.startAt")}: {dayjs(schedule.startAt).format("HH:mm")} -{" "}
-                                                        {t("common.startAt")}: {dayjs(schedule.endAt).format("HH:mm")} {" "}
-                                                        <p>{t("common.seatLeft")}: {schedule.seatLeft}</p>
+                                                        {t("common.start_at")}: {dayjs(schedule.startAt).format("HH:mm")} -{" "}
+                                                        {t("common.start_at")}: {dayjs(schedule.endAt).format("HH:mm")} {" "}
+                                                        <p>{t("common.seat_left")}: {schedule.seatLeft}</p>
                                                     </Card>
                                                 </Col>
                                             ))

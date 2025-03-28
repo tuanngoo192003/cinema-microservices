@@ -92,7 +92,7 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 	err = query.Model(&entity.Movie{}).
-		Select(`movie_id, movie_name, image_url, description, release_date, 
+		Select(`movie_id, movie_name, image_url, duration, description, release_date, 
 				movie_genre`).
 		Offset(offset).
 		Limit(perpage).
@@ -135,6 +135,8 @@ func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 	}
 	movieEntity := entity.Movie{
 		MovieName:   movie.MovieName,
+		ImageURL:    movie.ImageURL,
+		Duration:    movie.Duration,
 		Description: movie.Description,
 		ReleaseDate: parsedDate,
 		MovieGenre:  movie.MovieGenre,

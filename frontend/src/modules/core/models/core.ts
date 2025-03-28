@@ -1,4 +1,8 @@
+import { HttpStatusCode } from "axios";
+
 export type IResponse<T> = {
+    status: HttpStatusCode;
+    message: string;
     data: T;
 };
 

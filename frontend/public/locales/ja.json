@@ -44,7 +44,8 @@
     "buttons": {
       "buy_ticket": "チケットを買う",
       "continue": "続く",
-      "back": "戻る"
+      "back": "戻る",
+      "save": "保存"
     },
     "menu": {
       "user_list": "ユーザー名簿",

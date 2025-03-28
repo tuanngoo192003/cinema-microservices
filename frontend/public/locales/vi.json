@@ -44,7 +44,8 @@
     "buttons": {
       "buy_ticket": "Mua vé",
       "continue": "Tiếp tục",
-      "back": "Quay lại"
+      "back": "Quay lại",
+      "save": "Lưu"
     },
     "menu": {
       "user_list": "Danh sách người dùng",

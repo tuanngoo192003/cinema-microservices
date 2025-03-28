@@ -1,15 +1,16 @@
 import {useSnackbar} from "notistack";
 import {ErrorResponse, useNavigate} from "react-router-dom";
 import React, {useState} from "react";
-import {IProfile} from "../models/user.ts";
+import {IProfile, IUserParam} from "../models/user.ts";
 import Cookies from "js-cookie";
-import {GetProfileAPI, LoginApi} from "../services";
+import {GetProfileAPI, LoginApi, RegisterUserAPI} from "../services";
 import {HandleError} from "../../core/services/axios.ts";
 import {AxiosError} from "axios";
 import {ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY} from "../../core/constants/storage.ts";
 import {ILoginParams} from "../models/auth.ts";
 import {LoadingPage} from "../../core/components/LoadingPage.tsx";
 import {AuthContext} from "./Context.tsx";
+import { useTranslation } from "react-i18next";
 
 interface AuthProfileProps {
     children?: React.ReactNode
@@ -18,7 +19,7 @@ interface AuthProfileProps {
 export function AuthContextProvider({children}: AuthProfileProps) {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
-
+    const { t } = useTranslation();
     const [loading, setLoading] = useState<boolean>(false);
     const [profile, setProfile] = useState<IProfile | null>(() => {
         const storedProfile = localStorage.getItem("profile");
@@ -62,6 +63,22 @@ export function AuthContextProvider({children}: AuthProfileProps) {
         }
     };
 
+    const handleRegister = async (body: IUserParam) => {
+        setLoading(true);
+        try {
+            const response = await RegisterUserAPI(body)
+            console.log(response)
+            enqueueSnackbar(t('labels.success'), { variant: "success" });
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
+        } catch (error) {
+            console.error("Error fetching user list", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <AuthContext.Provider
             value={{
@@ -69,6 +86,7 @@ export function AuthContextProvider({children}: AuthProfileProps) {
                 profile,
                 handleLogin,
                 handleLogout,
+                handleRegister, 
             }}
         >
             {loading ? <LoadingPage /> : children}

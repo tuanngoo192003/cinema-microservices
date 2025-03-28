@@ -12,36 +12,39 @@ import {
   HOME,
   LOGIN,
   MOVIE_DETAILS,
+  PAGE403,
   PAGE404,
   REGISTER,
   USER_LIST,
 } from "../constants/redirectURI.ts";
+import { Page403 } from "./403.tsx";
 
 const LoginUI = lazy(() => import("../../user/components/LoginUI.tsx"));
 const RegisterForm = lazy(() => import("../../user/components/RegisterUI.tsx"));
-const UserList = lazy(() => import("../../user/components/UserListUI.tsx"));
+const UserList = lazy(() => import("../../admin/user/components/UserListUI.tsx"));
 const HomeUI = lazy(() => import("../../cinema/components/HomeUI.tsx"));
 const MovieDetailsUI = lazy(
   () => import("../../cinema/components/MovieDetailsUI.tsx")
 );
 const BookingUI = lazy(() => import("../../booking/components/BookingUI.tsx"));
 const AuditoriumsList = lazy(
-  () => import("../../admin/auditoriums/components/AuditoriumsList.tsx")
+  () => import("../../admin/cinema/components/AuditoriumsList.tsx")
 );
 const UsersList = lazy(
-  () => import("../../admin/users/components/UsersList.tsx")
+  () => import("../../admin/user/components/UserListUI.tsx")
 );
 const AuditoriumCreate = lazy(
-  () => import("../../admin/auditoriums/components/AuditoriumCreate.tsx")
+  () => import("../../admin/cinema/components/AuditoriumCreate.tsx")
 );
 const AuditoriumUpdate = lazy(
-  () => import("../../admin/auditoriums/components/AuditoriumUpdate.tsx")
+  () => import("../../admin/cinema/components/AuditoriumUpdate.tsx")
 );
 
 export const AppRouter = () => (
   <Suspense fallback={<div>Loading...</div>}>
     <Routes>
       <Route path={PAGE404} element={<Page404 />} />
+      <Route path={PAGE403} element={<Page403 />} />
       <Route path={LOGIN} element={<LoginUI />} />
       <Route
         path="/"

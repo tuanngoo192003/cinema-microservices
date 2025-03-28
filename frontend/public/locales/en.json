@@ -44,7 +44,8 @@
     "buttons": {
       "buy_ticket": "Buy ticket",
       "continue": "Continue",
-      "back": "Back"
+      "back": "Back",
+      "save": "Save"
     },
     "menu": {
       "user_list": "User list",

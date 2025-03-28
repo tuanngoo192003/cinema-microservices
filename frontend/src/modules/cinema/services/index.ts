@@ -35,7 +35,7 @@ export const GetMovieSchedules
     = async (movieId: number, page: number, perpage: number, startAt: string, endAt: string) : Promise<IPagination<IMovieSchedule>> => {
         return new Promise((resolve, reject) => {
             api 
-                .get<IPagination<IMovieSchedule>>(`/cinema/movie-schedules?page=${page}&perpage=${perpage}&startAt=${startAt}&endAt=${endAt}&movieId=${movieId}`)
+                .get<IPagination<IMovieSchedule>>(`/cinema/schedules?page=${page}&perpage=${perpage}&startAt=${startAt}&endAt=${endAt}&movieId=${movieId}`)
                 .then((res) => {
                     resolve(res.data)
                 })

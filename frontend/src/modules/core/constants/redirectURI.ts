@@ -3,6 +3,7 @@ export const HOME = "/home";
 export const REGISTER = "/register";
 export const LOGIN = "/login";
 export const PAGE404 = "/404";
+export const PAGE403 = "/403"
 
 /* user pages */
 export const PROFILES = "/profile";
@@ -16,6 +17,7 @@ export const MOVIE_DETAILS = "/movie/details/:id";
 export const BOOKING_FORMAT_URI = (id: number) => `/booking/${id}`;
 export const BOOKING = "/booking/:id";
 
+export const ADMIN_DASHBOARD = "/admin/"
 export const ADMIN_AUDITORIUMS = "/admin/auditoriums";
 export const ADMIN_USERS = "/admin/users";
 export const ADMIN_AUDITORIUMS_CREATE = "/admin/auditoriums/create";

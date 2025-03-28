@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col } from "antd";
+import "../../../../App.css";
 import { faCouch } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
@@ -28,6 +29,7 @@ export default function SeatUI({ row, col }: Props) {
         >
           <FontAwesomeIcon
             icon={faCouch}
+            className="icon-default"
             style={{
               fontSize: "1.5rem",
               color: "#bcb7b3",

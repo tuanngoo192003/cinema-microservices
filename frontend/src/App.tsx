@@ -6,9 +6,10 @@ import {AppRouter} from "./modules/core/components/AppRouter.tsx";
 import {SnackbarProvider} from "notistack";
 import {AuthContextProvider} from "./modules/user/context/AuthContextProvider.tsx";
 import {BrowserRouter} from "react-router-dom";
-import {UserProvider} from "./modules/user/context/UserContextProvider.tsx";
 import { MovieContextProvider } from "./modules/cinema/context/MovieContextProvider.tsx";
 import { MovieScheduleContextProvider } from "./modules/cinema/context/MovieScheduleContextProvider.tsx";
+import { UserProvider } from "./modules/admin/user/context/UserContextProvider.tsx";
+import { AuditoriumContextProvider } from "./modules/admin/cinema/context/AuditoriumContextProvider.tsx";
 
 const App: React.FC = () => (
     <>
@@ -19,7 +20,9 @@ const App: React.FC = () => (
                         <UserProvider>
                             <MovieContextProvider>
                                 <MovieScheduleContextProvider>
-                                    <AppRouter/>
+                                    <AuditoriumContextProvider>
+                                        <AppRouter/>
+                                    </AuditoriumContextProvider>
                                 </MovieScheduleContextProvider>
                             </MovieContextProvider>
                         </UserProvider>

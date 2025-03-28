@@ -11,7 +11,7 @@ func SetupAuthoriumRouter(db *gorm.DB, router *gin.RouterGroup) {
 	auditoriumGroup := router.Group("/auditoriums")
 	h := handlers.NewAuditoriumHandler(db)
 	auditoriumGroup.GET("", h.ListAuditoriums)
+	auditoriumGroup.GET("/:id", h.GetAuditoriumByID)
 	auditoriumGroup.POST("", h.Create)
 	auditoriumGroup.PUT("", h.Update)
-
 }

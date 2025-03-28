@@ -306,7 +306,7 @@ server {
         proxy_pass   http://cinemaservice:8001/cinema/movies/ ;
     }
 
-    location /cinema/movie-schedules {
+    location /cinema/schedules {
         if ($request_method = 'OPTIONS') {
             add_header 'Access-Control-Allow-Origin' '*';
             add_header 'Access-Control-Allow-Credentials' 'true';
@@ -331,7 +331,7 @@ server {
         proxy_pass   http://cinemaservice:8001/cinema/movie-schedules ;
     }
 
-    location /cinema/movie-schedules/ {
+    location /cinema/schedules/ {
         if ($request_method = 'OPTIONS') {
             add_header 'Access-Control-Allow-Origin' '*';
             add_header 'Access-Control-Allow-Credentials' 'true';
