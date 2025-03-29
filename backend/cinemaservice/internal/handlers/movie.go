@@ -99,24 +99,24 @@ func (m *MoviesHandler) Search(c *gin.Context) {
 func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 	log := config.GetLogger()
 
-	var createMovieDTO payload.CreateMovieRequest
-	if err := c.ShouldBindJSON(&createMovieDTO); err != nil {
+	var req payload.CreateMovieRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error}})
 		return
 	}
-	var movie entity.Movie
-	payload.MapStruct(createMovieDTO, &movie)
+	var obj entity.Movie
+	payload.MapStruct(req, &obj)
 
-	if err := h.db.Create(&movie).Error; err != nil {
+	if err := h.db.Create(&obj).Error; err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	var movieResponse payload.MovieResponse
-	payload.MapStruct(createMovieDTO, &movieResponse)
+	payload.MapStruct(obj, &movieResponse)
 
-	c.JSON(http.StatusCreated, gin.H{"data": movie})
+	c.JSON(http.StatusCreated, gin.H{"data": movieResponse})
 }
 
 func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
@@ -135,12 +135,14 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 
 	var obj entity.Movie
 	payload.MapStruct(movie, &obj)
-	obj.ID = uint(id)
-	if err := h.db.Model(entity.Movie{}).Where(`movie_id = ?`, id).Updates(&obj).Error; err != nil {
+	if err := h.db.Model(entity.Movie{}).Where(`id = ?`, id).Updates(&obj).Error; err != nil {
 		log.Error(err.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	h.db.Model(&entity.Movie{}).First(&obj, id)
+	var response payload.MovieResponse
+	payload.MapStruct(obj, &response)
 
-	c.JSON(http.StatusOK, gin.H{"data": obj})
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }

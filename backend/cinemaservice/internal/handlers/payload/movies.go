@@ -21,7 +21,7 @@ type UpdateMovieRequest struct {
 }
 
 type MovieResponse struct {
-	MovieID        uint      `json:"movieId"`
+	ID             uint      `json:"movieId"`
 	MovieName      string    `json:"movieName"`
 	Description    string    `json:"description"`
 	ReleaseDate    time.Time `json:"releaseDate"`

@@ -21,8 +21,10 @@ type CreateSeatRequest struct {
 }
 
 type UpdateSeatRequest struct {
+	ID             uint
 	AuditoriumID   uint
 	SeatCode       string
 	CurrentStatus  string
 	LastModifiedBy string
 }
+

@@ -25,26 +25,28 @@ func NewScheduleHandler(db *gorm.DB) *ScheduleHandler {
 func (a *ScheduleHandler) Create(c *gin.Context) {
 	log := config.GetLogger()
 
-	var obj payload.CreateScheduleRequest
+	var req payload.CreateScheduleRequest
 
 	log.Info("Creating new schedule")
-	err := c.ShouldBindJSON(&obj)
-	var schedule entity.MovieSchedule
-	payload.MapStruct(obj, &schedule)
+	err := c.ShouldBindJSON(&req)
+	var obj entity.MovieSchedule
+	payload.MapStruct(req, &obj)
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	a.db = a.db.Model(&entity.MovieSchedule{})
-	response := a.db.Create(&schedule)
+	a.db.Model(&entity.MovieSchedule{})
+	result := a.db.Create(&obj)
 
-	if response.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": response.Error.Error()})
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": schedule})
+	var response payload.ScheduleResponse
+	payload.MapStruct(obj, &response)
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
 
 func (a *ScheduleHandler) Update(c *gin.Context) {
@@ -59,24 +61,18 @@ func (a *ScheduleHandler) Update(c *gin.Context) {
 		return
 	}
 
-	find := a.db.First(&entity.MovieSchedule{}, id)
-	if find.Error != nil {
-		log.Error(find.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
-		return
-	}
 	var obj entity.MovieSchedule
 	payload.MapStruct(req, &obj)
-	obj.ID = uint(id)
 
-	reponse := a.db.Save(obj)
-	if reponse.Error != nil {
-		log.Error(reponse.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": reponse.Error.Error()})
+	if err := a.db.Model(&entity.MovieSchedule{}).Where(`id = ?`, id).Updates(&obj).Error; err != nil {
+		log.Error(err.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": obj})
+	a.db.Model(&entity.MovieSchedule{}).First(&obj, id)
+	var response payload.ScheduleResponse
+	payload.MapStruct(obj, &response)
+	c.JSON(http.StatusOK, gin.H{"data": response})
 
 }
 func (a *ScheduleHandler) Delete(c *gin.Context) {
@@ -89,22 +85,15 @@ func (a *ScheduleHandler) Delete(c *gin.Context) {
 		return
 	}
 
-	find := a.db.First(&entity.MovieSchedule{}, id)
-	if find.Error != nil {
-		log.Error(find.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
-		return
-	}
 	var obj entity.MovieSchedule
-	obj.ID = uint(id)
-	obj.IsDeleted = true
-	result := a.db.Save(&obj)
 
-	if result.Error != nil {
-		log.Error(result.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
+	obj.IsDeleted = true
+	if err := a.db.Model(entity.MovieSchedule{}).Where(`id = ?`, id).Updates(&obj).Error; err != nil {
+		log.Error(err.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	a.db.Model(&entity.MovieSchedule{}).First(&obj, id)
 
 	var response payload.ScheduleResponse
 	payload.MapStruct(obj, &response)
@@ -161,13 +150,9 @@ func (a *ScheduleHandler) Search(c *gin.Context) {
 	query = query.Where("last_modified_at BETWEEN ? AND ?",
 		c.DefaultQuery("lastModifiedStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
 		c.DefaultQuery("lastModifiedEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
-	query = query.Where("created_At BETWEEN ? AND ?",
+	query = query.Where("created_at BETWEEN ? AND ?",
 		c.DefaultQuery("createdStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
 		c.DefaultQuery("createdEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
-
-	query = query.Where("last_modified_at BETWEEN ? AND ?",
-		c.DefaultQuery("lastModifiedStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
-		c.DefaultQuery("lastModifiedEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
 
 	var count int64
 	if err := query.Count(&count).Error; err != nil {
@@ -179,9 +164,8 @@ func (a *ScheduleHandler) Search(c *gin.Context) {
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 
-	var obj []payload.ScheduleResponse
+	var obj []entity.MovieSchedule
 	result := query.Offset(offset).Limit(perpage).Find(&obj)
-
 	if result.Error != nil {
 		log.Error(result.Error.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
@@ -189,7 +173,6 @@ func (a *ScheduleHandler) Search(c *gin.Context) {
 	}
 	var response []payload.ScheduleResponse
 	for _, auditorium := range obj {
-		payload.MapStruct(auditorium, &response)
 		var temp payload.ScheduleResponse
 		payload.MapStruct(auditorium, &temp)
 		response = append(response, temp)
@@ -203,6 +186,4 @@ func (a *ScheduleHandler) Search(c *gin.Context) {
 		TotalRecord: count,
 		TotalPage:   int64(totalPage),
 	})
-
-	c.JSON(http.StatusOK, gin.H{"data": response})
 }

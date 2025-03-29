@@ -50,30 +50,22 @@ func (a *AuditoriumsHandler) Update(c *gin.Context) {
 
 	var req payload.AuditoriumRequest
 
-	id, _ := strconv.Atoi(c.Query("id"))
+	id, _ := strconv.Atoi(c.Param("id"))
 	err := c.ShouldBindJSON(&req)
 	var obj entity.Auditorium
 	payload.MapStruct(req, &obj)
-	obj.ID = uint(id)
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	find := a.db.First(&entity.Auditorium{}, obj)
-	if find.Error != nil {
-		log.Error(find.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
+	if err := a.db.Model(&entity.Auditorium{}).Where("id = ?", id).Updates(&obj).Error; err != nil {
+		log.Error(err.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	result := a.db.Save(&obj)
-	if result.Error != nil {
-		log.Error(result.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
-		return
-	}
+	a.db.Model(&entity.Auditorium{}).First(&obj, id)
 	var response payload.AuditoriumResponse
 	payload.MapStruct(obj, &response)
 

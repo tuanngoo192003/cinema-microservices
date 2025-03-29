@@ -7,7 +7,7 @@ import (
 )
 
 type Movie struct {
-	ID             uint            `gorm:"column:movie_id;primaryKey;not null"`
+	ID             uint            `gorm:"column:id;primaryKey;not null"`
 	MovieName      string          `gorm:"column:movie_name"`
 	Description    string          `gorm:"column:description"`
 	ReleaseDate    time.Time       `gorm:"column:release_date"`

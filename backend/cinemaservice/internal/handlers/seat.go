@@ -43,13 +43,13 @@ func (s *SeatHandler) Search(c *gin.Context) {
 		query = query.Where("isDeleted = ?", c.Query("isDeleted"))
 	}
 
-	query = query.Where("created_at BETWEEN ? AND ?",
-		c.DefaultQuery("createdStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
-		c.DefaultQuery("createdEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
-
+	timeFormat := "2006-01-02T15:04:05.000Z"
 	query = query.Where("last_modified_at BETWEEN ? AND ?",
-		c.DefaultQuery("lastModifiedStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).String()),
-		c.DefaultQuery("lastModifiedEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).String()))
+		c.DefaultQuery("lastModifiedStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
+		c.DefaultQuery("lastModifiedEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
+	query = query.Where("created_at BETWEEN ? AND ?",
+		c.DefaultQuery("createdStart", time.Date(2000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)),
+		c.DefaultQuery("createdEnd", time.Date(3000, time.March, 14, 10, 30, 0, 0, time.UTC).Format(timeFormat)))
 
 	offset, err := strconv.Atoi(c.DefaultQuery("offset", "0"))
 	if err != nil {
@@ -73,9 +73,9 @@ func (s *SeatHandler) Search(c *gin.Context) {
 		return
 	}
 	var response []payload.SeatReponse
-	for i := range obj {
+	for _, i := range obj {
 		var temp payload.SeatReponse
-		payload.MapStruct(obj[i], &temp)
+		payload.MapStruct(i, &temp)
 		response = append(response, temp)
 
 	}
@@ -86,20 +86,23 @@ func (s *SeatHandler) Search(c *gin.Context) {
 func (s *SeatHandler) Create(c *gin.Context) {
 	log := config.GetLogger()
 	s.db.Model(&entity.Seat{})
-	var seat payload.CreateSeatRequest
-	if err := c.ShouldBindJSON(&seat); err != nil {
+	var req payload.CreateSeatRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	if err := s.db.Create(&seat).Error; err != nil {
+	var obj entity.Seat
+	payload.MapStruct(req, &obj)
+	if err := s.db.Create(&obj).Error; err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	var response payload.SeatReponse
+	payload.MapStruct(obj, &response)
 
-	c.JSON(http.StatusOK, gin.H{"data": seat})
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
 
 func (s *SeatHandler) Update(c *gin.Context) {
@@ -112,22 +115,19 @@ func (s *SeatHandler) Update(c *gin.Context) {
 		return
 	}
 	id, _ := strconv.Atoi(c.Param("id"))
-
-	find := s.db.First(&entity.MovieSchedule{}, id)
-	if find.Error != nil {
-		log.Error(find.Error)
-		c.JSON(http.StatusBadRequest, gin.H{"error": find.Error.Error()})
-		return
-	}
 	var obj entity.Seat
 
 	payload.MapStruct(req, &obj)
-	obj.ID = uint(id)
-	if err := s.db.Save(&obj).Error; err != nil {
-		log.Error(err)
+	if err := s.db.Model(&entity.Seat{}).Where(`id = ?`, id).Updates(&obj).Error; err != nil {
+		log.Error(err.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	s.db.Model(&entity.Seat{}).First(&obj, id)
+	var response payload.SeatReponse
+	payload.MapStruct(obj, &response)
 
-	c.JSON(http.StatusOK, gin.H{"data": obj})
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
+
+
