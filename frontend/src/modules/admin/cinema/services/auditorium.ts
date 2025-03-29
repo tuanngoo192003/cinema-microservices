@@ -2,7 +2,7 @@ import { IPagination, IResponse } from "../../../core/models/core";
 import {
   IAuditorium,
   IAuditoriumParam,
-} from "../models/Auditorium";
+} from "../models/auditorium";
 import api from "../../../core/services/axios";
 
 let data: IAuditorium[] = [

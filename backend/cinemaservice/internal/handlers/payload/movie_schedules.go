@@ -1,36 +1,36 @@
 package payload
 
 type MovieScheduleRequest struct {
-	MovieID        uint   `json:"movie_id" binding:"required"`
-	AuditoriumID   uint   `json:"auditorium_id" binding:"required"`
-	StartAt        string `json:"start_at" binding:"required"`
-	EndAt          string `json:"end_at" binding:"required"`
-	ScheduleStatus string `json:"schedule_status" binding:"required"`
+	MovieID        uint   `json:"movieId" binding:"required"`
+	AuditoriumID   uint   `json:"auditoriumId" binding:"required"`
+	StartAt        string `json:"startAt" binding:"required"`
+	EndAt          string `json:"endAt" binding:"required"`
+	ScheduleStatus string `json:"scheduleStatus" binding:"required"`
 }
 
 type UpdateMovieScheduleRequest struct {
 	ID             uint   `json:"id" binding:"required"`
-	MovieID        uint   `json:"movie_id" binding:"required"`
-	AuditoriumID   uint   `json:"auditorium_id" binding:"required"`
-	StartAt        string `json:"start_at" binding:"required"`
-	EndAt          string `json:"end_at" binding:"required"`
-	ScheduleStatus string `json:"schedule_status" binding:"required"`
+	MovieID        uint   `json:"movieId" binding:"required"`
+	AuditoriumID   uint   `json:"auditoriumId" binding:"required"`
+	StartAt        string `json:"startAt" binding:"required"`
+	EndAt          string `json:"endAt" binding:"required"`
+	ScheduleStatus string `json:"scheduleStatus" binding:"required"`
 }
 
 type MovieScheduleResponse struct {
 	ID             uint   `json:"id"`
-	MovieID        uint   `json:"movie_id"`
-	AuditoriumID   uint   `json:"auditorium_id"`
-	StartAt        string `json:"start_at"`
-	EndAt          string `json:"end_at"`
-	ScheduleStatus string `json:"schedule_status"`
+	MovieID        uint   `json:"movieId"`
+	AuditoriumID   uint   `json:"auditoriumId"`
+	StartAt        string `json:"startAt"`
+	EndAt          string `json:"endAt"`
+	ScheduleStatus string `json:"scheduleStatus"`
 }
 
 type GetByIDMovieScheduleResponse struct {
 	ID             uint          `json:"id"`
 	Movie          MovieResponse `json:"movie"`
-	AuditoriumID   uint          `json:"auditorium_id"`
-	StartAt        string        `json:"start_at"`
-	EndAt          string        `json:"end_at"`
-	ScheduleStatus string        `json:"schedule_status"`
+	AuditoriumID   uint          `json:"auditoriumId"`
+	StartAt        string        `json:"startAt"`
+	EndAt          string        `json:"endAt"`
+	ScheduleStatus string        `json:"scheduleStatus"`
 }

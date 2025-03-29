@@ -7,7 +7,7 @@ type Props = {
   columns: number[];
 };
 
-export default function SeatList({ rows, columns }: Props) {
+export default function SeatListUI({ rows, columns }: Props) {
   return (
     <Layout className="app-theme">
       <Content>

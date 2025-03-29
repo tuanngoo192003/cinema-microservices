@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { AuditoriumContext } from "./Context";
-import { CreateAuditorium, GetAuditoriumsList } from "../services";
+import { CreateAuditorium, GetAuditoriumsList } from "../services/auditorium";
 import { IPagination } from "../../../core/models/core";
-import { IAuditorium, IAuditoriumParam } from "../models/Auditorium";
+import { IAuditorium, IAuditoriumParam } from "../models/auditorium";
 import { HttpStatusCode } from "axios";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_AUDITORIUMS } from "../../../core/constants/redirectURI";

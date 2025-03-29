@@ -28,16 +28,16 @@ const MovieDetailsUI = lazy(
 );
 const BookingUI = lazy(() => import("../../booking/components/BookingUI.tsx"));
 const AuditoriumsList = lazy(
-  () => import("../../admin/cinema/components/AuditoriumsList.tsx")
+  () => import("../../admin/cinema/components/AuditoriumsListUI.tsx")
 );
 const UsersList = lazy(
   () => import("../../admin/user/components/UserListUI.tsx")
 );
 const AuditoriumCreate = lazy(
-  () => import("../../admin/cinema/components/AuditoriumCreate.tsx")
+  () => import("../../admin/cinema/components/AuditoriumCreateUI.tsx")
 );
 const AuditoriumUpdate = lazy(
-  () => import("../../admin/cinema/components/AuditoriumUpdate.tsx")
+  () => import("../../admin/cinema/components/AuditoriumUpdateUI.tsx")
 );
 
 export const AppRouter = () => (

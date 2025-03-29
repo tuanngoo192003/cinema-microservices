@@ -1,8 +1,8 @@
 import { Button, Form, Input, InputNumber, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getRows } from "../../../core/constants/seat";
-import SeatList from "./SeatList";
-import { CreateAuditorium, GetAuditoriumByID } from "../services";
+import SeatListUI from "./SeatListUI";
+import { CreateAuditorium, GetAuditoriumByID } from "../services/auditorium";
 import { HttpStatusCode } from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { ADMIN_AUDITORIUMS } from "../../../core/constants/redirectURI";
@@ -10,7 +10,7 @@ import { LoadingPage } from "../../../core/components/LoadingPage";
 import "../../../../App.css";
 import { useTranslation } from "react-i18next";
 
-export default function AuditoriumUpdate() {
+export default function AuditoriumUpdateUI() {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>();
   const [rowCount, setRowCount] = useState<number>(1);
@@ -92,7 +92,7 @@ export default function AuditoriumUpdate() {
           />
         </Form.Item>
       </Form>
-      <SeatList columns={columns} rows={rows} />
+      <SeatListUI columns={columns} rows={rows} />
       <Button className="app-btn" onClick={handleCreate}>
         {t('labels.button.save')}
       </Button>

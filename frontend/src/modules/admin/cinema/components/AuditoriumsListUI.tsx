@@ -1,5 +1,5 @@
 import { Button, Layout, Space, Table, Typography } from "antd";
-import { IAuditorium } from "../models/Auditorium";
+import { IAuditorium } from "../models/auditorium";
 import { useEffect, useState } from "react";
 import "../../../../App.css"
 import { useNavigate } from "react-router-dom";
@@ -58,7 +58,7 @@ import { IPagination } from "../../../core/models/core";
 //   },
 // ];
 
-export default function AuditoriumsList() {
+export default function AuditoriumsListUI() {
   const { auditoriums, loading, handleGetAuditoriumList } = useAuditorium()
   const [ auditoriumPagination, setAuditoriumPagination ] = useState<IPagination<IAuditorium> | null>(null)
   const [totalItems, setTotalItems] = useState<number>(0);

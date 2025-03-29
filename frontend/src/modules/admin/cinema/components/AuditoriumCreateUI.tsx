@@ -11,14 +11,14 @@ import { useState } from "react";
 import "../../../../App.css";
 import { getRows } from "../../../core/constants/seat";
 import { useAuditorium } from "../hooks";
-import { IAuditoriumParam } from "../models/Auditorium";
-import SeatList from "./SeatList";
+import { IAuditoriumParam } from "../models/auditorium";
+import SeatListUI from "./SeatListUI";
 import { useTranslation } from "react-i18next";
 import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_AUDITORIUMS } from "../../../core/constants/redirectURI";
 
-export default function AuditoriumCreate() {
+export default function AuditoriumCreateUI() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [rowCount, setRowCount] = useState<number>(1);
@@ -80,7 +80,7 @@ export default function AuditoriumCreate() {
               </Form.Item>
             </Form>
               {t('titles.preview')}
-            <SeatList columns={columns} rows={rows} />
+            <SeatListUI columns={columns} rows={rows} />
             <Button className="app-btn" onClick={createAuditorium}>
               {t("labels.buttons.save")}
             </Button>
