@@ -33,9 +33,9 @@ export const ADMIN_MOVIES_UPDATE = "/admin/movies/:id"
 export const ADMIN_MOVIES_UPDATE_FORMAT_URI = (id: number) => 
   `/admin/movies/${id}`;
 
-export const ADMIN_MOVIE_SCHEDULES = "/admin/movies"
-export const ADMIN_MOVIE_SCHEDULES_CREATE = "/admin/movies/create"
-export const ADMIN_MOVIE_SCHEDULES_UPDATE = "/admin/movies/:id"
+export const ADMIN_MOVIE_SCHEDULES = "/admin/movie-schedules"
+export const ADMIN_MOVIE_SCHEDULES_CREATE = "/admin/movie-schedules/create"
+export const ADMIN_MOVIE_SCHEDULES_UPDATE = "/admin/movie-schedules/:id"
 export const ADMIN_MOVIE_SCHEDULES_UPDATE_FORMAT_URI = (id: number) => 
   `/admin/movies/${id}`;
 

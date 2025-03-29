@@ -43,7 +43,6 @@ export default function AuditoriumCreateUI() {
   return (
     <>
       <Layout
-        className="app-theme"
         style={{ minHeight: "100vh", overflow: "hidden" }}
       >
         <Content>
@@ -51,7 +50,7 @@ export default function AuditoriumCreateUI() {
             <Typography.Title
               style={{ textAlign: "center", marginBottom: "24px" }}
             >
-              Create Auditorium
+              {t('titles.auditorium_create')}
             </Typography.Title>
             <Form
               labelCol={{ span: 4 }}

@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useMovie } from "../hooks";
-import { Avatar, Button, Layout, Space, Table, Tooltip, Typography } from "antd";
-import { Content } from "antd/es/layout/layout";
-import { LoadingPage } from "../../../core/components/LoadingPage";
 import { useNavigate } from "react-router-dom";
 import { IPagination } from "../../../core/models/core";
-import { IMovie } from "../models/movie";
-import { ADMIN_MOVIES_CREATE } from "../../../core/constants/redirectURI";
-import { UserOutlined } from "@ant-design/icons";
+import { IMovieSchedule } from "../models/schedule";
+import { useMovieSchedule } from "../hooks";
+import { LoadingPage } from "../../../core/components/LoadingPage";
+import { Button, Layout, Space, Table, Typography } from "antd";
+import { Content } from "antd/es/layout/layout";
+import { ADMIN_MOVIE_SCHEDULES_CREATE } from "../../../core/constants/redirectURI";
 
-const AdminMovieListUI: React.FC = () => {
+const MovieScheduleListUI: React.FC = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const [totalItems, setTotalItems] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [movieName, setMovieName] = useState<string>('')
-    const [movieGenre, setMovieGenre] = useState<string>('')
+    const [movieId, setMovieId] = useState<number>(1)
+    const [startAt, setStartAt] = useState<string>('')
+    const [endAt, setEndAt] = useState<string>('')
     const [pageSize, setPageSize] = useState(10);
-    const { movies, loading, handleGetMovieList } = useMovie()
-    const [moviePagination, setMoviePagination] = useState<IPagination<IMovie> | null>(null)
+    const { movieSchedules, loading, handleGetMovieScheduleList } = useMovieSchedule()
+    const [movieSchedulePagination, setMovieSchedulePagination] = useState<IPagination<IMovieSchedule> | null>(null)
 
     useEffect(() => {
-        handleGetMovieList(currentPage, pageSize, movieName, movieGenre)
-    }, [movieName, movieGenre, currentPage, pageSize])
+        handleGetMovieScheduleList(movieId, currentPage, pageSize, startAt, endAt)
+    }, [movieId, currentPage, pageSize, startAt, endAt])
 
     useEffect(() => {
-        setMoviePagination(movies)
-    }, [movies])
+        setMovieSchedulePagination(movieSchedules)
+    }, [movieSchedules])
 
     const handleTableChange = (pagination: any) => {
         setCurrentPage(pagination.current);
@@ -52,25 +52,25 @@ const AdminMovieListUI: React.FC = () => {
                 >
                     <Content>
                         <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
-                            {t('labels.titles.list_auditorium')}
+                            {t('labels.titles.list_movie_schedules')}
                         </Typography.Title>
                         <Space style={{ marginBottom: 16 }}>
                             <Button
                                 className="app-btn"
-                                onClick={() => navigate(ADMIN_MOVIES_CREATE)}
+                                onClick={() => navigate(ADMIN_MOVIE_SCHEDULES_CREATE)}
                             >
                                 {t('labels.buttons.create')}
                             </Button>
                         </Space>
-                        <Table<IMovie>
+                        <Table<IMovieSchedule>
                             style={{ marginTop: "2rem" }}
-                            dataSource={moviePagination?.data}
+                            dataSource={movieSchedulePagination?.data}
                             rowKey="auditorium_id"
                             loading={loading}
                             pagination={{
                                 current: currentPage,
                                 pageSize: pageSize,
-                                total: moviePagination?.totalRecord || 0, // Total records from API
+                                total: movieSchedulePagination?.totalRecord || 0, // Total records from API
                                 showSizeChanger: true,
                                 pageSizeOptions: ["5", "10", "20"],
                             }}
@@ -82,43 +82,29 @@ const AdminMovieListUI: React.FC = () => {
                                 key="movieName"
                             />
                             <Table.Column
-                                title={t("labels.description")}
-                                dataIndex="description"
-                                key="description"
-                                render={(text) => (
-                                    <Tooltip title={text}>
-                                      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 200 }}>
-                                        {text}
-                                      </span>
-                                    </Tooltip>
-                                  )}
-                            />
-                            <Table.Column
-                                title={t("labels.duration")}
-                                dataIndex="duration"
+                                title={t("labels.auditorium_name")}
+                                dataIndex="auditoriumName"
                                 key="duration"
                             />
                             <Table.Column
-                                title={t("labels.release_date")}
-                                dataIndex="releaseDate"
-                                key="releaseDate"
+                                title={t("labels.seat_left")}
+                                dataIndex="seatLeft"
+                                key="seatLeft"
                             />
                             <Table.Column
-                                title={t("labels.movie_genre")}
-                                dataIndex="movieGenre"
-                                key="movieGenre"
+                                title={t("labels.start_at")}
+                                dataIndex="startAt"
+                                key="startAt"
                             />
                             <Table.Column
-                                title={t('labels.image')}
-                                dataIndex="imageURL"
-                                key="imageURL"
-                                render={(avatar) => (
-                                    <Avatar
-                                        size={30}
-                                        src={avatar}
-                                        icon={!avatar ? <UserOutlined /> : undefined}
-                                    />
-                                )}
+                                title={t("labels.end_at")}
+                                dataIndex="endAt"
+                                key="endAt"
+                            />
+                            <Table.Column
+                                title={t("labels.schedule_status")}
+                                dataIndex="scheduleStatus"
+                                key="scheduleStatus"
                             />
                             <Table.Column
                                 title="Action"
@@ -138,4 +124,4 @@ const AdminMovieListUI: React.FC = () => {
     )
 }
 
-export default AdminMovieListUI
+export default MovieScheduleListUI

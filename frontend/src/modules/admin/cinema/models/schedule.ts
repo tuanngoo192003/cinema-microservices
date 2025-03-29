@@ -12,10 +12,13 @@ export interface IGetByIDMovieSchedule {
 export interface IMovieSchedule {
     id: number 
     movieId: number
+    movieName: string 
     auditoriumId: number 
+    auditoriumName: string  
     startAt: Date 
     endAt: Date 
     scheduleStatus: string 
+    seatLeft: number
 }
 
 export interface ICreateMovieScheduleParam {

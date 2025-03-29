@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  CalendarOutlined,
   DesktopOutlined,
   InsertRowBelowOutlined,
   TeamOutlined,
@@ -16,6 +17,7 @@ import { Profile } from "./Profile";
 import { useTranslation } from "react-i18next";
 import { HOME } from "../constants/redirectURI";
 import { AppFooter } from "./AppFooter";
+import SubMenu from "antd/es/menu/SubMenu";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -45,16 +47,6 @@ interface MenuConfig {
   breadcrumbItem: string[];
 }
 
-const items: MenuItem[] = [
-  getItem("User", "/admin/users", <UserOutlined />),
-  getItem("Movies", "/admin/movies", <DesktopOutlined />),
-  getItem("Auditoriums", "/admin/auditoriums", <InsertRowBelowOutlined />),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "4"),
-    getItem("Team 2", "5"),
-  ]),
-];
-
 const configs: MenuConfig[] = [
   {
     key: "/admin/users",
@@ -65,6 +57,11 @@ const configs: MenuConfig[] = [
     key: "/admin/movies",
     navigateTo: "/admin/movies",
     breadcrumbItem: ["Admin", "Movies"],
+  },
+  {
+    key: "/admin/movie-schedules",
+    navigateTo: "/admin/movie-schedules",
+    breadcrumbItem: ["Admin", "Movie schedules"]
   },
   {
     key: "/admin/auditoriums",
@@ -81,6 +78,7 @@ const configs: MenuConfig[] = [
 const routeMap: Record<string, string> = {
   "/admin/users": "/admin/users",
   "/admin/movies": "/admin/movies",
+  "/admin/movie-schedules": "/admin/movie-schedules",
   "/admin/auditoriums": "/admin/auditoriums",
 };
 
@@ -89,6 +87,7 @@ const matchedKey = Object.keys(routeMap).find((key) =>
 );
 
 export default function AdminSideBar({ children }: Props) {
+  const { t } = useTranslation()
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -102,9 +101,6 @@ export default function AdminSideBar({ children }: Props) {
       navigate(config.navigateTo);
     }
   };
-
-  const { t } = useTranslation();
-
 
   return (
     <Layout style={{ minHeight: "100vh", marginTop: "3.1rem" }}>
@@ -133,7 +129,7 @@ export default function AdminSideBar({ children }: Props) {
         </Menu>
       </Header>
       <Sider
-        style={{background: "#403C3AFF"}}
+        style={{ background: "#403C3AFF" }}
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
@@ -143,9 +139,25 @@ export default function AdminSideBar({ children }: Props) {
           className="side-menu"
           defaultSelectedKeys={[matchedKey ?? location.pathname]}
           mode="inline"
-          items={items}
           onClick={handleMenuClick}
-        />
+        >
+          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
+            {t('side_bar.users')}
+          </Menu.Item>
+          <Menu.Item key="/admin/movies" icon={<DesktopOutlined />}>
+            {t('side_bar.movies')}
+          </Menu.Item>
+          <Menu.Item key="/admin/movie-schedules" icon={< CalendarOutlined />}>
+            {t('side_bar.movie_schedules')}
+          </Menu.Item>
+          <Menu.Item key="/admin/auditoriums" icon={<InsertRowBelowOutlined />}>
+            {t('side_bar.auditoriums')}
+          </Menu.Item>
+          <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
+            <Menu.Item key="4">{t('team.team_1')}</Menu.Item>
+            <Menu.Item key="5">{t('team.team_2')}</Menu.Item>
+          </SubMenu>
+        </Menu>
       </Sider>
       <Layout>
         <Content style={{ margin: "0 16px" }}>
@@ -167,7 +179,7 @@ export default function AdminSideBar({ children }: Props) {
             {children}
           </div>
         </Content>
-        <AppFooter/>
+        <AppFooter />
       </Layout>
     </Layout>
   );

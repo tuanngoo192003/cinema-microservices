@@ -20,10 +20,13 @@ type UpdateMovieScheduleRequest struct {
 type MovieScheduleResponse struct {
 	ID             uint   `json:"id"`
 	MovieID        uint   `json:"movieId"`
+	MovieName      string `json:"movieName"`
 	AuditoriumID   uint   `json:"auditoriumId"`
+	AuditoriumName string `json:"auditoriumName"`
 	StartAt        string `json:"startAt"`
 	EndAt          string `json:"endAt"`
 	ScheduleStatus string `json:"scheduleStatus"`
+	SeatLeft 	   int   `json:"seatLeft"`
 }
 
 type GetByIDMovieScheduleResponse struct {

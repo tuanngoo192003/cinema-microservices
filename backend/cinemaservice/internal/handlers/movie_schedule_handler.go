@@ -131,7 +131,7 @@ func getAuditoriumByID(auditoriumID uint, db *gorm.DB) (ent *entity.Auditorium, 
 func (h *MovieScheduleHander) UpdateMovieSchedule(c *gin.Context) {
 	log := config.GetLogger()
 
-	var req payload.UpdateScheduleRequest
+	var req payload.UpdateMovieScheduleRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		log.Error(err.Error())
@@ -214,9 +214,14 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 
-	var result []payload.ScheduleResponse
+	var result []payload.MovieScheduleResponse
 	response := query.
-		Select("s.schedule_id", "s.movie_id", "s.auditorium_id", "s.start_at", "s.end_at", "s.schedule_status",
+		Select(
+			"s.schedule_id", "s.movie_id",
+			"(SELECT m.movie_name FROM movies m WHERE m.movie_id = s.movie_id) AS movie_name",
+			"s.auditorium_id",
+			"(SELECT a.auditorium FROM auditoriums a WHERE a.auditorium_id = s.auditorium_id) AS auditorium_name",
+			"s.start_at", "s.end_at", "s.schedule_status",
 			"(SELECT COUNT(*) FROM seats WHERE seats.schedule_id = s.schedule_id AND seats.current_status = 'AVAILABLE') AS seat_left").
 		Table("movie_schedule AS s").
 		Offset(offset).
@@ -229,7 +234,7 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, payload.PaginationResponse[payload.ScheduleResponse]{
+	c.JSON(http.StatusOK, payload.PaginationResponse[payload.MovieScheduleResponse]{
 		Page:        page,
 		Perpage:     perpage,
 		Data:        result,

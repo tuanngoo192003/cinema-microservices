@@ -7,6 +7,12 @@ import {
   ADMIN_AUDITORIUMS,
   ADMIN_AUDITORIUMS_CREATE,
   ADMIN_AUDITORIUMS_UPDATE,
+  ADMIN_MOVIE_SCHEDULES,
+  ADMIN_MOVIE_SCHEDULES_CREATE,
+  ADMIN_MOVIE_SCHEDULES_UPDATE,
+  ADMIN_MOVIES,
+  ADMIN_MOVIES_CREATE,
+  ADMIN_MOVIES_UPDATE,
   ADMIN_USERS,
   BOOKING,
   HOME,
@@ -38,6 +44,24 @@ const AuditoriumCreate = lazy(
 );
 const AuditoriumUpdate = lazy(
   () => import("../../admin/cinema/components/AuditoriumUpdateUI.tsx")
+);
+const MovieList = lazy(
+  () => import ("../../admin/cinema/components/MovieListUI.tsx")
+);
+const MovieCreate = lazy(
+  () => import ("../../admin/cinema/components/MovieCreateUI.tsx")
+);
+const MovieUpdate = lazy(
+  () => import ("../../admin/cinema/components/MovieUpdateUI.tsx")
+);
+const MovieScheduleList = lazy(
+  () => import ("../../admin/cinema/components/MovieScheduleListUI.tsx")
+);
+const MovieScheduleCreate = lazy(
+  () => import ("../../admin/cinema/components/MovieScheduleCreateUI.tsx")
+);
+const MovieScheduleUpdate = lazy(
+  () => import ("../../admin/cinema/components/MovieScheduleUpdateUI.tsx")
 );
 
 export const AppRouter = () => (
@@ -72,6 +96,12 @@ export const AppRouter = () => (
         <Route path={ADMIN_AUDITORIUMS_CREATE} element={<AuditoriumCreate />} />
         <Route path={ADMIN_AUDITORIUMS_UPDATE} element={<AuditoriumUpdate />} />
         <Route path={ADMIN_USERS} element={<UsersList />} />
+        <Route path={ADMIN_MOVIES} element={<MovieList />} />
+        <Route path={ADMIN_MOVIES_CREATE} element={<MovieCreate />} />
+        <Route path={ADMIN_MOVIES_UPDATE} element={<MovieUpdate />} />
+        <Route path={ADMIN_MOVIE_SCHEDULES} element={<MovieScheduleList />} />
+        <Route path={ADMIN_MOVIE_SCHEDULES_CREATE} element={<MovieScheduleCreate />} />
+        <Route path={ADMIN_MOVIE_SCHEDULES_UPDATE} element={<MovieScheduleUpdate />} />
       </Route>
 
       <Route path="*" element={<Page404 />} />

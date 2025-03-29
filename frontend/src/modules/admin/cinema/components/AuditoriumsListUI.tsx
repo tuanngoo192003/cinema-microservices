@@ -1,5 +1,4 @@
 import { Button, Layout, Space, Table, Typography } from "antd";
-import { IAuditorium } from "../models/auditorium";
 import { useEffect, useState } from "react";
 import "../../../../App.css"
 import { useNavigate } from "react-router-dom";
@@ -9,54 +8,7 @@ import { useAuditorium } from "../hooks";
 import { LoadingPage } from "../../../core/components/LoadingPage";
 import { Content } from "antd/es/layout/layout";
 import { IPagination } from "../../../core/models/core";
-
-// const columns: TableProps<IAuditorium>["columns"] = [
-//   {
-//     title: "Id",
-//     dataIndex: "auditorium_id",
-//     key: "auditorium_id",
-//     render: (text) => <a>{text}</a>,
-//   },
-//   {
-//     title: "Name",
-//     dataIndex: "auditorium_name",
-//     key: "auditorium_name",
-//   },
-//   {
-//     title: "Capacity",
-//     dataIndex: "capacity",
-//     key: "capacity",
-//   },
-//   {
-//     title: "Created By",
-//     dataIndex: "created_by",
-//     key: "created_by",
-//   },
-//   {
-//     title: "Last Modified By",
-//     dataIndex: "last_modified_by",
-//     key: "last_modified_by",
-//   },
-//   {
-//     title: "Status",
-//     key: "is_deleted",
-//     dataIndex: "is_deleted",
-//     render: (_, { is_deleted }) => {
-//       const color = is_deleted ? "geekblue" : "green";
-//       const status = is_deleted ? "ACTIVE" : "DELETED";
-//       return (
-//         <Tag color={color} key={status}>
-//           {status.toUpperCase()}
-//         </Tag>
-//       );
-//     },
-//   },
-//   {
-//     title: "Action",
-//     key: "action",
-//     render: (_, { auditorium_id }) => <EditButton id={auditorium_id} />,
-//   },
-// ];
+import { IAuditorium } from "../models/auditorium";
 
 export default function AuditoriumsListUI() {
   const { auditoriums, loading, handleGetAuditoriumList } = useAuditorium()
