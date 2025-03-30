@@ -1,4 +1,4 @@
-import { Card, Layout, Typography, Form, FormProps, Input, InputNumber, DatePicker, Select, Upload, message } from "antd";
+import { Card, Layout, Typography, Form, FormProps, Input, InputNumber, DatePicker, Select, Upload, message, Button } from "antd";
 import { Content } from "antd/es/layout/layout";
 import React from "react";
 import "../../../../App.css";
@@ -171,6 +171,11 @@ const MovieCreateUI: React.FC = () => {
                                         DRAMA
                                     </Option>
                                 </Select>
+                            </Form.Item>
+                            <Form.Item>
+                                <Button className="app-btn" htmlType="submit" block>
+                                    {t("labels.create")}
+                                </Button>
                             </Form.Item>
                         </Form>
                     </Card>

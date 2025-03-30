@@ -8,6 +8,11 @@ export interface IMovie {
     movieGenre: string 
 }
 
+export interface IMovieSelect {
+    movieId: number
+    movieName: string 
+}
+
 export interface ICreateMovieParam {
     movieName: string 
     imageURL: string 

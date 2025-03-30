@@ -19,3 +19,8 @@ type AuditoriumResponse struct {
 	Rows           int    `json:"rows"`
 	Columns        int    `json:"numbers"`
 }
+
+type AuditoriumSelectResponse struct {
+	AuditoriumID   int    `json:"auditorium_id"`
+	AuditoriumName string `json:"auditorium_name"`
+}

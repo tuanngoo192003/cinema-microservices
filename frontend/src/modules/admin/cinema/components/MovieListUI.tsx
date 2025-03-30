@@ -13,17 +13,28 @@ import { UserOutlined } from "@ant-design/icons";
 const AdminMovieListUI: React.FC = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
+    const formatDate = (date: Date) => date.toISOString().split('T')[0];
+
     const [totalItems, setTotalItems] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [movieName, setMovieName] = useState<string>('')
     const [movieGenre, setMovieGenre] = useState<string>('')
+    const [releaseStart, setReleaseStart] = useState<Date>(() => {
+        const now = new Date();
+        return new Date(now.setDate(now.getDate() - 14));
+    });
+
+    const [releaseEnd, setReleaseEnd] = useState<Date>(() => {
+        const now = new Date();
+        return new Date(now.setDate(now.getDate() + 14));
+    });
     const [pageSize, setPageSize] = useState(10);
     const { movies, loading, handleGetMovieList } = useMovie()
     const [moviePagination, setMoviePagination] = useState<IPagination<IMovie> | null>(null)
 
     useEffect(() => {
-        handleGetMovieList(currentPage, pageSize, movieName, movieGenre)
-    }, [movieName, movieGenre, currentPage, pageSize])
+        handleGetMovieList(currentPage, pageSize, movieName, movieGenre, formatDate(releaseStart), formatDate(releaseEnd))
+    }, [movieName, movieGenre, currentPage, pageSize, releaseStart, releaseEnd])
 
     useEffect(() => {
         setMoviePagination(movies)
@@ -85,13 +96,24 @@ const AdminMovieListUI: React.FC = () => {
                                 title={t("labels.description")}
                                 dataIndex="description"
                                 key="description"
-                                render={(text) => (
-                                    <Tooltip title={text}>
-                                      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 200 }}>
-                                        {text}
-                                      </span>
-                                    </Tooltip>
-                                  )}
+                                render={(text: string) => {
+                                    const maxLength = 30; // Maximum characters before truncating
+                                    const truncatedText = text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+
+                                    return (
+                                        <Tooltip title={text}>
+                                            <span style={{
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                maxWidth: 200,
+                                                display: 'inline-block'
+                                            }}>
+                                                {truncatedText}
+                                            </span>
+                                        </Tooltip>
+                                    );
+                                }}
                             />
                             <Table.Column
                                 title={t("labels.duration")}

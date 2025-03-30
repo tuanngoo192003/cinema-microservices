@@ -22,6 +22,19 @@ func NewMoviesHandler(db *gorm.DB) *MoviesHandler {
 	return &MoviesHandler{db}
 }
 
+func (h *MoviesHandler) GetAllMovies(c *gin.Context) {
+	log := config.GetLogger()
+
+	var movies []payload.MovieSelectResponse
+	if err := h.db.Select(`movie_id, movie_name`).Find(&movies).Error; err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"erorr": err.Error()}})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": movies})
+}
+
 func (h *MoviesHandler) GetMovieByID(c *gin.Context) {
 	log := config.GetLogger()
 

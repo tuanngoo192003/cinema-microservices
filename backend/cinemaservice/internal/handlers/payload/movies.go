@@ -31,3 +31,8 @@ type MovieResponse struct {
 	ReleaseDate time.Time `json:"releaseDate"`
 	MovieGenre  string    `json:"movieGenre"`
 }
+
+type MovieSelectResponse struct {
+	MovieID   uint   `json:"movieId"`
+	MovieName string `json:"movieName"`
+}

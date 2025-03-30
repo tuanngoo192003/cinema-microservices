@@ -1,4 +1,6 @@
+import { IResponse } from "../../core/models/core";
 import api from "../../core/services/axios";
+import { IMovieSchedule } from "../models/booking";
 import { MovieDetailResponse } from "../models/Movie";
 import { ReservedSeatRequest, ReservedSeatResponse } from "../models/Seat";
 
@@ -24,3 +26,16 @@ export const GetMovieDetail = (id: string): Promise<MovieDetailResponse> => {
     setTimeout(() => resolve(mockMovie), 1000);
   });
 };
+
+export const GetMovieDetails = (movieId: number): Promise<IResponse<IMovieSchedule>> => {
+  return new Promise((resolve, reject) => {
+    api 
+      .get(`/cinema/movie-schedules/details/${movieId}`)
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}

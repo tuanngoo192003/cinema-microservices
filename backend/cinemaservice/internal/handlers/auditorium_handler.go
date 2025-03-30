@@ -174,3 +174,16 @@ func (a *AuditoriumsHandler) GetAuditoriumByID(c *gin.Context) {
 		},
 	})
 }
+
+func (a *AuditoriumsHandler) GetAllAuditoriums(c *gin.Context) {
+	log := config.GetLogger()
+	var auditoriums []payload.AuditoriumSelectResponse
+
+	if err := a.db.Select(`auditorium_id, auditorium_name`).Find(&auditoriums).Error; err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": auditoriums})
+}

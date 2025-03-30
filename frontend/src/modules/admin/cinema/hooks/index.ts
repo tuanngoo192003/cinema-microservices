@@ -1,14 +1,14 @@
 import { useContext } from "react";
-import { AuditoriumContext, MovieContext, MovieScheduleContext } from "../context/Context";
+import { AuditoriumContext, AdminMovieContext, AdminMovieScheduleContext } from "../context/Context";
 
 export const useAuditorium = () => {
     return useContext(AuditoriumContext)
 }
 
 export const useMovie = () => {
-    return useContext(MovieContext)
+    return useContext(AdminMovieContext)
 }
 
 export const useMovieSchedule = () => {
-    return useContext(MovieScheduleContext)
+    return useContext(AdminMovieScheduleContext)
 } 

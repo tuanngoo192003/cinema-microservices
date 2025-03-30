@@ -25,67 +25,57 @@ import Title from "antd/es/typography/Title";
 import { useTranslation } from "react-i18next";
 import { AppFooter } from "../../core/components/AppFooter.tsx";
 import { ConfirmBookingUI } from "./ConfirmBooking.tsx";
-import { Seat } from "../models/Seat.ts";
 import SeatUI from "./SeatUI.tsx";
-import useModal from "../hooks/useModal.ts";
-import { MovieDetailResponse } from "../models/Movie.ts";
-import { GetMovieDetail } from "../services/index.ts";
+import useModal from "../../core/hooks/useModal.ts";
+import { IMovieSchedule, ISeat } from "../models/booking.ts";
+import { useBooking } from "../hooks/index.ts";
+import { useParams } from "react-router-dom";
 
 const BookingUI: React.FC = () => {
-  const [movieDetail, setMovieDetail] = useState<MovieDetailResponse | null>(
-    null
-  );
-  const [choose, setChoosed] = useState<string[]>([]);
-  const [seats, setSeats] = useState<Seat[]>([]);
   const { t } = useTranslation();
   const { isVisible, showModal, hideModal, isLoading } = useModal();
   const [modalText, setModalText] = useState<string>("");
-  const [rows, setRows] = useState<string[]>("ABCDEFGHIJ".split(""));
-  const [columns, setColumns] = useState<number[]>(
-    Array.from({ length: 12 }, (_, i) => i + 1)
-  );
+
+  const [movieScheduleData, setMovieScheduleData] = useState<IMovieSchedule | null>(null)
+  const { movieSchedule, loading, handleGetMovieDetails } = useBooking()
+  const { id } = useParams<{ id: string }>();
+  const movieId = Number(id);
+
+  const [choose, setChoosed] = useState<string[]>([]);
+  const [seats, setSeats] = useState<ISeat[]>([]);
 
   useEffect(() => {
-    const currentRows = movieDetail?.rows.split("") || [];
+    if (movieId) {
+      handleGetMovieDetails(movieId);
+      setMovieScheduleData(movieSchedule)
+    }
+  }, [movieId]);
+
+  useEffect(() => {
+    const currentRows = movieScheduleData?.auditorium.rows.split("") || [];
     const currentColumns = Array.from(
-      { length: movieDetail?.colums ?? 12 },
+      { length: movieScheduleData?.auditorium.columns ?? 12 },
       (_, i) => i + 1
     );
 
-    setRows(currentRows);
-    setColumns(currentColumns);
-
-    const updatedSeats: Seat[] = currentRows.flatMap((row) =>
+    const updatedSeats: ISeat[] = currentRows.flatMap((row) =>
       currentColumns.map((col) => {
         const seatId = `${row}${col}`;
-        const status = movieDetail?.booked.includes(seatId)
+        const status = movieScheduleData?.booked.includes(seatId)
           ? "BOOKED"
-          : movieDetail?.reserved.includes(seatId)
-          ? "RESERVED"
-          : choose.includes(seatId)
-          ? "CHOOSED"
-          : "AVAILABLE";
+          : movieScheduleData?.reserved.includes(seatId)
+            ? "RESERVED"
+            : choose.includes(seatId)
+              ? "CHOOSED"
+              : "AVAILABLE";
 
         return { id: seatId, status };
       })
     );
     setSeats(updatedSeats);
-  }, [movieDetail, choose]);
+  }, [movieScheduleData, choose]);
 
-  useEffect(() => {
-    const fetchMovieDetail = async () => {
-      try {
-        const response = await GetMovieDetail("movieID");
-        setMovieDetail(response);
-      } catch (error) {
-        console.error("Failed to fetch movie details:", error);
-      }
-    };
-
-    fetchMovieDetail();
-  }, []);
-
-  const appendSeat = (seat: Seat) => {
+  const appendSeat = (seat: ISeat) => {
     if (seat.status == "BOOKED" || seat.status == "RESERVED") {
       setModalText(
         `This seat is already ${seat.status.toLocaleLowerCase()}. Please choose other seat.`
@@ -100,7 +90,7 @@ const BookingUI: React.FC = () => {
         : [...prevChoosed, seatId]
     );
   };
-  if (!movieDetail) {
+  if (!movieScheduleData) {
     return <div>Loading movie details...</div>;
   }
   return (
@@ -236,22 +226,16 @@ const BookingUI: React.FC = () => {
 
                 {/* Seats Layout */}
                 <div style={{ width: "100%" }}>
-                  {rows.map((row) => (
-                    <Row key={row} gutter={[4, 4]} justify="center">
-                      {columns.map((col) => {
-                        const seat = seats.find((s) => s.id === `${row}${col}`);
-                        if (!seat) return null;
-                        return (
-                          <SeatUI
-                            handleOnclick={appendSeat}
-                            col={col}
-                            row={row}
-                            seat={seat}
-                          />
-                        );
-                      })}
-                    </Row>
-                  ))}
+                  <Row gutter={[4, 4]} justify="center">
+                    {movieScheduleData.auditorium.seats.map(seat => {
+                      return (
+                        <SeatUI
+                          handleOnclick={appendSeat}
+                          seat={seat}
+                        />
+                      );
+                    })}
+                  </Row>
                 </div>
               </Card>
             </Col>
@@ -281,12 +265,12 @@ const BookingUI: React.FC = () => {
                   </Col>
                   <Col xs={24} md={14}>
                     <div>
-                      <Title level={3}>{movieDetail?.name}</Title>
+                      <Title level={3}>{movieScheduleData?.movie.movieName}</Title>
                       <Title
                         level={5}
                         style={{ marginBottom: 0, whiteSpace: "nowrap" }}
                       >
-                        {t("labels.titles.movie_genre")} : {movieDetail?.genre}
+                        {t("labels.titles.movie_genre")} : {movieScheduleData?.movie.movieGenre}
                       </Title>
                       <Title
                         level={5}
@@ -294,7 +278,7 @@ const BookingUI: React.FC = () => {
                       >
                         <FontAwesomeIcon icon={faClock} /> &nbsp;{" "}
                         {t("labels.titles.duration")} :{" "}
-                        {movieDetail?.timeInMinute}
+                        {movieScheduleData?.movie.duration}
                       </Title>
                     </div>
                   </Col>
@@ -321,7 +305,7 @@ const BookingUI: React.FC = () => {
                           {t("common.start_at")} :
                         </Title>
                         <Typography.Text>
-                          {movieDetail?.startAt}
+                          {movieScheduleData?.startAt}
                         </Typography.Text>
                       </div>
 
@@ -337,7 +321,7 @@ const BookingUI: React.FC = () => {
                           {t("labels.titles.auditorium")} :
                         </Title>
                         <Typography.Text>
-                          {movieDetail?.auditorium}
+                          {movieScheduleData?.auditorium.auditoriumName}
                         </Typography.Text>
                       </div>
 

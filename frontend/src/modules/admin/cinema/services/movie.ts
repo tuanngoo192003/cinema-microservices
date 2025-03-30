@@ -1,12 +1,28 @@
 import { IPagination, IResponse } from "../../../core/models/core";
 import api from "../../../core/services/axios";
-import { ICreateMovieParam, IMovie, IUpdateMovieParam } from "../models/movie";
+import { ICreateMovieParam, IMovie, IMovieSelect, IUpdateMovieParam } from "../models/movie";
 
-export const GetMovieList
-    = async (page: number, perpage: number, movieName: string, movieGenre: string): Promise<IPagination<IMovie>> => {
+export const GetAllMovies
+    = async (): Promise<IResponse<IMovieSelect[]>> => {
         return new Promise((resolve, reject) => {
             api
-                .get(`/cinema/movies?page=${page}&perpage=${perpage}&movieName=${movieName}&movieGenre=${movieGenre}`)
+                .get(`/cinema/movies/all`)
+                .then((res) => {
+                    resolve(res.data)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
+        })
+    }
+
+export const GetMovieList
+    = async (page: number, perpage: number, movieName: string, movieGenre: string,
+        releaseStart: string, releaseEnd: string
+    ): Promise<IPagination<IMovie>> => {
+        return new Promise((resolve, reject) => {
+            api
+                .get(`/cinema/movies?page=${page}&perpage=${perpage}&movieName=${movieName}&movieGenre=${movieGenre}&releaseStart=${releaseStart}&releaseEnd=${releaseEnd}`)
                 .then((res) => {
                     resolve(res.data)
                 })

@@ -1,16 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col } from "antd";
 import { faCouch } from "@fortawesome/free-solid-svg-icons";
-import { Seat } from "../models/Seat";
+import { ISeat } from "../models/booking";
+import separateSeatCode from "../../core/utils";
 
 type Props = {
-  handleOnclick: (seat: Seat) => void;
-  row: string;
-  col: number;
-  seat: Seat;
+  handleOnclick: (seat: ISeat) => void;
+  seat: ISeat;
 };
 
-export default function SeatUI({ handleOnclick, row, col, seat }: Props) {
+export default function SeatUI({ handleOnclick, seat }: Props) {
+  const { row, col } = separateSeatCode(seat.seatCode);
   return (
     <>
       <Col

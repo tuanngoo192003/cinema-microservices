@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { MovieScheduleContext } from "./Context"
+import { AdminMovieScheduleContext } from "./Context"
 import { IPagination } from "../../../core/models/core"
 import { ICreateMovieScheduleParam, IGetByIDMovieSchedule, IMovieSchedule, IUpdateMovieScheduleParam } from "../models/schedule"
 import { CreateMovieSchedule, GetMovieSchedules, GetMovieSchedulesDetails, UpdateMovieSchedule } from "../services/schedule"
@@ -10,7 +10,7 @@ interface MovieScheduleProps {
     children?: React.ReactNode
 }
 
-export const MovieScheduleContextProvider: React.FC<{children: React.ReactNode}> = ({children} : MovieScheduleProps) => {
+export const AdminMovieScheduleContextProvider: React.FC<{children: React.ReactNode}> = ({children} : MovieScheduleProps) => {
 
     const [movieSchedules, setMovieSchedules] = useState<IPagination<IMovieSchedule> | null>(null)
     const [movieSchedule, setMovieSchedule] = useState<IGetByIDMovieSchedule | null>(null)
@@ -70,9 +70,9 @@ export const MovieScheduleContextProvider: React.FC<{children: React.ReactNode}>
     }
 
     return (
-        <MovieScheduleContext.Provider 
+        <AdminMovieScheduleContext.Provider 
         value={{movieSchedules, movieSchedule, loading, handleGetMovieScheduleList, handleGetMovieScheduleByID, handleCreateMovieSchedule, handleUpdateMovieSchedule}}>
             {children}
-        </MovieScheduleContext.Provider>
+        </AdminMovieScheduleContext.Provider>
     )
 }

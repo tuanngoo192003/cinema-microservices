@@ -1,33 +1,46 @@
 import React, { useState } from "react";
 import { AuditoriumContext } from "./Context";
-import { CreateAuditorium, GetAuditoriumsList } from "../services/auditorium";
+import { CreateAuditorium, GetAllAuditoriums, GetAuditoriumsList } from "../services/auditorium";
 import { IPagination } from "../../../core/models/core";
-import { IAuditorium, IAuditoriumParam } from "../models/auditorium";
 import { HttpStatusCode } from "axios";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_AUDITORIUMS } from "../../../core/constants/redirectURI";
+import { IAuditorium, IAuditoriumParam, IAuditoriumSelect } from "../models/auditorium";
 
 interface AuditoriumProps {
     children?: React.ReactNode
 }
 
-export const AuditoriumContextProvider: React.FC<{children: React.ReactNode}> = ({children}: AuditoriumProps) => {
+export const AuditoriumContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }: AuditoriumProps) => {
     const navigate = useNavigate()
     const [auditoriums, setAuditoriums] = useState<IPagination<IAuditorium> | null>(null)
+    const [auditoriumList, setAuditoriumList] = useState<IAuditoriumSelect[]>([])
     const [loading, setLoading] = useState<boolean>(false)
+
+    const handleGetAllAuditoriums = async () => {
+        setLoading(true)
+        try {
+            const result = await GetAllAuditoriums();
+            setAuditoriumList(result.data)
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const handleCreateAuditorium = async (body: IAuditoriumParam) => {
         setLoading(true)
         try {
             const result = await CreateAuditorium(body);
             if (result.status == HttpStatusCode.Ok) {
-              navigate(ADMIN_AUDITORIUMS);
+                navigate(ADMIN_AUDITORIUMS);
             }
         } catch (error) {
             console.log(error);
         } finally {
-            setLoading(false)            
-        } 
+            setLoading(false)
+        }
     };
 
     const handleGetAuditoriumList = async (page: number, perpage: number, auditoriumName: string) => {
@@ -38,13 +51,13 @@ export const AuditoriumContextProvider: React.FC<{children: React.ReactNode}> = 
         } catch (error) {
             console.log(error);
         } finally {
-            setLoading(false)            
-        } 
+            setLoading(false)
+        }
     }
 
     return (
-        <AuditoriumContext.Provider value={{ auditoriums, loading, handleCreateAuditorium, handleGetAuditoriumList }}>
-             {children}
+        <AuditoriumContext.Provider value={{ auditoriums, auditoriumList, loading, handleCreateAuditorium, handleGetAuditoriumList, handleGetAllAuditoriums }}>
+            {children}
         </AuditoriumContext.Provider>
     )
 }

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { MovieContext } from "./Context";
+import { AdminMovieContext } from "./Context";
 import { IPagination } from "../../../core/models/core";
-import { ICreateMovieParam, IMovie, IUpdateMovieParam } from "../models/movie";
-import { CreateMovie, GetMovieByID, GetMovieList, UpdateMovie } from "../services/movie";
+import { ICreateMovieParam, IMovie, IMovieSelect, IUpdateMovieParam } from "../models/movie";
+import { CreateMovie, GetAllMovies, GetMovieByID, GetMovieList, UpdateMovie } from "../services/movie";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_MOVIES } from "../../../core/constants/redirectURI";
 
@@ -10,18 +10,33 @@ interface MovieProps {
     children?: React.ReactNode
 }
 
-export const MovieContextProvider: React.FC<{children: React.ReactNode}> = ({children}: MovieProps) => {
+export const AdminMovieContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }: MovieProps) => {
     const [movies, setMovies] = useState<IPagination<IMovie> | null>(null)
+    const [movieList, setMovieList] = useState<IMovieSelect[]>([])
     const [movie, setMovie] = useState<IMovie | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
 
-    const handleGetMovieList = async (page: number, perpage: number, movieName: string, movieGenre: string) => {
+    const handleGetAllMovies = async () => {
         setLoading(true)
         try {
-            const res = await GetMovieList(page, perpage, movieName, movieGenre)
+            const res = await GetAllMovies()
+            setMovieList(res.data)
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleGetMovieList = async (page: number, perpage: number, movieName: string, movieGenre: string,
+        releaseStart: string, releaseEnd: string
+    ) => {
+        setLoading(true)
+        try {
+            const res = await GetMovieList(page, perpage, movieName, movieGenre, releaseStart, releaseEnd)
             setMovies(res)
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         } finally {
             setLoading(false)
@@ -33,7 +48,7 @@ export const MovieContextProvider: React.FC<{children: React.ReactNode}> = ({chi
         try {
             const res = await GetMovieByID(id)
             setMovie(res.data)
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         } finally {
             setLoading(false)
@@ -47,13 +62,13 @@ export const MovieContextProvider: React.FC<{children: React.ReactNode}> = ({chi
             setTimeout(() => {
                 navigate(ADMIN_MOVIES)
             }, 2000)
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         } finally {
             setLoading(false)
         }
     }
-    
+
     const handleUpdateMovie = async (body: IUpdateMovieParam) => {
         setLoading(true)
         try {
@@ -61,7 +76,7 @@ export const MovieContextProvider: React.FC<{children: React.ReactNode}> = ({chi
             setTimeout(() => {
                 navigate(ADMIN_MOVIES)
             }, 2000)
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         } finally {
             setLoading(false)
@@ -69,8 +84,11 @@ export const MovieContextProvider: React.FC<{children: React.ReactNode}> = ({chi
     }
 
     return (
-        <MovieContext.Provider value={{ movies, movie, loading, handleGetMovieList, handleGetMovieDetails, handleCreateMovie, handleUpdateMovie}}>
+        <AdminMovieContext.Provider value={{
+            movies, movieList, movie, loading, handleGetMovieList,
+            handleGetMovieDetails, handleCreateMovie, handleUpdateMovie, handleGetAllMovies
+        }}>
             {children}
-        </MovieContext.Provider>
+        </AdminMovieContext.Provider>
     )
 }
