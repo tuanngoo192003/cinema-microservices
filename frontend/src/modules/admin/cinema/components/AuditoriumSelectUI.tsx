@@ -17,7 +17,7 @@ const AuditoriumSelectUI: React.FC<AuditoriumSelectUIProps> = ({onSelectAuditori
     useEffect(() => {
         handleGetAllAuditoriums()
         setAuditoriums(auditoriumList)
-    }, [auditoriumList])
+    }, [])
 
     useEffect(() => {
         setSelectData(auditoriums)

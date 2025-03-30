@@ -220,7 +220,7 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 			"s.schedule_id", "s.movie_id",
 			"(SELECT m.movie_name FROM movies m WHERE m.movie_id = s.movie_id) AS movie_name",
 			"s.auditorium_id",
-			"(SELECT a.auditorium FROM auditoriums a WHERE a.auditorium_id = s.auditorium_id) AS auditorium_name",
+			"(SELECT a.auditorium_name FROM auditoriums a WHERE a.auditorium_id = s.auditorium_id) AS auditorium_name",
 			"s.start_at", "s.end_at", "s.schedule_status",
 			"(SELECT COUNT(*) FROM seats WHERE seats.schedule_id = s.schedule_id AND seats.current_status = 'AVAILABLE') AS seat_left").
 		Table("movie_schedule AS s").

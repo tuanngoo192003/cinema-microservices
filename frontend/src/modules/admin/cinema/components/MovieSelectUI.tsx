@@ -17,7 +17,7 @@ const MovieSelectUI: React.FC<MovieSelectUIProps> = ({onSelectMovie}) => {
     useEffect(() => {
         handleGetAllMovies()
         setMovies(movieList)
-    }, [movieList])
+    }, [])
 
     useEffect(() => {
         setSelectData(movies)
