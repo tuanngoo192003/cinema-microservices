@@ -12,6 +12,7 @@ import { UserProvider } from "./modules/admin/user/context/UserContextProvider.t
 import { AuditoriumContextProvider } from "./modules/admin/cinema/context/AuditoriumContextProvider.tsx";
 import { AdminMovieContextProvider } from "./modules/admin/cinema/context/AdminMovieContextProvider.tsx";
 import { AdminMovieScheduleContextProvider } from "./modules/admin/cinema/context/AdminMovieScheduleContextProvider.tsx";
+import BookingContextProvider from "./modules/booking/context/BookingContextProvider.tsx";
 
 const App: React.FC = () => (
     <>
@@ -22,13 +23,15 @@ const App: React.FC = () => (
                         <UserProvider>
                             <MovieContextProvider>
                                 <MovieScheduleContextProvider>
-                                    <AuditoriumContextProvider>
-                                        <AdminMovieScheduleContextProvider>
-                                            <AdminMovieContextProvider>
-                                                <AppRouter />
-                                            </AdminMovieContextProvider>
-                                        </AdminMovieScheduleContextProvider>
-                                    </AuditoriumContextProvider>
+                                    <BookingContextProvider>
+                                        <AuditoriumContextProvider>
+                                            <AdminMovieScheduleContextProvider>
+                                                <AdminMovieContextProvider>
+                                                    <AppRouter />
+                                                </AdminMovieContextProvider>
+                                            </AdminMovieScheduleContextProvider>
+                                        </AuditoriumContextProvider>
+                                    </BookingContextProvider>
                                 </MovieScheduleContextProvider>
                             </MovieContextProvider>
                         </UserProvider>

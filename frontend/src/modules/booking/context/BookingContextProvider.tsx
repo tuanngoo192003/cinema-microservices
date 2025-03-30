@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { BookingContext } from "./Context"
 import { IMovieSchedule } from "../models/booking"
-import { GetMovieDetails } from "../services"
+import { GetMovieDetail, GetMovieDetails } from "../services"
 
 interface BookingContextProps {
     children: React.ReactNode
@@ -14,7 +14,7 @@ const BookingContextProvider: React.FC<{children: React.ReactNode}> = ({children
     const handleGetMovieDetails = async (movieId: number) => {
         setLoading(true)
         try {
-            const res = await GetMovieDetails(movieId)
+            const res = await GetMovieDetail(movieId)
             setMovieSchedule(res.data)
         } catch(e) {
             console.log(e)
@@ -22,7 +22,6 @@ const BookingContextProvider: React.FC<{children: React.ReactNode}> = ({children
             setLoading(false)
         }
     }
-
 
     return (
         <BookingContext.Provider value={{movieSchedule, loading, handleGetMovieDetails}}>

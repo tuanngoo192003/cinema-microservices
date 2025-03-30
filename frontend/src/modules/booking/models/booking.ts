@@ -1,5 +1,9 @@
 import { HttpStatusCode } from "axios"
 
+export interface IBooking {
+    
+}
+
 export interface IMovieSchedule {
     id: number
     movie: IMovie
@@ -31,8 +35,9 @@ export interface IMovie {
 }
 
 export interface ISeat {
-    id: string;
+    id: number;
     seatCode: string;
+    price: number
     status: "AVAILABLE" | "RESERVED" | "BOOKED" | "CHOOSED";
 }
 
