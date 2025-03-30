@@ -24,12 +24,12 @@ func Migrate(DB *gorm.DB) {
 	}
 	fmt.Println("Migrated Movie successfully!")
 
-	err = DB.AutoMigrate(&entity.MovieSchedule{})
+	err = DB.AutoMigrate(&entity.Schedule{})
 	if err != nil {
-		fmt.Printf("Error migrating MovieSchedule: %v\n", err)
+		fmt.Printf("Error migrating Schedule: %v\n", err)
 		return
 	}
-	fmt.Println("Migrated MovieSchedule successfully!")
+	fmt.Println("Migrated Schedule successfully!")
 
 	err = DB.AutoMigrate(&entity.ReservedSeat{})
 	if err != nil {

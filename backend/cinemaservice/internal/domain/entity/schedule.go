@@ -6,7 +6,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type MovieSchedule struct {
+const (
+	StatusScheduleActive  = "active"
+	StatusScheduleExpired = "expired"
+)
+
+type Schedule struct {
 	ID             uint           `gorm:"primaryKey;not null"`
 	MovieID        uint           `gorm:"column:movie_id"`
 	AuditoriumID   uint           `gorm:"column:auditorium_id"`
@@ -16,7 +21,7 @@ type MovieSchedule struct {
 	LastModifiedAt time.Time      `gorm:"column:last_modified_at;autoUpdateTime"`
 	LastModifiedBy string         `gorm:"column:last_modified_by"`
 	CreatedBy      string         `gorm:"column:created_by;type:varchar(50)"`
-	ScheduleStatus string         `gorm:"column:schedule_status;type:varchar(50)"`
+	ScheduleStatus string         `gorm:"column:schedule_status;type:varchar(20)"`
 	IsDeleted      bool           `gorm:"column:is_deleted"`
 	Movie          Movie          `gorm:"foreignKey:MovieID;references:ID;constraint:OnDelete:CASCADE;"`
 	Auditorium     Auditorium     `gorm:"foreignKey:AuditoriumID;references:ID;constraint:OnDelete:CASCADE;"`

@@ -8,7 +8,7 @@ import {MOVIE_DETAILS} from "../../core/constants/redirectURI.ts";
 import {useTranslation} from "react-i18next";
 import { useParams } from "react-router-dom";
 import chinatsu from "../../../assets/千夏.jpg";
-import {MovieSchedulesUI} from "./MovieSchedulesUI.tsx";
+import {SchedulesUI} from "./SchedulesUI.tsx";
 
 interface IMovieDetails {
     imageSrc: string;
@@ -79,7 +79,7 @@ export const MovieDetailsUI: React.FC = () => {
                             </div>
                         </Col>
                         <Col xs={24} md={24}>
-                            <MovieSchedulesUI id={1}/>
+                            <SchedulesUI id={1}/>
                         </Col>
                     </Row>
                 </Content>

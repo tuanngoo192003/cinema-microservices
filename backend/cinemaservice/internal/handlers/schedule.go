@@ -29,7 +29,7 @@ func (a *ScheduleHandler) Create(c *gin.Context) {
 
 	log.Info("Creating new schedule")
 	err := c.ShouldBindJSON(&req)
-	var obj entity.MovieSchedule
+	var obj entity.Schedule
 	payload.MapStruct(req, &obj)
 	if err != nil {
 		log.Error(err.Error())
@@ -37,7 +37,7 @@ func (a *ScheduleHandler) Create(c *gin.Context) {
 		return
 	}
 
-	a.db.Model(&entity.MovieSchedule{})
+	a.db.Model(&entity.Schedule{})
 	result := a.db.Create(&obj)
 
 	if result.Error != nil {
@@ -61,15 +61,15 @@ func (a *ScheduleHandler) Update(c *gin.Context) {
 		return
 	}
 
-	var obj entity.MovieSchedule
+	var obj entity.Schedule
 	payload.MapStruct(req, &obj)
 
-	if err := a.db.Model(&entity.MovieSchedule{}).Where(`id = ?`, id).Updates(&obj).Error; err != nil {
+	if err := a.db.Model(&entity.Schedule{}).Where(`id = ?`, id).Updates(&obj).Error; err != nil {
 		log.Error(err.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	a.db.Model(&entity.MovieSchedule{}).First(&obj, id)
+	a.db.Model(&entity.Schedule{}).First(&obj, id)
 	var response payload.ScheduleResponse
 	payload.MapStruct(obj, &response)
 	c.JSON(http.StatusOK, gin.H{"data": response})
@@ -85,15 +85,15 @@ func (a *ScheduleHandler) Delete(c *gin.Context) {
 		return
 	}
 
-	var obj entity.MovieSchedule
+	var obj entity.Schedule
 
 	obj.IsDeleted = true
-	if err := a.db.Model(entity.MovieSchedule{}).Where(`id = ?`, id).Updates(&obj).Error; err != nil {
+	if err := a.db.Model(entity.Schedule{}).Where(`id = ?`, id).Updates(&obj).Error; err != nil {
 		log.Error(err.Error)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	a.db.Model(&entity.MovieSchedule{}).First(&obj, id)
+	a.db.Model(&entity.Schedule{}).First(&obj, id)
 
 	var response payload.ScheduleResponse
 	payload.MapStruct(obj, &response)
@@ -103,7 +103,7 @@ func (a *ScheduleHandler) Delete(c *gin.Context) {
 
 func (a *ScheduleHandler) Search(c *gin.Context) {
 	log := config.GetLogger()
-	query := a.db.Model(&entity.MovieSchedule{})
+	query := a.db.Model(&entity.Schedule{})
 
 	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil || page <= 0 {
@@ -164,7 +164,7 @@ func (a *ScheduleHandler) Search(c *gin.Context) {
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 
-	var obj []entity.MovieSchedule
+	var obj []entity.Schedule
 	result := query.Offset(offset).Limit(perpage).Find(&obj)
 	if result.Error != nil {
 		log.Error(result.Error.Error())

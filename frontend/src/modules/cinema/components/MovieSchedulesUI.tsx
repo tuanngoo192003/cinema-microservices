@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import Title from "antd/es/typography/Title";
 const { TabPane } = Tabs;
 
-interface MovieSchedulesProps {
+interface SchedulesProps {
     id: number;
 }
 
@@ -42,7 +42,7 @@ const movieScheduleData: Record<number, { start_at: Date; end_at: Date; seat_lef
 };
 
 
-export const MovieSchedulesUI: React.FC<MovieSchedulesProps> = ({ id }) => {
+export const SchedulesUI: React.FC<SchedulesProps> = ({ id }) => {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState("0");
 

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"cinema-service/infra/config"
+	"cinema-service/internal/domain/entity"
 	"cinema-service/internal/handlers/payload"
 	"cinema-service/internal/usecase"
 	"net/http"
@@ -52,8 +53,9 @@ func (h *ReservedSeatHandler) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	result, err := h.useCase.Create(req)
+	obj := entity.ReservedSeat{}
+	payload.MapStruct(req, &obj)
+	result, err := h.useCase.Create(obj)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
