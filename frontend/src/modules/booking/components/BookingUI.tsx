@@ -24,7 +24,7 @@ import chinatsu from "../../../assets/千夏.jpg";
 import Title from "antd/es/typography/Title";
 import { useTranslation } from "react-i18next";
 import { AppFooter } from "../../core/components/AppFooter.tsx";
-import { ConfirmBookingUI } from "./ConfirmBooking.tsx";
+import { ConfirmBookingUI } from "./ConfirmBookingUI.tsx";
 import SeatUI from "./SeatUI.tsx";
 import useModal from "../../core/hooks/useModal.ts";
 import { IMovieSchedule, ISeat } from "../models/booking.ts";
