@@ -14,7 +14,7 @@ const MovieScheduleListUI: React.FC = () => {
     const navigate = useNavigate()
     const [totalItems, setTotalItems] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [movieId, setMovieId] = useState<number>(1)
+    const [movieId, setMovieId] = useState<number>(2)
     const [startAt, setStartAt] = useState<string>('')
     const [endAt, setEndAt] = useState<string>('')
     const [pageSize, setPageSize] = useState(10);

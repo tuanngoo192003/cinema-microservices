@@ -39,7 +39,7 @@
     "duration": "上映時間",
     "release_date": "公開日",
     "movie_genre": "ジャンル",
-    "start_at": "始める時間", 
+    "start_at": "始める時間",
     "end_at": "終了時間",
     "schedule_status": "ステータス",
     "seat_left": "残る席",
@@ -91,11 +91,12 @@
     "duration": "上映時間",
     "user_list": "ユーザーのリスト",
     "preview": "プレビュー",
+    "auditorium_create": "スクリーンを作成する",
     "movie_create": "映画を作成する",
     "movie_schedule_create": "映画のスケジュールを作成する"
   },
   "messages": {
-    "required":{
+    "required": {
       "username": "ユーザー名を入力してください!",
       "password": "パスワードを入力してください!",
       "email": "メールを入力してください!",

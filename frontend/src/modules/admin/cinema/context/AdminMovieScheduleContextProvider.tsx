@@ -18,6 +18,15 @@ export const AdminMovieScheduleContextProvider: React.FC<{children: React.ReactN
     const navigate = useNavigate()
 
     const handleGetMovieScheduleList = async (movieId: number, page: number, perpage: number, startAt: string, endAt: string) => {
+        let tempDate = new Date()
+        if (!startAt) {
+            startAt = tempDate.toISOString()
+        }
+        if (!endAt) {
+            let endAtDate = new Date() 
+            endAtDate.setDate(tempDate.getDate() + 14)
+            endAt = endAtDate.toISOString()
+        }
         setLoading(true)
         try {
             const res = await GetMovieSchedules(movieId, page, perpage, startAt, endAt)

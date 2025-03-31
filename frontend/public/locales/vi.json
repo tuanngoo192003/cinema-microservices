@@ -84,13 +84,14 @@
     "users": "Danh sách người dùng",
     "movies": "Danh sách phim",
     "movie_schedules": "Danh sách lịch chiếu phim",
-    "auditoriumss": "Danh sách phòng chiếu"
+    "auditoriums": "Danh sách phòng chiếu"
   },
   "titles": {
     "movie_genre": "Thể loại",
     "duration": "Thời lượng",
     "user_list": "Danh sách người dùng",
     "preview": "Xem trước",
+    "auditorium_create": "Tạo phòng chiếu phim",
     "movie_create": "Tạo phim",
     "movie_schedule_create": "Tạo lịch chiếu phim"
   },

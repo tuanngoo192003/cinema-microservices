@@ -180,7 +180,7 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 	if c.Query("movieId") != "" {
 		query = query.Where(" movie_id = ? ", c.Query("movieId"))
 	}
-	if c.Query("auditoriumUd") != "" {
+	if c.Query("auditoriumId") != "" {
 		res, _ := strconv.Atoi(c.Query("auditoriumId"))
 		query = query.Where(" auditorium_id = ? ", res)
 	}
@@ -223,7 +223,7 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 	var result []payload.MovieScheduleResponse
 	response := query.
 		Select(
-			"s.schedule_id", "s.movie_id",
+			"s.schedule_id as id ", "s.movie_id",
 			"(SELECT m.movie_name FROM movies m WHERE m.movie_id = s.movie_id) AS movie_name",
 			"s.auditorium_id",
 			"(SELECT a.auditorium_name FROM auditoriums a WHERE a.auditorium_id = s.auditorium_id) AS auditorium_name",
@@ -300,9 +300,10 @@ func (h *MovieScheduleHander) GetMovieScheduleDetails(c *gin.Context) {
 	}
 
 	var seats []entity.Seat
-	if err := h.db.Model(&entity.Seat{}).Where(` auditorium_id = ? AND schedule_id = ? `, movieSchedule.AuditoriumID, movieSchedule.ScheduleID).
-		Find(&seats); err != nil {
-		log.Error(err.Error)
+	if err := h.db.Model(&entity.Seat{}).Where(" auditorium_id = ? ", movieSchedule.AuditoriumID).
+		Where(" schedule_id = ?  ", movieSchedule.ScheduleID).
+		Find(&seats).Error; err != nil {
+		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
 		return
 	}

@@ -27,16 +27,18 @@ import { AppFooter } from "../../core/components/AppFooter.tsx";
 import { ConfirmBookingUI } from "./ConfirmBookingUI.tsx";
 import SeatUI from "./SeatUI.tsx";
 import useModal from "../../core/hooks/useModal.ts";
-import { IChoosedSeat, IMovieSchedule, ISeat } from "../models/booking.ts";
+import { IBookingParam, IChoosedSeat, IMovieSchedule, ISeat } from "../models/booking.ts";
 import { useBooking } from "../hooks/index.ts";
 import { useParams } from "react-router-dom";
 import { LoadingPage } from "../../core/components/LoadingPage.tsx";
+import { useAuth } from "../../user/hooks";
 
 const BookingUI: React.FC = () => {
   const { t } = useTranslation();
+  const { profile } = useAuth()
   const { isVisible, showModal, hideModal, isLoading } = useModal();
   const [modalText, setModalText] = useState<string>("");
-  const { movieSchedule, loading, handleGetMovieDetails } = useBooking()
+  const { movieSchedule, loading, handleGetMovieDetails, handleBooking } = useBooking()
   const [movieScheduleData, setMovieScheduleData] = useState<IMovieSchedule>();
   const [totalPrice, setTotalPrice] = useState<number>(0)
 
@@ -66,8 +68,8 @@ const BookingUI: React.FC = () => {
         choose.some((c) => c.seatId === seat.id) && seat.status !== "CHOOSED"
           ? { ...seat, status: "CHOOSED" }
           : seat.status === "CHOOSED" && !choose.some((c) => c.seatId === seat.id)
-          ? { ...seat, status: "AVAILABLE" }
-          : seat
+            ? { ...seat, status: "AVAILABLE" }
+            : seat
       )
     );
     let currentPrice = 0
@@ -94,9 +96,21 @@ const BookingUI: React.FC = () => {
       };
 
       return prevChose.some((seat) => seat.seatId === newSeat.seatId)
-        ? prevChose.filter((seat) => seat.seatId !== newSeat.seatId) 
+        ? prevChose.filter((seat) => seat.seatId !== newSeat.seatId)
         : [...prevChose, newSeat];
     });
+  };
+
+  const handleConfirmBooking = () => {
+    const bookingParam = {
+      user_id: profile?.id,
+      schedule_id: movieSchedule?.id,
+      seat_ids: choose.map(s => s.seatId),
+      total_price: totalPrice,
+      status: 'CONFIRMED'
+    } as IBookingParam
+    
+    handleBooking(bookingParam, movieId)
   };
 
   return (
@@ -311,9 +325,11 @@ const BookingUI: React.FC = () => {
                             <FontAwesomeIcon icon={faCalendarDay} /> &nbsp;{" "}
                             {t("common.start_at")} :
                           </Title>
-                          <Typography.Text>
-                            {movieScheduleData?.startAt ? movieScheduleData.startAt.toISOString().split("T")[0] : ""}
-                          </Typography.Text>
+                          {movieScheduleData?.startAt && (
+                            <Typography.Text>
+                              {new Date(movieScheduleData.startAt).toISOString().split("T")[0]}
+                            </Typography.Text>
+                          )}
                         </div>
 
                         <div
@@ -362,7 +378,9 @@ const BookingUI: React.FC = () => {
                       startAt={movieSchedule?.startAt}
                       endAt={movieSchedule?.endAt}
                       seat={choose}
-                      totalPrice={totalPrice} />
+                      totalPrice={totalPrice}
+                      onConfirm={handleConfirmBooking}
+                    />
                     <Button className="secondary-btn">
                       {t("labels.buttons.back")}
                     </Button>

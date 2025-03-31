@@ -8,7 +8,6 @@ import {MOVIE_DETAILS_FORMAT_URI} from "../../core/constants/redirectURI.ts";
 import { IMovieItem } from "../models/movie.ts";
 import { useNavigate } from "react-router-dom";
 
-
 export const MovieItemUI: React.FC<IMovieItem> = ({ movieId, movieName, duration, imageURL, movieGenre }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();

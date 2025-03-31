@@ -3,41 +3,24 @@ import "../../../App.css"
 import { Button, Col, Layout, Modal, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { Content } from "antd/es/layout/layout";
-import { IAuditorium, IBookingParam, IChoosedSeat } from "../models/booking";
-import { useBooking } from "../hooks";
-import { useParams } from "react-router-dom";
-import { useAuth } from "../../user/hooks";
+import { IAuditorium, IChoosedSeat } from "../models/booking";
 
 interface ConfirmModalProps {
-    movieScheduleId?: number 
+    movieScheduleId?: number
     movieName?: string
     auditorium?: IAuditorium
     startAt?: Date
     endAt?: Date
     seat: IChoosedSeat[]
     totalPrice: number
+    onConfirm: () => void
 }
 
 export const ConfirmBookingUI: React.FC<ConfirmModalProps> = (bookingInfo: ConfirmModalProps) => {
     const [open, setOpen] = useState(false);
-    const { handleBooking } = useBooking()
-    const { profile } = useAuth()
     const [confirmLoading, setConfirmLoading] = useState(false);
     const { t } = useTranslation();
     const [modalText, setModalText] = useState('Content of the modal');
-
-    const confirmBooking = () => {
-        const bookingParam = {
-            user_id: profile?.id,
-            schedule_id: bookingInfo.movieScheduleId,
-            seat_ids: bookingInfo.seat.map(s => s.seatId),
-            total_price: bookingInfo.totalPrice,
-            status: 'CONFIRMED'
-        } as IBookingParam
-        const { id } = useParams<{ id: string }>();
-        const movieScheduleId = Number(id);
-        handleBooking(bookingParam, movieScheduleId)
-    }
 
     const showModal = () => {
         setOpen(true);
@@ -83,9 +66,20 @@ export const ConfirmBookingUI: React.FC<ConfirmModalProps> = (bookingInfo: Confi
                                     }}
                                 >
                                     <Typography.Title level={3}>{bookingInfo.movieName}</Typography.Title>
-                                    <Typography.Text strong>Start at:</Typography.Text> <Typography.Text>{bookingInfo.startAt?.toISOString()}</Typography.Text>
+
+                                    <Typography.Text strong>Start at:</Typography.Text>                                    
+                                    {bookingInfo?.startAt && (
+                                        <Typography.Text>
+                                            {new Date(bookingInfo.startAt).toISOString().split("T")[0]}
+                                        </Typography.Text>
+                                    )}
                                     <br />
-                                    <Typography.Text strong>End at:</Typography.Text> <Typography.Text>{bookingInfo.endAt?.toISOString()}</Typography.Text>
+                                    <Typography.Text strong>End at:</Typography.Text> 
+                                    {bookingInfo?.endAt && (
+                                        <Typography.Text>
+                                            {new Date(bookingInfo.endAt).toISOString().split("T")[0]}
+                                        </Typography.Text>
+                                    )}
                                     <br />
                                     <Typography.Text strong>Auditorium:</Typography.Text> <Typography.Text>{bookingInfo.auditorium?.auditoriumName}</Typography.Text>
                                     <br />
@@ -96,7 +90,7 @@ export const ConfirmBookingUI: React.FC<ConfirmModalProps> = (bookingInfo: Confi
                                             <Typography.Text strong>Total Price:</Typography.Text> <Typography.Text>${bookingInfo.totalPrice}</Typography.Text>
                                         </Col>
                                     </Row>
-                                    <Button className="app-btn" style={{ marginTop: '2rem' }} onClick={confirmBooking}>
+                                    <Button className="app-btn" style={{ marginTop: '2rem' }} onClick={bookingInfo.onConfirm}>
                                         {t('labels.buttons.confirm-booking')}
                                     </Button>
                                 </div>
