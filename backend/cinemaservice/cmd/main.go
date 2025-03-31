@@ -1,10 +1,12 @@
 package main
 
 import (
-	"cinema-service/infra/router"
 	"cinema-service/infra/config"
 	"cinema-service/infra/database"
+	"cinema-service/infra/router"
 	"cinema-service/internal/handlers"
+	"cinema-service/internal/job"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -44,6 +46,7 @@ func main() {
 	cinemaApis(authHandler, r, cfg)
 
 	router.Setup(db, r)
+	go job.SetupJob(db)
 	sererAddr := cfg.Server.Host + ":" + cfg.Server.Port
 	log.Infof("CinemaService started on %s and listening...", sererAddr)
 

@@ -175,6 +175,9 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 	log := config.GetLogger()
 
 	var movie payload.UpdateMovieRequest
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
 	err := c.ShouldBindJSON(&movie)
 	if err != nil {
 		log.Error(err.Error())
@@ -205,6 +208,9 @@ func (h *MoviesHandler) UpdateMovie(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	h.db.Model(&entity.Movie{}).First(&obj, id)
+	var response payload.MovieResponse
+	payload.MapStruct(obj, &response)
 
-	c.JSON(http.StatusOK, gin.H{"data": movieUpdate})
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
