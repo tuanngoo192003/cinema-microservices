@@ -45,7 +45,7 @@ const MovieCreateUI: React.FC = () => {
         const newMovie = {
             movieName: values.movieName,
             moviePrice: values.moviePrice,
-            imageURL: '',
+            imageURL: 'https://my-cinema-app-bucket.s3.ap-southeast-2.amazonaws.com/%E5%8D%83%E5%A4%8F.jpg',
             description: values.description,
             duration: values.duration,
             releaseDate: values.releaseDate.toISOString().split('T')[0],
@@ -157,7 +157,7 @@ const MovieCreateUI: React.FC = () => {
                                 <InputNumber className="app-input" />
                             </Form.Item>
                             <Form.Item
-                                label={t("labels.releaseDate")}
+                                label={t("labels.release_date")}
                                 name="releaseDate"
                                 rules={[
                                     {
@@ -169,7 +169,7 @@ const MovieCreateUI: React.FC = () => {
                                 <DatePicker className="app-input" />
                             </Form.Item>
                             <Form.Item
-                                label={t("labels.movieGenre")}
+                                label={t("labels.movie_genre")}
                                 name="movieGenre"
                                 rules={[
                                     {
@@ -203,7 +203,7 @@ const MovieCreateUI: React.FC = () => {
                             </Form.Item>
                             <Form.Item>
                                 <Button className="app-btn" htmlType="submit" block>
-                                    {t("labels.create")}
+                                    {t("labels.buttons.create")}
                                 </Button>
                             </Form.Item>
                         </Form>

@@ -38,6 +38,7 @@ const BookingUI: React.FC = () => {
   const [modalText, setModalText] = useState<string>("");
   const { movieSchedule, loading, handleGetMovieDetails } = useBooking()
   const [movieScheduleData, setMovieScheduleData] = useState<IMovieSchedule>();
+  const [totalPrice, setTotalPrice] = useState<number>(0)
 
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
@@ -69,6 +70,11 @@ const BookingUI: React.FC = () => {
           : seat
       )
     );
+    let currentPrice = 0
+    choose.forEach(c => {
+      currentPrice = currentPrice + c.seatPrice
+    })
+    setTotalPrice(currentPrice)
   }, [choose]);
 
   const appendSeat = (seat: ISeat) => {
@@ -356,7 +362,7 @@ const BookingUI: React.FC = () => {
                       startAt={movieSchedule?.startAt}
                       endAt={movieSchedule?.endAt}
                       seat={choose}
-                      totalPrice={0} />
+                      totalPrice={totalPrice} />
                     <Button className="secondary-btn">
                       {t("labels.buttons.back")}
                     </Button>

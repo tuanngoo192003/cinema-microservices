@@ -5,7 +5,7 @@ import { IPagination } from "../../../core/models/core";
 import { HttpStatusCode } from "axios";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_AUDITORIUMS } from "../../../core/constants/redirectURI";
-import { IAuditorium, IAuditoriumParam, IAuditoriumSelect } from "../models/auditorium";
+import { IAuditorium, IAuditoriumParam, IAuditoriumSelect } from "../models/auditorium_admin";
 
 interface AuditoriumProps {
     children?: React.ReactNode

@@ -44,6 +44,11 @@
     "schedule_status": "Status",
     "seat_left": "Seats left",
     "your_choices": "Your choices",
+    "price": "Price",
+    "movies": "Movies",
+    "auditoriums": "Auditoriums",
+    "start_date": "Start date",
+    "end_date": "End date",
     "english": "English",
     "vietnamese": "Vietnamese",
     "japanese": "Japanese",
@@ -85,7 +90,9 @@
     "movie_genre": "Movie genre",
     "duration": "Duration",
     "user_list": "User list",
-    "preview": "Preview"
+    "preview": "Preview",
+    "movie_create": "Create movie",
+    "movie_schedule_create": "Create movie schedule"
   },
   "messages": {
     "required":{

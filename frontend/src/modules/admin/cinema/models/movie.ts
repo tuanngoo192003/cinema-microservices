@@ -11,6 +11,7 @@ export interface IMovie {
 export interface IMovieSelect {
     movieId: number
     movieName: string 
+    moviePrice: number 
 }
 
 export interface ICreateMovieParam {

@@ -27,6 +27,7 @@ export interface ICreateMovieScheduleParam {
     startAt: Date 
     endAt: Date 
     scheduleStatus: string 
+    moviePrice: number
 }
 
 export interface IUpdateMovieScheduleParam {

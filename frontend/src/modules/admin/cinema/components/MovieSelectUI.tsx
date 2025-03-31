@@ -11,17 +11,15 @@ interface MovieSelectUIProps {
 const MovieSelectUI: React.FC<MovieSelectUIProps> = ({onSelectMovie}) => {
     const { t } = useTranslation()
     const [movies, setMovies] = useState<IMovieSelect[]>([])
-    const [selectData, setSelectData] = useState<IMovieSelect[]>([])
     const { movieList, handleGetAllMovies } = useMovie()
 
     useEffect(() => {
         handleGetAllMovies()
-        setMovies(movieList)
     }, [])
 
     useEffect(() => {
-        setSelectData(movies)
-    }, [movies])
+        setMovies(movieList)
+    }, [movieList])
 
     const handleChange = (value: number) => {
         onSelectMovie(value);
@@ -33,7 +31,7 @@ const MovieSelectUI: React.FC<MovieSelectUIProps> = ({onSelectMovie}) => {
                 placeholder={t("Select a movie")}
                 style={{ width: "100%" }}
                 onChange={handleChange}
-                options={selectData.map(movie => ({
+                options={movies.map(movie => ({
                     value: movie.movieId,
                     label: movie.movieName,
                 }))}

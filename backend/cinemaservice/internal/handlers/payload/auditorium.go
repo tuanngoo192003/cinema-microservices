@@ -3,7 +3,7 @@ package payload
 type CreateAuditoriumRequest struct {
 	AuditoriumName string `json:"auditorium_name"`
 	Rows           int    `json:"rows"`
-	Columns        int    `json:"numbers"`
+	Columns        int    `json:"columns"`
 }
 
 type UpdateAuditoriumRequest struct {

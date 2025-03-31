@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useMovieSchedule } from "../hooks"
+import { useMovie, useMovieSchedule } from "../hooks"
 import { ICreateMovieScheduleParam } from "../models/schedule"
 import { Button, Card, DatePicker, Form, Layout, Typography } from "antd"
 import { Content } from "antd/es/layout/layout"
@@ -14,18 +14,24 @@ const MovieScheduleCreateUI: React.FC = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const { handleCreateMovieSchedule } = useMovieSchedule()
-    const [form] = Form.useForm<ICreateMovieScheduleParam>();
+    const { movieList } = useMovie()
+    const [movieId, setMovieId] = useState<number>(0)
+    const [moviePrice, setMoviePrice] = useState<number>(0)
+    const [auditoriumId, setAuditoriumId] = useState<number>(0)
 
     const backToListSchedule = () => {
         navigate(ADMIN_MOVIE_SCHEDULES)
     }
 
     const handleSelectMovie = (movieId: number) => {
-        form.setFieldsValue({ movieId });
+        setMovieId(movieId)
+        const moviePrice = movieList.find(m => m.movieId == movieId)?.moviePrice
+        console.log(movieList)
+        setMoviePrice(moviePrice as unknown as number)
     }
 
     const handleSelectAuditorium = (auditoriumId: number) => {
-        form.setFieldsValue({ auditoriumId });
+        setAuditoriumId(auditoriumId)
     }
 
     const saveAsDraft = (values: ICreateMovieScheduleParam) => {
@@ -35,8 +41,12 @@ const MovieScheduleCreateUI: React.FC = () => {
     }
 
     const onFinish = (values: ICreateMovieScheduleParam) => {
-        values.scheduleStatus = "CONFIRM"
+        values.scheduleStatus = "FINAL"
+        values.movieId = movieId
+        values.auditoriumId = auditoriumId
+        values.moviePrice = moviePrice
         console.log("Success", values);
+        console.log(values)
         handleCreateMovieSchedule(values);
     };
 
@@ -68,8 +78,7 @@ const MovieScheduleCreateUI: React.FC = () => {
                                 name="movie"
                                 rules={[
                                     {
-                                        required: true,
-                                        message: t("messages.required.movie"),
+                                        required: false,
                                     },
                                 ]}
                             >
@@ -80,16 +89,15 @@ const MovieScheduleCreateUI: React.FC = () => {
                                 name="auditorium"
                                 rules={[
                                     {
-                                        required: true,
-                                        message: t("messages.required.auditorium"),
+                                        required: false,
                                     },
                                 ]}
                             >
                                 <AuditoriumSelectUI onSelectAuditorium={handleSelectAuditorium} />
                             </Form.Item>
                             <Form.Item
-                                label={t("labels.startDate")}
-                                name="start_date"
+                                label={t("labels.start_date")}
+                                name="startAt"
                                 rules={[
                                     {
                                         required: true,
@@ -100,12 +108,12 @@ const MovieScheduleCreateUI: React.FC = () => {
                                 <DatePicker className="app-input" />
                             </Form.Item>
                             <Form.Item
-                                label={t("labels.startDate")}
-                                name="start_date"
+                                label={t("labels.end_date")}
+                                name="endAt"
                                 rules={[
                                     {
                                         required: true,
-                                        message: t("messages.required.start_date"),
+                                        message: t("messages.required.end_date"),
                                     },
                                 ]}
                             >
@@ -113,20 +121,17 @@ const MovieScheduleCreateUI: React.FC = () => {
                             </Form.Item>
                             <Form.Item>
                                 <Button className="app-btn" htmlType="submit" block>
-                                    {t("labels.create")}
+                                    {t("labels.buttons.create")}
                                 </Button>
                             </Form.Item>
                             <Form.Item>
-                                <Button className="app-btn" onClick={() => {
-                                    const values = form.getFieldsValue();
-                                    saveAsDraft(values);
-                                }}>
-                                    {t("labels.save_as_draft")}
+                                <Button className="app-btn">
+                                    {t("labels.buttons.save_as_draft")}
                                 </Button>
                             </Form.Item>
                             <Form.Item>
                                 <Button className="secondary-btn" onClick={backToListSchedule}>
-                                    {t("labels.back")}
+                                    {t("labels.buttons.back")}
                                 </Button>
                             </Form.Item>
                         </Form>

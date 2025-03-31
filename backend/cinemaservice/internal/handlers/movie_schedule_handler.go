@@ -87,6 +87,7 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 		tx.Rollback()
 		return
 	}
+	log.Info(auditorium)
 	seats := generateSeats(auditorium.AuditoriumID, movieScheduleEntity.ScheduleID, int(auditorium.Rows), int(auditorium.Cols), movieSchedule.MoviePrice)
 	response = tx.Create(seats)
 	if err := response.Error; err != nil {
@@ -104,26 +105,30 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": movieScheduleEntity})
 }
 
-func generateSeats(auditoriumID uint, scheduleID uint, rows int, cols int, moviePrice float64) (seats []entity.Seat) {
-	char := 'A'
-	for i := 0; i < cols; i++ {
-		for j := 1; j <= rows; j++ {
+func generateSeats(auditoriumID uint, scheduleID uint, rows int, cols int, moviePrice float64) []entity.Seat {
+	var seats []entity.Seat
+	char := 'A' // Starting letter for the first row
+
+	for i := 0; i < rows; i++ { // Loop through rows
+		for j := 1; j <= cols; j++ { // Loop through columns
 			seat := entity.Seat{
-				AuthoriumID:   auditoriumID,
+				AuditoriumID:  auditoriumID, // Corrected typo: AuthoriumID -> AuditoriumID
 				ScheduleID:    scheduleID,
 				CurrentStatus: "AVAILABLE",
-				SeatCode:      fmt.Sprintf("%c%d", char, j),
+				SeatCode:      fmt.Sprintf("%c%d", char, j), // Format SeatCode as "A1", "A2", etc.
 				Price:         moviePrice,
 			}
 			seats = append(seats, seat)
 		}
-		char++ // Move to the next row (A → B → C → ... → J)
+		char++ // Move to the next row (A → B → C → ... → J) after finishing current row
 	}
 	return seats
 }
 
 func getAuditoriumByID(auditoriumID uint, db *gorm.DB) (ent *entity.Auditorium, err error) {
-	if err = db.Select("auditorium_id", "rows", "cols").Where(` auditorium_id = ? `, auditoriumID).Find(ent).Error; err != nil {
+	ent = &entity.Auditorium{}
+
+	if err = db.Select("auditorium_id, rows, cols").Where("auditorium_id = ?", auditoriumID).Find(ent).Error; err != nil {
 		return nil, err
 	}
 	return
@@ -283,28 +288,25 @@ func (h *MovieScheduleHander) GetMovieScheduleDetails(c *gin.Context) {
 		return
 	}
 	var movieSchedule entity.MovieSchedule
-	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("Movie").First(&movieSchedule); err != nil {
-		if err.Error == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusOK, gin.H{"data": payload.GetMovieScheduleDetailsResponse{}})
-			return
-		}
-		log.Error(err.Error)
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
+	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("Movie").First(&movieSchedule).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
 		return
 	}
+
 	var auditorium entity.Auditorium
-	if err := h.db.Model(&entity.Auditorium{}).Where(` auditorium_id = ? `, movieSchedule.AuditoriumID).Find(&auditorium); err != nil {
-		log.Error(err.Error)
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
+	if err := h.db.Model(&entity.Auditorium{}).Where(` auditorium_id = ? `, movieSchedule.AuditoriumID).Find(&auditorium).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
 		return
 	}
+
 	var seats []entity.Seat
 	if err := h.db.Model(&entity.Seat{}).Where(` auditorium_id = ? AND schedule_id = ? `, movieSchedule.AuditoriumID, movieSchedule.ScheduleID).
-		Find(&auditorium); err != nil {
+		Find(&seats); err != nil {
 		log.Error(err.Error)
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{"data": payload.GetMovieScheduleDetailsResponse{
 		ID: int(movieSchedule.ScheduleID),
 		Movie: payload.MovieResponse{

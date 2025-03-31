@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { IPagination } from "../../../core/models/core"
 import { ICreateMovieParam, IMovie, IMovieSelect, IUpdateMovieParam } from "../models/movie";
 import { ICreateMovieScheduleParam, IGetByIDMovieSchedule, IMovieSchedule, IUpdateMovieScheduleParam } from "../models/schedule";
-import { IAuditorium, IAuditoriumParam, IAuditoriumSelect } from "../models/auditorium";
+import { IAuditorium, IAuditoriumParam, IAuditoriumSelect } from "../models/auditorium_admin";
 
 type AuditoriumContextType = {
     auditoriums: IPagination<IAuditorium> | null;

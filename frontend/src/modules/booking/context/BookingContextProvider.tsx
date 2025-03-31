@@ -31,7 +31,7 @@ const BookingContextProvider: React.FC<{children: React.ReactNode}> = ({children
     const handleGetMovieDetails = async (movieId: number) => {
         setLoading(true)
         try {
-            const res = await GetMovieDetail(movieId)
+            const res = await GetMovieDetails(movieId)
             setMovieSchedule(res.data)
         } catch(e) {
             console.log(e)

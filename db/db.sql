@@ -50,7 +50,7 @@ CREATE TABLE movies (
     movie_id SERIAL PRIMARY KEY,
     movie_name VARCHAR(255),
     movie_price FLOAT,
-    image_url VARCHAR(50),
+    image_url VARCHAR(500),
     duration INT,
     description TEXT,
     release_date DATE,

@@ -35,6 +35,7 @@ type MovieResponse struct {
 }
 
 type MovieSelectResponse struct {
-	MovieID   uint   `json:"movieId"`
-	MovieName string `json:"movieName"`
+	MovieID    uint    `json:"movieId"`
+	MovieName  string  `json:"movieName"`
+	MoviePrice float64 `json:"moviePrice"`
 }

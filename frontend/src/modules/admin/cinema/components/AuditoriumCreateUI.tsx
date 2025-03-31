@@ -11,12 +11,12 @@ import { useState } from "react";
 import "../../../../App.css";
 import { getRows } from "../../../core/constants/seat";
 import { useAuditorium } from "../hooks";
-import { IAuditoriumParam } from "../models/auditorium";
 import SeatListUI from "./SeatListUI";
 import { useTranslation } from "react-i18next";
 import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_AUDITORIUMS } from "../../../core/constants/redirectURI";
+import { IAuditoriumParam } from "../models/auditorium_admin";
 
 export default function AuditoriumCreateUI() {
   const { t } = useTranslation();
@@ -33,7 +33,7 @@ export default function AuditoriumCreateUI() {
       rows: rowCount,
       columns: colCount,
     };
-
+    console.log(body)
     handleCreateAuditorium(body);
   };
   const backToAuditoriumList = () => {
