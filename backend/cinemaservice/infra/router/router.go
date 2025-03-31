@@ -7,9 +7,9 @@ import (
 
 func Setup(db *gorm.DB, g *gin.Engine) {
 	group := g.Group("")
-	SetupAuditoriumRouter(db, group)
+	SetupAuthoriumRouter(db, group)
 	SetupSeatRouter(db, group)
 	SetupMovieRouter(db, group)
-	SetupScheduleRouter(db, group)
+	SetupMovieScheduleRouter(db, group)
 	SetupReservedSeatRouter(db, group)
 }

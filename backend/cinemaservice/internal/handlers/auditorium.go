@@ -72,7 +72,14 @@ func (a *AuditoriumsHandler) Update(c *gin.Context) {
 	}
 	obj.LastModifiedAt = time.Now()
 
-	c.JSON(http.StatusOK, gin.H{"data": response})
+	reponse := a.db.Save(obj)
+	if reponse.Error != nil {
+		log.Error(reponse.Error)
+		c.JSON(http.StatusBadRequest, gin.H{"error": reponse.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": obj})
 
 }
 
