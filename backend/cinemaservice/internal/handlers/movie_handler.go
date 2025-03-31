@@ -6,6 +6,7 @@ import (
 	"cinema-service/internal/handlers/payload"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/tuanngoo192003/golang-utils/utils"
@@ -52,6 +53,7 @@ func (h *MoviesHandler) GetMovieByID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"data": payload.MovieResponse{
 		MovieID:     movie.MovieID,
+		MoviePrice:  movie.MoviePrice,
 		MovieName:   movie.MovieName,
 		Description: movie.Description,
 		Duration:    movie.Duration,
@@ -150,11 +152,12 @@ func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 	}
 	movieEntity := entity.Movie{
 		MovieName:   movie.MovieName,
+		MoviePrice:  movie.Price,
 		ImageURL:    movie.ImageURL,
 		Duration:    movie.Duration,
 		Description: movie.Description,
 		ReleaseDate: parsedDate,
-		MovieGenre:  movie.MovieGenre,
+		MovieGenre:  strings.Join(movie.MovieGenre, ";"),
 	}
 
 	response := h.db.Model(entity.Movie{}).Create(&movieEntity)

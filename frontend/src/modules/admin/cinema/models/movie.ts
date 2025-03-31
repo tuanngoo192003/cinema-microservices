@@ -15,11 +15,12 @@ export interface IMovieSelect {
 
 export interface ICreateMovieParam {
     movieName: string 
+    moviePrice: number
     imageURL: string 
     description: string 
     duration: number 
-    releaseDate: Date
-    movieGenre: string 
+    releaseDate: string
+    movieGenre: string[]
 }
 
 export interface IUpdateMovieParam {

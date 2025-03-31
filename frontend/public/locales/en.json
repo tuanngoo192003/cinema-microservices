@@ -34,6 +34,16 @@
     "capacity": "Capacity",
     "num_rows": "Number of seats rows",
     "num_cols": "Number of seats columns",
+    "movie_name": "Movie name",
+    "description": "Description",
+    "duration": "Duration",
+    "release_date": "Release date",
+    "movie_genre": "Genre",
+    "start_at": "Start at", 
+    "end_at": "End at",
+    "schedule_status": "Status",
+    "seat_left": "Seats left",
+    "your_choices": "Your choices",
     "english": "English",
     "vietnamese": "Vietnamese",
     "japanese": "Japanese",
@@ -44,14 +54,17 @@
       "user_list": "User list",
       "auditorium": "Auditorium",
       "seat": "Seats",
-      "list_auditorium": "Auditorium List"
+      "list_auditorium": "Auditorium List",
+      "list_movies": "Movie List",
+      "list_movie_schedules": "Movie schedule list"
     },
     "buttons": {
       "buy_ticket": "Buy ticket",
       "continue": "Continue",
       "back": "Back",
       "save": "Save",
-      "create": "Create"
+      "create": "Create",
+      "confirm-booking": "Confirm"
     },
     "menu": {
       "user_list": "User list",
@@ -61,6 +74,12 @@
       "contact": "Contact",
       "admin_dashboard": "Admin's dashboard"
     }
+  },
+  "side_bar": {
+    "users": "User list",
+    "movies": "Movie list",
+    "movie_schedules": "Schedule list",
+    "auditoriums": "Auditorium list"
   },
   "titles": {
     "movie_genre": "Movie genre",

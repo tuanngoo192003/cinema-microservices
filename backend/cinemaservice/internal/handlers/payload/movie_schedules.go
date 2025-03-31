@@ -1,11 +1,12 @@
 package payload
 
 type MovieScheduleRequest struct {
-	MovieID        uint   `json:"movieId" binding:"required"`
-	AuditoriumID   uint   `json:"auditoriumId" binding:"required"`
-	StartAt        string `json:"startAt" binding:"required"`
-	EndAt          string `json:"endAt" binding:"required"`
-	ScheduleStatus string `json:"scheduleStatus" binding:"required"`
+	MovieID        uint    `json:"movieId" binding:"required"`
+	MoviePrice     float64 `json:"moviePrice" binding:"required"`
+	AuditoriumID   uint    `json:"auditoriumId" binding:"required"`
+	StartAt        string  `json:"startAt" binding:"required"`
+	EndAt          string  `json:"endAt" binding:"required"`
+	ScheduleStatus string  `json:"scheduleStatus" binding:"required"`
 }
 
 type UpdateMovieScheduleRequest struct {
@@ -26,7 +27,7 @@ type MovieScheduleResponse struct {
 	StartAt        string `json:"startAt"`
 	EndAt          string `json:"endAt"`
 	ScheduleStatus string `json:"scheduleStatus"`
-	SeatLeft 	   int   `json:"seatLeft"`
+	SeatLeft       int    `json:"seatLeft"`
 }
 
 type GetByIDMovieScheduleResponse struct {
@@ -36,4 +37,14 @@ type GetByIDMovieScheduleResponse struct {
 	StartAt        string        `json:"startAt"`
 	EndAt          string        `json:"endAt"`
 	ScheduleStatus string        `json:"scheduleStatus"`
+}
+
+type GetMovieScheduleDetailsResponse struct {
+	ID             int                        `json:"id"`
+	Movie          MovieResponse              `json:"movie"`
+	Auditorium     AuditoriumWithSeatResponse `json:"auditorium"`
+	StartAt        string                     `json:"startAt"`
+	EndAt          string                     `json:"endAt"`
+	ScheduleStatus string                     `json:"scheduleStatus"`
+	SeatLeft       int                        `json:"seatLeft"`
 }

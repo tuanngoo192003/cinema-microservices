@@ -49,6 +49,7 @@ INSERT INTO users (user_id, email, password, username, role_id) VALUES
 CREATE TABLE movies (
     movie_id SERIAL PRIMARY KEY,
     movie_name VARCHAR(255),
+    movie_price FLOAT,
     image_url VARCHAR(50),
     duration INT,
     description TEXT,
@@ -97,6 +98,7 @@ CREATE TABLE seats (
     seat_id SERIAL PRIMARY KEY,
     schedule_id INT REFERENCES movie_schedule(schedule_id), 
     auditorium_id INT REFERENCES auditoriums(auditorium_id) ON DELETE CASCADE,
+    price FLOAT,
     seat_code VARCHAR(5),
     current_status seat_status_enum DEFAULT 'AVAILABLE',
     is_deleted BOOLEAN DEFAULT FALSE,

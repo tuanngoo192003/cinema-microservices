@@ -3,12 +3,13 @@ package payload
 import "time"
 
 type CreateMovieRequest struct {
-	MovieName   string `json:"movieName"`
-	ImageURL    string `json:"imageURL"`
-	Duration    int    `json:"duration"`
-	Description string `json:"description"`
-	ReleaseDate string `json:"releaseDate"`
-	MovieGenre  string `json:"movieGenre"`
+	MovieName   string   `json:"movieName"`
+	ImageURL    string   `json:"imageURL"`
+	Duration    int      `json:"duration"`
+	Description string   `json:"description"`
+	ReleaseDate string   `json:"releaseDate"`
+	MovieGenre  []string `json:"movieGenre"`
+	Price       float64  `json:"moviePrice"`
 }
 
 type UpdateMovieRequest struct {
@@ -24,6 +25,7 @@ type UpdateMovieRequest struct {
 
 type MovieResponse struct {
 	MovieID     uint      `json:"movieId"`
+	MoviePrice  float64   `json:"moviePrice"`
 	MovieName   string    `json:"movieName"`
 	ImageURL    string    `json:"imageURL"`
 	Duration    int       `json:"duration"`

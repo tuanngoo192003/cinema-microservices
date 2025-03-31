@@ -1,5 +1,5 @@
 export type IProfile = {
-    id: string;
+    id: number;
     firstName: string;
     lastName: string;
     email: string;

@@ -9,6 +9,16 @@ import { UploadOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
+interface ICreateMovieProps {
+    movieName: string
+    moviePrice: number
+    imageURL: string
+    description: string
+    duration: number
+    releaseDate: Date
+    movieGenre: string[]
+}
+
 const MovieCreateUI: React.FC = () => {
     const { t } = useTranslation()
     const { handleCreateMovie } = useMovie()
@@ -30,12 +40,20 @@ const MovieCreateUI: React.FC = () => {
         return isImage;
     };
 
-    const onFinish: FormProps<ICreateMovieParam>["onFinish"] = (values) => {
+    const onFinish: FormProps<ICreateMovieProps>["onFinish"] = (values) => {
         console.log("Success", values);
-        console.log('Uploaded Image:', values.imageURL);
-        handleCreateMovie(values)
+        const newMovie = {
+            movieName: values.movieName,
+            moviePrice: values.moviePrice,
+            imageURL: '',
+            description: values.description,
+            duration: values.duration,
+            releaseDate: values.releaseDate.toISOString().split('T')[0],
+            movieGenre: values.movieGenre
+        } as ICreateMovieParam
+        handleCreateMovie(newMovie)
     };
-    const onFinishFailed: FormProps<ICreateMovieParam>["onFinishFailed"] = (
+    const onFinishFailed: FormProps<ICreateMovieProps>["onFinishFailed"] = (
         errorInfo
     ) => {
         console.log("Failed", errorInfo);
@@ -72,8 +90,7 @@ const MovieCreateUI: React.FC = () => {
                                 getValueFromEvent={(e: any) => e && e.fileList}
                                 rules={[
                                     {
-                                        required: true,
-                                        message: t('messages.required.image_url'),
+                                        required: false,
                                     },
                                 ]}
                             >
@@ -128,8 +145,20 @@ const MovieCreateUI: React.FC = () => {
                                 <InputNumber className="app-input" />
                             </Form.Item>
                             <Form.Item
+                                label={t("labels.price")}
+                                name="moviePrice"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: t("messages.required.movie_price"),
+                                    },
+                                ]}
+                            >
+                                <InputNumber className="app-input" />
+                            </Form.Item>
+                            <Form.Item
                                 label={t("labels.releaseDate")}
-                                name="release_date"
+                                name="releaseDate"
                                 rules={[
                                     {
                                         required: true,
@@ -141,7 +170,7 @@ const MovieCreateUI: React.FC = () => {
                             </Form.Item>
                             <Form.Item
                                 label={t("labels.movieGenre")}
-                                name="movie_genre"
+                                name="movieGenre"
                                 rules={[
                                     {
                                         required: true,

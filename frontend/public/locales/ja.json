@@ -34,6 +34,16 @@
     "capacity": "収容人数",
     "num_rows": "席の行数",
     "num_cols": "席の列数",
+    "movie_name": "映画の名",
+    "description": "映画の説明",
+    "duration": "上映時間",
+    "release_date": "公開日",
+    "movie_genre": "ジャンル",
+    "start_at": "始める時間", 
+    "end_at": "終了時間",
+    "schedule_status": "ステータス",
+    "seat_left": "残る席",
+    "your_choices": "選んだ席",
     "english": "英語",
     "vietnamese": "ベトナム語",
     "japanese": "日本語",
@@ -44,14 +54,17 @@
       "user_list": "ユーザー名簿",
       "auditorium": "スクリーン番号",
       "seat": "席番",
-      "list_auditorium": "オーディトリアムのリスト"
+      "list_auditorium": "オーディトリアムのリスト",
+      "list_movies": "映画のリスト",
+      "list_movie_schedules": "映画のスケジュールのリスト"
     },
     "buttons": {
       "buy_ticket": "チケットを買う",
       "continue": "続く",
       "back": "戻る",
       "save": "保存",
-      "create": "作成"
+      "create": "作成",
+      "confirm-booking": "確認する"
     },
     "menu": {
       "user_list": "ユーザー名簿",
@@ -61,6 +74,12 @@
       "contact": "コンタクト",
       "admin_dashboard": "アドミンのダッシュボード"
     }
+  },
+  "side_bar": {
+    "users": "ユーザーのリスト",
+    "movies": "映画のリスト",
+    "movie_schedules": "映画のスケジュールのリスト",
+    "auditoriums": "スクリーン番号"
   },
   "titles": {
     "movie_genre": "ジャンル",

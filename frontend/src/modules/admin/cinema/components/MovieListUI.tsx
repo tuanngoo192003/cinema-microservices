@@ -63,7 +63,7 @@ const AdminMovieListUI: React.FC = () => {
                 >
                     <Content>
                         <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
-                            {t('labels.titles.list_auditorium')}
+                            {t('labels.titles.list_movies')}
                         </Typography.Title>
                         <Space style={{ marginBottom: 16 }}>
                             <Button

@@ -11,6 +11,7 @@ type Seat struct {
 	ScheduleID     uint      `gorm:"column:schedule_id"`
 	AuthoriumID    uint      `gorm:"column:auditorium_id"`
 	SeatCode       string    `gorm:"column:seat_code"`
+	Price          float64   `gorm:"column:price"`
 	CurrentStatus  string    `gorm:"column:current_status"`
 	CreatedAt      time.Time `gorm:"column:created_at; autoCreateTime"`
 	LastModifiedAt time.Time `gorm:"column:last_modified_at; autoUpdateTime"`

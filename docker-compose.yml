@@ -56,17 +56,14 @@ services:
       - bookingdb
 
   bookingdb:
-    image: postgres
+    image: mongo
     restart: always
-    secrets:
-      - db-password
     volumes:
-      - booking-db-data:/var/lib/postgresql/data
+      - booking-db-data:/data/db
     environment:
-      - POSTGRES_DB=bookingservicedb
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+      - MONGO_INITDB_DATABASE=bookingservicedb
     ports:
-      - "5434:5432"
+      - "27017:27017"
 
   # reactapp:
   #   build: frontend

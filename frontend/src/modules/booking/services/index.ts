@@ -1,8 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { IResponse } from "../../core/models/core";
 import api from "../../core/services/axios";
-import { IMovieSchedule } from "../models/booking";
-import { ReservedSeatRequest, ReservedSeatResponse } from "../models/Seat";
+import { IBooking, IBookingParam, IMovieSchedule, ReservedSeatRequest, ReservedSeatResponse } from "../models/booking";
 
 export const ReservedSeat = (body: ReservedSeatRequest) =>
   api.post<ReservedSeatResponse>("/book/reverve-seat", body);
@@ -46,8 +45,6 @@ const mockMovieSchedule: IResponse<IMovieSchedule> = {
     endAt: new Date(new Date().getTime() + 120 * 60000),
     scheduleStatus: "ACTIVE",
     seatLeft: 11 * 12 - 7, // Total seats minus booked and reserved
-    booked: ["A1", "A2", "E5", "F9"],
-    reserved: ["C7", "J6", "J7"],
   },
 };
 
@@ -62,7 +59,33 @@ export const GetMovieDetail = (id: number): Promise<IResponse<IMovieSchedule>> =
 export const GetMovieDetails = (movieId: number): Promise<IResponse<IMovieSchedule>> => {
   return new Promise((resolve, reject) => {
     api
-      .get(`/cinema/movie-schedules/details/${movieId}`)
+      .get(`/cinema/schedules/details/${movieId}`)
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const Booking = (body: IBookingParam): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    api 
+      .post(`/booking`, body)
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const GetBookingsOfUser = (userId: number): Promise<IResponse<IBooking>> => {
+  return new Promise((resolve, reject) => {
+    api 
+      .get(`/booking/${userId}`)
       .then((res) => {
         resolve(res.data)
       })

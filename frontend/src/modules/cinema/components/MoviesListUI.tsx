@@ -24,7 +24,7 @@ export const MovieListUI = () => {
     // Movie Data for Different Tabs
     const movieData = {
         "1": [
-            { movieId: 1, movieName: "青いの箱", duration: 120, imageURL: chinatsu, movieGenre: "Romcom" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "青いの箱", duration: 120, imageURL: "https://my-cinema-app-bucket.s3.ap-southeast-2.amazonaws.com/%E5%8D%83%E5%A4%8F.jpg", movieGenre: "Romcom" } as unknown as IMovieItem,
             { movieId: 1, movieName: "青いの箱", duration: 90, imageURL: betacinema, movieGenre: "Horror" } as unknown as IMovieItem,
             { movieId: 1, movieName: "青いの箱", duration: 90, imageURL: betacinema, movieGenre: "Horror" } as unknown as IMovieItem,
             { movieId: 1, movieName: "青いの箱", duration: 90, imageURL: betacinema, movieGenre: "Horror" } as unknown as IMovieItem,

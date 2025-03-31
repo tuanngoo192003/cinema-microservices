@@ -87,7 +87,7 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 		tx.Rollback()
 		return
 	}
-	seats := generateSeats(auditorium.AuditoriumID, movieScheduleEntity.ScheduleID, int(auditorium.Rows), int(auditorium.Cols))
+	seats := generateSeats(auditorium.AuditoriumID, movieScheduleEntity.ScheduleID, int(auditorium.Rows), int(auditorium.Cols), movieSchedule.MoviePrice)
 	response = tx.Create(seats)
 	if err := response.Error; err != nil {
 		log.Error(err.Error())
@@ -104,7 +104,7 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": movieScheduleEntity})
 }
 
-func generateSeats(auditoriumID uint, scheduleID uint, rows int, cols int) (seats []entity.Seat) {
+func generateSeats(auditoriumID uint, scheduleID uint, rows int, cols int, moviePrice float64) (seats []entity.Seat) {
 	char := 'A'
 	for i := 0; i < cols; i++ {
 		for j := 1; j <= rows; j++ {
@@ -113,6 +113,7 @@ func generateSeats(auditoriumID uint, scheduleID uint, rows int, cols int) (seat
 				ScheduleID:    scheduleID,
 				CurrentStatus: "AVAILABLE",
 				SeatCode:      fmt.Sprintf("%c%d", char, j),
+				Price:         moviePrice,
 			}
 			seats = append(seats, seat)
 		}
@@ -252,7 +253,7 @@ func (h *MovieScheduleHander) GetMovieSchedule(c *gin.Context) {
 		return
 	}
 	var movieSchedule entity.MovieSchedule
-	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("movie").Find(&movieSchedule); err != nil {
+	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("Movie").Find(&movieSchedule); err != nil {
 		log.Error(err.Error)
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
 		return
@@ -271,4 +272,72 @@ func (h *MovieScheduleHander) GetMovieSchedule(c *gin.Context) {
 		EndAt:          movieSchedule.EndAt.String(),
 		ScheduleStatus: movieSchedule.ScheduleStatus,
 	})
+}
+
+func (h *MovieScheduleHander) GetMovieScheduleDetails(c *gin.Context) {
+	log := config.Newlogger(config.ConfigLogger{})
+	id := c.Param("id")
+	if id == "" {
+		log.Info("Parameter id is required but not found!")
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": "Parameter id is required but not found!"}})
+		return
+	}
+	var movieSchedule entity.MovieSchedule
+	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("Movie").First(&movieSchedule); err != nil {
+		if err.Error == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusOK, gin.H{"data": payload.GetMovieScheduleDetailsResponse{}})
+			return
+		}
+		log.Error(err.Error)
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
+		return
+	}
+	var auditorium entity.Auditorium
+	if err := h.db.Model(&entity.Auditorium{}).Where(` auditorium_id = ? `, movieSchedule.AuditoriumID).Find(&auditorium); err != nil {
+		log.Error(err.Error)
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
+		return
+	}
+	var seats []entity.Seat
+	if err := h.db.Model(&entity.Seat{}).Where(` auditorium_id = ? AND schedule_id = ? `, movieSchedule.AuditoriumID, movieSchedule.ScheduleID).
+		Find(&auditorium); err != nil {
+		log.Error(err.Error)
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": payload.GetMovieScheduleDetailsResponse{
+		ID: int(movieSchedule.ScheduleID),
+		Movie: payload.MovieResponse{
+			MovieID:     movieSchedule.Movie.MovieID,
+			MovieName:   movieSchedule.Movie.MovieName,
+			MoviePrice:  movieSchedule.Movie.MoviePrice,
+			Description: movieSchedule.Movie.Description,
+			ReleaseDate: movieSchedule.Movie.ReleaseDate,
+			MovieGenre:  movieSchedule.Movie.MovieGenre,
+		},
+		Auditorium: payload.AuditoriumWithSeatResponse{
+			AuditoriumID:   int(auditorium.AuditoriumID),
+			AuditoriumName: auditorium.AuditoriumName,
+			Rows:           int(auditorium.Rows),
+			Columns:        int(auditorium.Cols),
+			Seats:          setSeatsResponse(seats),
+		},
+		StartAt:        movieSchedule.StartAt.String(),
+		EndAt:          movieSchedule.EndAt.String(),
+		ScheduleStatus: movieSchedule.ScheduleStatus,
+	}})
+}
+
+func setSeatsResponse(seats []entity.Seat) []payload.SeatInfoResponse {
+	var res []payload.SeatInfoResponse
+	for _, s := range seats {
+		seatResponse := payload.SeatInfoResponse{
+			ID:       int(s.SeatID),
+			SeatCode: s.SeatCode,
+			Price:    s.Price,
+			Status:   s.CurrentStatus,
+		}
+		res = append(res, seatResponse)
+	}
+	return res
 }

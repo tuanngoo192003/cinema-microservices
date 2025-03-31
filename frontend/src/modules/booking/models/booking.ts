@@ -1,7 +1,26 @@
 import { HttpStatusCode } from "axios"
 
+export interface IChoosedSeat {
+    seatId: number
+    seatCode: string
+    seatPrice: number
+  }
+
+export interface IBookingParam {
+    user_id: number 
+    schedule_id: number 
+    seat_ids: number[] 
+    total_price: number 
+    status: string 
+}
+
 export interface IBooking {
-    
+    id: string
+    userID: number 
+    scheduleID: number 
+    seatIDs: number[] 
+    totalPrice: number 
+    status: string 
 }
 
 export interface IMovieSchedule {
@@ -12,8 +31,6 @@ export interface IMovieSchedule {
     endAt: Date
     scheduleStatus: string
     seatLeft: number
-    booked: string[];
-    reserved: string[];
 }
 
 export interface IAuditorium {

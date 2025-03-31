@@ -34,6 +34,16 @@
     "capacity": "Sức chứa",
     "num_rows": "Số lượng hàng ghế",
     "num_cols": "Số lượng cột ghế",
+    "movie_name": "Tên phim",
+    "description": "Mô tả",
+    "duration": "Thời lượng",
+    "release_date": "Ngày ra mắt",
+    "movie_genre": "Thể loại",
+    "start_at": "Bắt đầu lúc", 
+    "end_at": "Kết thúc khi",
+    "schedule_status": "Trạng thái",
+    "seat_left": "Số ghế còn lại",
+    "your_choices": "Ghế đã chọn",
     "english": "Tiếng Anh",
     "vietnamese": "Tiếng Việt",
     "japanese": "Tiếng Nhật",
@@ -44,14 +54,17 @@
       "user_list": "Danh sách người dùng",
       "auditorium": "Phòng chiếu số",
       "seat": "Ghế",
-      "list_auditorium": "Danh sách phòng chiếu"
+      "list_auditorium": "Danh sách phòng chiếu",
+      "list_movies": "Danh sách phim",
+      "list_movie_schedules": "Danh sách lịch chiếu phim"
     },
     "buttons": {
       "buy_ticket": "Mua vé",
       "continue": "Tiếp tục",
       "back": "Quay lại",
       "save": "Lưu",
-      "create": "Tạo"
+      "create": "Tạo",
+      "confirm-booking": "Xác nhận"
     },
     "menu": {
       "user_list": "Danh sách người dùng",
@@ -61,6 +74,12 @@
       "contact": "Liên hệ",
       "admin_dashboard": "Trang quản trị"
     }
+  },
+  "side_bar": {
+    "users": "Danh sách người dùng",
+    "movies": "Danh sách phim",
+    "movie_schedules": "Danh sách lịch chiếu phim",
+    "auditoriumss": "Danh sách phòng chiếu"
   },
   "titles": {
     "movie_genre": "Thể loại",
