@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { IPagination } from "../../core/models/core"
 import { IMovie, IMovieItem } from "../models/movie"
-import { IMovieSchedule } from "../models/movieSchedule";
+import { IMovieSchedule, IMovieScheduleTab } from "../models/movieSchedule";
 
 type CinemaContextType = {
     movies: IPagination<IMovieItem> | null; 
@@ -20,13 +20,13 @@ export const CinemaContext = createContext<CinemaContextType>({
 })
 
 type MovieScheduleContextType = {
-    movieSchedules: IPagination<IMovieSchedule> | null;
+    movieSchedules: Record<number, IMovieScheduleTab[]>;
     loading: boolean;
     handleGetMovieSchedules: (movieId: number, page: number, perpage: number, startAt: string, endAt: string) => Promise<void>;
 }
 
 export const MovieScheduleContext = createContext<MovieScheduleContextType>({
-    movieSchedules: null,
+    movieSchedules: {},
     loading: false,
     handleGetMovieSchedules: async () => {} 
 })

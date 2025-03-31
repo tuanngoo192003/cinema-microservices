@@ -1,26 +1,36 @@
 export interface IMovieSchedule {
+    id: number
+    movieId: number
+    movieName: string 
+    auditoriumId: number
+    auditoriumName: string 
+    startAt: string
+    endAt: string
+    scheduleStatus: string
+    seatLeft: number
+}
+
+export interface IMovieScheduleTab {
     ScheduleID: number 
-    MovieID: number
-    AuditoriumID: number 
-    StartAt: Date
-    EndAt: Date
-    ScheduleStatus: string
+    AuditoriumID: number; 
+    StartAt: string; 
+    EndAt: string; 
     SeatLeft: number
 }
 
-export function transformMovieSchedules(schedules: IMovieSchedule[]): Record<number, { AuditoriumID: number; startAt: Date; endAt: Date; seatLeft: number }[]> {
+export function transformMovieSchedules(schedules: IMovieSchedule[]): Record<number, IMovieScheduleTab[]> {
     return schedules.reduce((acc, schedule) => {
-        if (!acc[schedule.ScheduleID]) {
-            acc[schedule.ScheduleID] = [];
+        if (!acc[schedule.id]) {
+            acc[schedule.id] = [];
         }
 
-        acc[schedule.ScheduleID].push({
-            AuditoriumID: schedule.AuditoriumID,
-            startAt: schedule.StartAt,
-            endAt: schedule.EndAt,
-            seatLeft: schedule.SeatLeft
+        acc[schedule.id].push({
+            ScheduleID: schedule.id,
+            AuditoriumID: schedule.auditoriumId,
+            StartAt: schedule.startAt,
+            EndAt: schedule.endAt,
+            SeatLeft: schedule.seatLeft
         });
-
         return acc;
-    }, {} as Record<number, { AuditoriumID: number; startAt: Date; endAt: Date; seatLeft: number }[]>);
+    }, {} as Record<number, IMovieScheduleTab[]>);
 }

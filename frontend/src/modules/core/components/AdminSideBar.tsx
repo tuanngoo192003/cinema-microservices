@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  CalendarOutlined,
   DesktopOutlined,
   InsertRowBelowOutlined,
   TeamOutlined,
@@ -7,7 +8,16 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import reactLogo from "../../../assets/react.svg";
+import "../../../App.css"
+import { Header } from "antd/es/layout/layout";
+import { LanguagePicker } from "./LanguagePicker";
+import { Profile } from "./Profile";
+import { useTranslation } from "react-i18next";
+import { HOME } from "../constants/redirectURI";
+import { AppFooter } from "./AppFooter";
+import SubMenu from "antd/es/menu/SubMenu";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -37,16 +47,6 @@ interface MenuConfig {
   breadcrumbItem: string[];
 }
 
-const items: MenuItem[] = [
-  getItem("User", "/admin/users", <UserOutlined />),
-  getItem("Movies", "/admin/movies", <DesktopOutlined />),
-  getItem("Auditoriums", "/admin/auditoriums", <InsertRowBelowOutlined />),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "4"),
-    getItem("Team 2", "5"),
-  ]),
-];
-
 const configs: MenuConfig[] = [
   {
     key: "/admin/users",
@@ -57,6 +57,11 @@ const configs: MenuConfig[] = [
     key: "/admin/movies",
     navigateTo: "/admin/movies",
     breadcrumbItem: ["Admin", "Movies"],
+  },
+  {
+    key: "/admin/movie-schedules",
+    navigateTo: "/admin/movie-schedules",
+    breadcrumbItem: ["Admin", "Movie schedules"]
   },
   {
     key: "/admin/auditoriums",
@@ -73,6 +78,7 @@ const configs: MenuConfig[] = [
 const routeMap: Record<string, string> = {
   "/admin/users": "/admin/users",
   "/admin/movies": "/admin/movies",
+  "/admin/movie-schedules": "/admin/movie-schedules",
   "/admin/auditoriums": "/admin/auditoriums",
 };
 
@@ -81,6 +87,7 @@ const matchedKey = Object.keys(routeMap).find((key) =>
 );
 
 export default function AdminSideBar({ children }: Props) {
+  const { t } = useTranslation()
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -96,20 +103,61 @@ export default function AdminSideBar({ children }: Props) {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh", marginTop: "3.1rem" }}>
+      <Header className="app-header">
+        {/* Logo */}
+        <div className="logo">
+          <img src={reactLogo} alt="Logo" />
+        </div>
+        {/* Navigation Menu */}
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]} className="nav-menu">
+          <Menu.Item key="1">
+            <Link to={HOME}>{t('labels.home')}</Link>
+          </Menu.Item>
+          <Menu.Item key="2">
+            <Link to={HOME}>{t('labels.menu.about')}</Link>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Link to={HOME}>{t('labels.menu.contact')}</Link>
+          </Menu.Item>
+          <Menu.Item key="4">
+            <LanguagePicker />
+          </Menu.Item>
+          <Menu.Item key="5">
+            <Profile />
+          </Menu.Item>
+        </Menu>
+      </Header>
       <Sider
+        style={{ background: "#403C3AFF" }}
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
         <div className="demo-logo-vertical" />
         <Menu
-          theme="dark"
+          className="side-menu"
           defaultSelectedKeys={[matchedKey ?? location.pathname]}
           mode="inline"
-          items={items}
           onClick={handleMenuClick}
-        />
+        >
+          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
+            {t('side_bar.users')}
+          </Menu.Item>
+          <Menu.Item key="/admin/movies" icon={<DesktopOutlined />}>
+            {t('side_bar.movies')}
+          </Menu.Item>
+          <Menu.Item key="/admin/movie-schedules" icon={< CalendarOutlined />}>
+            {t('side_bar.movie_schedules')}
+          </Menu.Item>
+          <Menu.Item key="/admin/auditoriums" icon={<InsertRowBelowOutlined />}>
+            {t('side_bar.auditoriums')}
+          </Menu.Item>
+          <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
+            <Menu.Item key="4">{t('team.team_1')}</Menu.Item>
+            <Menu.Item key="5">{t('team.team_2')}</Menu.Item>
+          </SubMenu>
+        </Menu>
       </Sider>
       <Layout>
         <Content style={{ margin: "0 16px" }}>
@@ -131,9 +179,7 @@ export default function AdminSideBar({ children }: Props) {
             {children}
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        <AppFooter />
       </Layout>
     </Layout>
   );

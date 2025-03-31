@@ -9,7 +9,7 @@ import (
 type MovieSchedule struct {
 	ScheduleID     uint      `gorm:"column:schedule_id;primaryKey;not null"`
 	MovieID        uint      `gorm:"column:movie_id"`
-	Movie          Movie     `json:"movie" gorm:"foreignKey:MovieID;references:MovieID"`
+	Movie          Movie     `gorm:"foreignKey:MovieID;references:MovieID"`
 	AuditoriumID   uint      `gorm:"column:auditorium_id"`
 	StartAt        time.Time `gorm:"column:start_at"`
 	EndAt          time.Time `gorm:"column:end_at"`

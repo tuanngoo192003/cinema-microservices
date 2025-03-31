@@ -30,6 +30,25 @@
     "reserved": "予約済み",
     "booked": "完売",
     "delete": "消す",
+    "auditorium_name": "オーディトリアム名",
+    "capacity": "収容人数",
+    "num_rows": "席の行数",
+    "num_cols": "席の列数",
+    "movie_name": "映画の名",
+    "description": "映画の説明",
+    "duration": "上映時間",
+    "release_date": "公開日",
+    "movie_genre": "ジャンル",
+    "start_at": "始める時間",
+    "end_at": "終了時間",
+    "schedule_status": "ステータス",
+    "seat_left": "残る席",
+    "your_choices": "選んだ席",
+    "price": "定価",
+    "movies": "映画",
+    "auditoriums": "スクリーン番号",
+    "start_date": "始める日",
+    "end_date": "終了の日",
     "english": "英語",
     "vietnamese": "ベトナム語",
     "japanese": "日本語",
@@ -39,23 +58,45 @@
       "release_date": "公開日",
       "user_list": "ユーザー名簿",
       "auditorium": "スクリーン番号",
-      "seat": "席番"
+      "seat": "席番",
+      "list_auditorium": "オーディトリアムのリスト",
+      "list_movies": "映画のリスト",
+      "list_movie_schedules": "映画のスケジュールのリスト"
     },
     "buttons": {
       "buy_ticket": "チケットを買う",
       "continue": "続く",
-      "back": "戻る"
+      "back": "戻る",
+      "save": "保存",
+      "create": "作成",
+      "confirm-booking": "確認する"
     },
     "menu": {
       "user_list": "ユーザー名簿",
       "logout": "ログアウト",
       "profile": "プロファイル",
       "about": "概要",
-      "contact": "コンタクト"
+      "contact": "コンタクト",
+      "admin_dashboard": "アドミンのダッシュボード"
     }
   },
+  "side_bar": {
+    "users": "ユーザーのリスト",
+    "movies": "映画のリスト",
+    "movie_schedules": "映画のスケジュールのリスト",
+    "auditoriums": "スクリーン番号"
+  },
+  "titles": {
+    "movie_genre": "ジャンル",
+    "duration": "上映時間",
+    "user_list": "ユーザーのリスト",
+    "preview": "プレビュー",
+    "auditorium_create": "スクリーンを作成する",
+    "movie_create": "映画を作成する",
+    "movie_schedule_create": "映画のスケジュールを作成する"
+  },
   "messages": {
-    "required":{
+    "required": {
       "username": "ユーザー名を入力してください!",
       "password": "パスワードを入力してください!",
       "email": "メールを入力してください!",

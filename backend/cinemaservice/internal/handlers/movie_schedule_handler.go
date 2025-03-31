@@ -77,7 +77,18 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 		return
 	}
 
-	seats := generateSeats(movieScheduleEntity.AuditoriumID, movieScheduleEntity.ScheduleID)
+	auditorium, err := getAuditoriumByID(movieScheduleEntity.AuditoriumID, h.db)
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{
+			"error":   err.Error(),
+			"message": "AuditoriumID is not valid",
+		}})
+		tx.Rollback()
+		return
+	}
+	log.Info(auditorium)
+	seats := generateSeats(auditorium.AuditoriumID, movieScheduleEntity.ScheduleID, int(auditorium.Rows), int(auditorium.Cols), movieSchedule.MoviePrice)
 	response = tx.Create(seats)
 	if err := response.Error; err != nil {
 		log.Error(err.Error())
@@ -94,27 +105,39 @@ func (h *MovieScheduleHander) CreateMovieSchedule(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": movieScheduleEntity})
 }
 
-func generateSeats(auditoriumID uint, scheduleID uint) (seats []entity.Seat) {
-	char := 'A'
-	for i := 0; i < 10; i++ {
-		for j := 1; j <= 12; j++ {
+func generateSeats(auditoriumID uint, scheduleID uint, rows int, cols int, moviePrice float64) []entity.Seat {
+	var seats []entity.Seat
+	char := 'A' // Starting letter for the first row
+
+	for i := 0; i < rows; i++ { // Loop through rows
+		for j := 1; j <= cols; j++ { // Loop through columns
 			seat := entity.Seat{
-				AuthoriumID:   auditoriumID,
+				AuditoriumID:  auditoriumID, // Corrected typo: AuthoriumID -> AuditoriumID
 				ScheduleID:    scheduleID,
 				CurrentStatus: "AVAILABLE",
-				SeatCode:      fmt.Sprintf("%c%d", char, j),
+				SeatCode:      fmt.Sprintf("%c%d", char, j), // Format SeatCode as "A1", "A2", etc.
+				Price:         moviePrice,
 			}
 			seats = append(seats, seat)
 		}
-		char++ // Move to the next row (A → B → C → ... → J)
+		char++ // Move to the next row (A → B → C → ... → J) after finishing current row
 	}
 	return seats
+}
+
+func getAuditoriumByID(auditoriumID uint, db *gorm.DB) (ent *entity.Auditorium, err error) {
+	ent = &entity.Auditorium{}
+
+	if err = db.Select("auditorium_id, rows, cols").Where("auditorium_id = ?", auditoriumID).Find(ent).Error; err != nil {
+		return nil, err
+	}
+	return
 }
 
 func (h *MovieScheduleHander) UpdateMovieSchedule(c *gin.Context) {
 	log := config.GetLogger()
 
-	var req payload.UpdateScheduleRequest
+	var req payload.UpdateMovieScheduleRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		log.Error(err.Error())
@@ -157,7 +180,7 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 	if c.Query("movieId") != "" {
 		query = query.Where(" movie_id = ? ", c.Query("movieId"))
 	}
-	if c.Query("auditoriumUd") != "" {
+	if c.Query("auditoriumId") != "" {
 		res, _ := strconv.Atoi(c.Query("auditoriumId"))
 		query = query.Where(" auditorium_id = ? ", res)
 	}
@@ -197,9 +220,14 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 
-	var result []payload.ScheduleResponse
+	var result []payload.MovieScheduleResponse
 	response := query.
-		Select("s.schedule_id", "s.movie_id", "s.auditorium_id", "s.start_at", "s.end_at", "s.schedule_status",
+		Select(
+			"s.schedule_id as id ", "s.movie_id",
+			"(SELECT m.movie_name FROM movies m WHERE m.movie_id = s.movie_id) AS movie_name",
+			"s.auditorium_id",
+			"(SELECT a.auditorium_name FROM auditoriums a WHERE a.auditorium_id = s.auditorium_id) AS auditorium_name",
+			"s.start_at", "s.end_at", "s.schedule_status",
 			"(SELECT COUNT(*) FROM seats WHERE seats.schedule_id = s.schedule_id AND seats.current_status = 'AVAILABLE') AS seat_left").
 		Table("movie_schedule AS s").
 		Offset(offset).
@@ -212,7 +240,7 @@ func (h *MovieScheduleHander) ListMovieSchedules(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, payload.PaginationResponse[payload.ScheduleResponse]{
+	c.JSON(http.StatusOK, payload.PaginationResponse[payload.MovieScheduleResponse]{
 		Page:        page,
 		Perpage:     perpage,
 		Data:        result,
@@ -230,7 +258,7 @@ func (h *MovieScheduleHander) GetMovieSchedule(c *gin.Context) {
 		return
 	}
 	var movieSchedule entity.MovieSchedule
-	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("movie").Find(&movieSchedule); err != nil {
+	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("Movie").Find(&movieSchedule); err != nil {
 		log.Error(err.Error)
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
 		return
@@ -249,4 +277,70 @@ func (h *MovieScheduleHander) GetMovieSchedule(c *gin.Context) {
 		EndAt:          movieSchedule.EndAt.String(),
 		ScheduleStatus: movieSchedule.ScheduleStatus,
 	})
+}
+
+func (h *MovieScheduleHander) GetMovieScheduleDetails(c *gin.Context) {
+	log := config.Newlogger(config.ConfigLogger{})
+	id := c.Param("id")
+	if id == "" {
+		log.Info("Parameter id is required but not found!")
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": "Parameter id is required but not found!"}})
+		return
+	}
+	var movieSchedule entity.MovieSchedule
+	if err := h.db.Model(&entity.MovieSchedule{}).Where(` schedule_id = ? `, id).Preload("Movie").First(&movieSchedule).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
+		return
+	}
+
+	var auditorium entity.Auditorium
+	if err := h.db.Model(&entity.Auditorium{}).Where(` auditorium_id = ? `, movieSchedule.AuditoriumID).Find(&auditorium).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
+		return
+	}
+
+	var seats []entity.Seat
+	if err := h.db.Model(&entity.Seat{}).Where(" auditorium_id = ? ", movieSchedule.AuditoriumID).
+		Where(" schedule_id = ?  ", movieSchedule.ScheduleID).
+		Find(&seats).Error; err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": payload.GetMovieScheduleDetailsResponse{
+		ID: int(movieSchedule.ScheduleID),
+		Movie: payload.MovieResponse{
+			MovieID:     movieSchedule.Movie.MovieID,
+			MovieName:   movieSchedule.Movie.MovieName,
+			MoviePrice:  movieSchedule.Movie.MoviePrice,
+			Description: movieSchedule.Movie.Description,
+			ReleaseDate: movieSchedule.Movie.ReleaseDate,
+			MovieGenre:  movieSchedule.Movie.MovieGenre,
+		},
+		Auditorium: payload.AuditoriumWithSeatResponse{
+			AuditoriumID:   int(auditorium.AuditoriumID),
+			AuditoriumName: auditorium.AuditoriumName,
+			Rows:           int(auditorium.Rows),
+			Columns:        int(auditorium.Cols),
+			Seats:          setSeatsResponse(seats),
+		},
+		StartAt:        movieSchedule.StartAt.String(),
+		EndAt:          movieSchedule.EndAt.String(),
+		ScheduleStatus: movieSchedule.ScheduleStatus,
+	}})
+}
+
+func setSeatsResponse(seats []entity.Seat) []payload.SeatInfoResponse {
+	var res []payload.SeatInfoResponse
+	for _, s := range seats {
+		seatResponse := payload.SeatInfoResponse{
+			ID:       int(s.SeatID),
+			SeatCode: s.SeatCode,
+			Price:    s.Price,
+			Status:   s.CurrentStatus,
+		}
+		res = append(res, seatResponse)
+	}
+	return res
 }

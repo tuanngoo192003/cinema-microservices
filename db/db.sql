@@ -45,12 +45,12 @@ INSERT INTO roles (role_id, role_name, description) VALUES
 INSERT INTO users (user_id, email, password, username, role_id) VALUES 
 (1, 'tuan.nguyenhuu@vti.com.vn', '$2a$10$kzZwQiR.CQJ/F80AzAeMFO1/hiAfx56UxxS6C/s6fXX/QbLV0zXIi', 'tuan.nguyenhuu', 1);
 
-
 -- cinemaservicedb tables 
 CREATE TABLE movies (
     movie_id SERIAL PRIMARY KEY,
     movie_name VARCHAR(255),
-    image_url VARCHAR(50),
+    movie_price FLOAT,
+    image_url VARCHAR(500),
     duration INT,
     description TEXT,
     release_date DATE,
@@ -65,7 +65,8 @@ CREATE TABLE movies (
 CREATE TABLE auditoriums (
     auditorium_id SERIAL PRIMARY KEY,
     auditorium_name VARCHAR(50),
-    capacity INT,
+    rows INT,
+    cols INT,
     is_deleted BOOLEAN DEFAULT FALSE,
     created_by VARCHAR(50),
     last_modified_by VARCHAR(50),
@@ -97,6 +98,7 @@ CREATE TABLE seats (
     seat_id SERIAL PRIMARY KEY,
     schedule_id INT REFERENCES movie_schedule(schedule_id), 
     auditorium_id INT REFERENCES auditoriums(auditorium_id) ON DELETE CASCADE,
+    price FLOAT,
     seat_code VARCHAR(5),
     current_status seat_status_enum DEFAULT 'AVAILABLE',
     is_deleted BOOLEAN DEFAULT FALSE,

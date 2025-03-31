@@ -6,6 +6,7 @@ import (
 	"cinema-service/internal/handlers/payload"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/tuanngoo192003/golang-utils/utils"
@@ -20,6 +21,19 @@ type MoviesHandler struct {
 
 func NewMoviesHandler(db *gorm.DB) *MoviesHandler {
 	return &MoviesHandler{db}
+}
+
+func (h *MoviesHandler) GetAllMovies(c *gin.Context) {
+	log := config.GetLogger()
+
+	var movies []payload.MovieSelectResponse
+	if err := h.db.Model(&entity.Movie{}).Select(`movie_id, movie_name, movie_price`).Find(&movies).Error; err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"erorr": err.Error()}})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": movies})
 }
 
 func (h *MoviesHandler) GetMovieByID(c *gin.Context) {
@@ -38,11 +52,14 @@ func (h *MoviesHandler) GetMovieByID(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": payload.MovieResponse{
-		MovieID:    movie.MovieID,
-		MovieName:  movie.MovieName,
-		Duration:   movie.Duration,
-		ImageURL:   movie.ImageURL,
-		MovieGenre: movie.MovieGenre,
+		MovieID:     movie.MovieID,
+		MoviePrice:  movie.MoviePrice,
+		MovieName:   movie.MovieName,
+		Description: movie.Description,
+		Duration:    movie.Duration,
+		ImageURL:    movie.ImageURL,
+		ReleaseDate: movie.ReleaseDate,
+		MovieGenre:  movie.MovieGenre,
 	}})
 }
 
@@ -92,7 +109,7 @@ func (h *MoviesHandler) ListMovies(c *gin.Context) {
 	offset := utils.GetOffset(page, &perpage)
 	totalPage := utils.GetTotalPage(float32(count), &perpage)
 	err = query.Model(&entity.Movie{}).
-		Select(`movie_id, movie_name, image_url, description, release_date, 
+		Select(`movie_id, movie_name, image_url, duration, description, release_date, 
 				movie_genre`).
 		Offset(offset).
 		Limit(perpage).
@@ -135,9 +152,12 @@ func (h *MoviesHandler) CreateMovie(c *gin.Context) {
 	}
 	movieEntity := entity.Movie{
 		MovieName:   movie.MovieName,
+		MoviePrice:  movie.Price,
+		ImageURL:    movie.ImageURL,
+		Duration:    movie.Duration,
 		Description: movie.Description,
 		ReleaseDate: parsedDate,
-		MovieGenre:  movie.MovieGenre,
+		MovieGenre:  strings.Join(movie.MovieGenre, ";"),
 	}
 
 	response := h.db.Model(entity.Movie{}).Create(&movieEntity)

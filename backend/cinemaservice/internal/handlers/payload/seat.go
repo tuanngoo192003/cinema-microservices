@@ -12,6 +12,14 @@ type SeatReponse struct {
 	LastModifiedBy string
 	CreatedBy      string
 }
+
+type SeatInfoResponse struct {
+	ID       int     `json:"id"`
+	SeatCode string  `json:"seatCode"`
+	Price    float64 `json:"price"`
+	Status   string  `json:"status"`
+}
+
 type CreateSeatRequest struct {
 	AuthoriumID    uint
 	SeatCode       string
