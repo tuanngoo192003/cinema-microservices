@@ -11,10 +11,10 @@ const { TabPane } = Tabs;
 
 export const MovieListUI = () => {
     const { movies, loading, handleGetMovieList } = useMovie()
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
-    const [movieNameSearch, setMovieNameSearch] = useState("")
-    const [moviemovieGenreSearch, setMoviemovieGenreSearch] = useState("")
+    const [currentPage, /* setCurrentPage */ ] = useState(1);
+    const [pageSize, /* setPageSize */] = useState(10);
+    const [movieNameSearch, /* setMovieNameSearch */] = useState("")
+    const [moviemovieGenreSearch, /* setMoviemovieGenreSearch */] = useState("")
 
     useEffect(() => {
         handleGetMovieList(currentPage, pageSize, movieNameSearch, moviemovieGenreSearch)

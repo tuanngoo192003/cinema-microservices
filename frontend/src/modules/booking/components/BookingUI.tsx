@@ -48,7 +48,7 @@ const BookingUI: React.FC = () => {
 
   const [choose, setChoosed] = useState<IChoosedSeat[]>([]);
   const [seats, setSeats] = useState<ISeat[]>([]);
-  const { reservedSeat, handleReservedSeat, handleGetResevedSeat, handleRemoveReservedSeat } = useReservedSeat()
+  const { handleReservedSeat, handleRemoveReservedSeat } = useReservedSeat()
 
   useEffect(() => {
     handleGetMovieDetails(movieId);

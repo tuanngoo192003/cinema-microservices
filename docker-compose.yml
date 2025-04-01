@@ -65,17 +65,26 @@ services:
     ports:
       - "27017:27017"
 
-  # reactapp:
-  #   build: frontend
-  #   volumes:
-  #     - react-build:/app/dist
-  #   depends_on:
-  #     - proxy
+  reactapp:
+    build: 
+      context: frontend
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL} 
+    volumes:
+      - react-build:/app/dist
+    depends_on:
+      - proxy
+    env_file:
+      - env/fe.env
+    ports:
+      - "3000:80"
 
   proxy:
     build: proxy
     ports:
       - 80:80
+    volumes:
+      - react-build:/usr/share/nginx/html
     depends_on: 
       - userservice
       - cinemaservice 
@@ -86,7 +95,7 @@ volumes:
   cinema-db-data:
   booking-db-data:
   cinema-sqlite-data:
-  # react-build:
+  react-build:
 
 secrets:
   db-password:

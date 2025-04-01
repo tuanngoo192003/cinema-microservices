@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { BookingContext } from "./Context"
 import { IBookingParam, IMovieSchedule } from "../models/booking"
-import { Booking, GetMovieDetail, GetMovieDetails } from "../services/booking"
+import { Booking, GetMovieDetails } from "../services/booking"
 import { useNavigate } from "react-router-dom"
 import { BOOKING_FORMAT_URI } from "../../core/constants/redirectURI"
 
@@ -17,7 +17,7 @@ const BookingContextProvider: React.FC<{children: React.ReactNode}> = ({children
     const handleBooking = async (body: IBookingParam, id: number) => {
         setLoading(true)
         try {
-            const res = await Booking(body)
+            await Booking(body)
             setTimeout(() => {
                 navigate(BOOKING_FORMAT_URI(id))
             }, 2000)

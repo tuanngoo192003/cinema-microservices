@@ -6,7 +6,9 @@ server {
     index index.html ;
 
     location / {
-        try_files $uri /index.html;
+        root /usr/share/nginx/html ;
+        index index.html ;
+        try_files $uri /index.html ;
     }
 
     location /generate_token {

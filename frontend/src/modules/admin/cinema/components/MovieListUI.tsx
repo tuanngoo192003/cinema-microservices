@@ -15,16 +15,16 @@ const AdminMovieListUI: React.FC = () => {
     const navigate = useNavigate()
     const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-    const [totalItems, setTotalItems] = useState<number>(0);
+    // const [totalItems, setTotalItems] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [movieName, setMovieName] = useState<string>('')
-    const [movieGenre, setMovieGenre] = useState<string>('')
-    const [releaseStart, setReleaseStart] = useState<Date>(() => {
+    const [movieName, /* setMovieName */ ] = useState<string>('')
+    const [movieGenre, /* setMovieGenre */] = useState<string>('')
+    const [releaseStart, /* setReleaseStart */] = useState<Date>(() => {
         const now = new Date();
         return new Date(now.setDate(now.getDate() - 14));
     });
 
-    const [releaseEnd, setReleaseEnd] = useState<Date>(() => {
+    const [releaseEnd, /* setReleaseEnd */] = useState<Date>(() => {
         const now = new Date();
         return new Date(now.setDate(now.getDate() + 14));
     });

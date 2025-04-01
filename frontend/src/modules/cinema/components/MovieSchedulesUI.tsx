@@ -26,11 +26,11 @@ export const MovieSchedulesUI: React.FC<MovieSchedulesProps> = ({ movieId }) => 
 
   const { movieSchedules, loading, handleGetMovieSchedules } =
     useMovieSchedule();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, /* setCurrentPage */] = useState(1);
+  const [pageSize, /* setPageSize */] = useState(10);
 
-  const [startAt, setStartAt] = useState(new Date().toISOString());
-  const [endAt, setEndAt] = useState(
+  const [startAt, /* setStartAt */] = useState(new Date().toISOString());
+  const [endAt, /* setEndAt */] = useState(
     new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString()
   );
   const [filteredSchedules, setFilteredSchedules] = useState<IMovieScheduleTab[]>([])

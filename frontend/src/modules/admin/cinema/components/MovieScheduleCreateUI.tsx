@@ -24,7 +24,7 @@ interface IMovieScheduleForm {
 const MovieScheduleCreateUI: React.FC = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { handleCreateMovieSchedule } = useMovieSchedule()
+    const { /* handleCreateMovieSchedule */ } = useMovieSchedule()
     const { movieList } = useMovie()
     const [movieId, setMovieId] = useState<number>(0)
     const [moviePrice, setMoviePrice] = useState<number>(0)
@@ -49,11 +49,11 @@ const MovieScheduleCreateUI: React.FC = () => {
         setAuditoriumId(auditoriumId)
     }
 
-    const saveAsDraft = (values: ICreateMovieScheduleParam) => {
-        values.scheduleStatus = "DRAFT"
-        console.log("Success", values);
-        handleCreateMovieSchedule(values);
-    }
+    // const saveAsDraft = (values: ICreateMovieScheduleParam) => {
+    //     values.scheduleStatus = "DRAFT"
+    //     console.log("Success", values);
+    //     handleCreateMovieSchedule(values);
+    // }
 
     const updateEndAt = (values: dayjs.Dayjs) => {
         setEndAt(values.add(currentMovieDuration, 'minute'))

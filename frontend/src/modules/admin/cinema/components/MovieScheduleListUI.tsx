@@ -12,11 +12,11 @@ import { ADMIN_MOVIE_SCHEDULES_CREATE } from "../../../core/constants/redirectUR
 const MovieScheduleListUI: React.FC = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const [totalItems, setTotalItems] = useState<number>(0);
+    // const [totalItems, setTotalItems] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [movieId, setMovieId] = useState<number>(2)
-    const [startAt, setStartAt] = useState<string>('')
-    const [endAt, setEndAt] = useState<string>('')
+    const [movieId, /* setMovieId */] = useState<number>(2)
+    const [startAt, /* setStartAt */] = useState<string>('')
+    const [endAt, /* setEndAt */] = useState<string>('')
     const [pageSize, setPageSize] = useState(10);
     const { movieSchedules, loading, handleGetMovieScheduleList } = useMovieSchedule()
     const [movieSchedulePagination, setMovieSchedulePagination] = useState<IPagination<IMovieSchedule> | null>(null)

@@ -26,7 +26,7 @@ const ReservedSeatContextProvider: React.FC<{children: React.ReactNode}> = ({chi
     const handleReservedSeat = async (body: IReservedSeatParam) => {
         setLoading(true)
         try {
-            const res = await ReservedSeat(body)
+            await ReservedSeat(body)
         } catch(e) {
             console.log(e);
         } finally {
@@ -37,7 +37,7 @@ const ReservedSeatContextProvider: React.FC<{children: React.ReactNode}> = ({chi
     const handleRemoveReservedSeat = async (id: number) => {
         setLoading(true)
         try {
-            const res = await RemoveReservedSeat(id)
+            await RemoveReservedSeat(id)
         } catch(e) {
             console.log(e);
         } finally {

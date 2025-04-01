@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { IPagination } from "../../core/models/core"
 import { IMovie, IMovieItem } from "../models/movie"
-import { IMovieSchedule, IMovieScheduleTab } from "../models/movieSchedule";
+import { IMovieScheduleTab } from "../models/movieSchedule";
 
 type CinemaContextType = {
     movies: IPagination<IMovieItem> | null; 

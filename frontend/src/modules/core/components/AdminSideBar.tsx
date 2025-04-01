@@ -19,23 +19,23 @@ import { HOME } from "../constants/redirectURI";
 import { AppFooter } from "./AppFooter";
 import SubMenu from "antd/es/menu/SubMenu";
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>["items"][number];
+// type MenuItem = Required<MenuProps>["items"][number];
 
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
+// function getItem(
+//   label: React.ReactNode,
+//   key: React.Key,
+//   icon?: React.ReactNode,
+//   children?: MenuItem[]
+// ): MenuItem {
+//   return {
+//     key,
+//     icon,
+//     children,
+//     label,
+//   } as MenuItem;
+// }
 
 interface Props {
   children?: React.ReactNode;

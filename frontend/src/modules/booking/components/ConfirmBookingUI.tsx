@@ -20,7 +20,7 @@ export const ConfirmBookingUI: React.FC<ConfirmModalProps> = (bookingInfo: Confi
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const { t } = useTranslation();
-    const [modalText, setModalText] = useState('Content of the modal');
+    const [/* modalText */, setModalText] = useState('Content of the modal');
 
     const showModal = () => {
         setOpen(true);

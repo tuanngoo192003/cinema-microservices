@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, Divider, Layout, Radio, Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
-import { IProfile } from "../../../user/models/user.ts";
 import { UserOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { LoadingPage } from "../../../core/components/LoadingPage.tsx";
@@ -10,6 +9,7 @@ import { Content } from "antd/es/layout/layout";
 import Title from "antd/es/typography/Title";
 import { IPagination } from "../../../core/models/core.ts";
 import { useUser } from "../hooks/index.ts";
+import { IProfile } from "../models/user.ts";
 
 const UserList: React.FC = () => {
   const { users, loading, handleGetUserList } = useUser();

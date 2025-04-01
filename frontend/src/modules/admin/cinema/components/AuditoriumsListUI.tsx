@@ -8,14 +8,14 @@ import { useAuditorium } from "../hooks";
 import { LoadingPage } from "../../../core/components/LoadingPage";
 import { Content } from "antd/es/layout/layout";
 import { IPagination } from "../../../core/models/core";
-import { IAuditorium } from "../models/auditorium";
+import { IAuditorium } from "../models/auditorium_admin";
 
 export default function AuditoriumsListUI() {
   const { auditoriums, loading, handleGetAuditoriumList } = useAuditorium()
   const [ auditoriumPagination, setAuditoriumPagination ] = useState<IPagination<IAuditorium> | null>(null)
-  const [totalItems, setTotalItems] = useState<number>(0);
+  //const [totalItems, setTotalItems] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [auditoriumName, setAuditoriumName] = useState<string>('')
+  const [auditoriumName,  /*setAuditoriumName*/ ] = useState<string>('')
   const [pageSize, setPageSize] = useState(10);
   const { t } = useTranslation();
   const navigate = useNavigate();
