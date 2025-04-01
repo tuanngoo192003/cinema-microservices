@@ -138,7 +138,15 @@ func ErrRecordNotFound(entity string) *AppError {
 	)
 }
 
+func ErrClientSendRequest(url string, method string, err error) *AppError {
+	return NewCustomError(
+		err,
+		fmt.Sprintf("Error to send request to %s with %s method", url, method),
+		fmt.Sprintf("API %s method %s", url, method),
+	)
+}
+
 var (
-	RecordNotFound = errors.New("record not found")
+	RecordNotFound    = errors.New("record not found")
 	FailedToConvertID = errors.New("failed to convert InsertedID to ObjectID")
 )

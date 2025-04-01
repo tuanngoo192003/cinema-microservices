@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+const (
+	HTTP_CLIENT_MOVIE_BASE_URL = "http://localhost:8002"
+	HTTP_CLIENT_USER_BASE_URL  = "http://localhost:8001"
+)
+
 type APIRequest struct {
 	Method  string
 	URL     string
@@ -18,7 +23,7 @@ type APIRequest struct {
 	Timeout time.Duration
 }
 
-func SendAPIRequest[T any](ctx context.Context, reqData APIRequest) (*T, error) {
+func SendRequest[T any](ctx context.Context, reqData APIRequest) (*T, error) {
 	var bodyReader io.Reader
 	if reqData.Body != nil {
 		jsonData, err := json.Marshal(reqData.Body)

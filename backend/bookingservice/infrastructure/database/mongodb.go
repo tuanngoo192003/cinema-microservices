@@ -10,7 +10,8 @@ import (
 )
 
 func GetMongoDbClient(connectionString string) (*mongo.Client, error) {
-	clientOptions := options.Client().ApplyURI(connectionString)
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	clientOptions := options.Client().ApplyURI(connectionString).SetServerAPIOptions(serverAPI)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
