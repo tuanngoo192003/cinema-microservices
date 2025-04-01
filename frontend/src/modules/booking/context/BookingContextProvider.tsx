@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { BookingContext } from "./Context"
 import { IBookingParam, IMovieSchedule } from "../models/booking"
-import { Booking, GetMovieDetail, GetMovieDetails } from "../services"
+import { Booking, GetMovieDetail, GetMovieDetails } from "../services/booking"
 import { useNavigate } from "react-router-dom"
 import { BOOKING_FORMAT_URI } from "../../core/constants/redirectURI"
 

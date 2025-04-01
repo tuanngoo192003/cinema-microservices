@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HanleCreateBookingRequest(appContext appctx.AppContext) gin.HandlerFunc {
+func HandleCreateBookingRequest(appContext appctx.AppContext) gin.HandlerFunc {
 	client := appContext.GetMainDbConnection()
 	storage := storage.NewDbStore(client)
 	repository := repositories.NewBookingCreateRepository(storage)

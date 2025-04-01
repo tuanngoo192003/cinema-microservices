@@ -17,6 +17,11 @@ func NewReservedSeatUsecase(repo *repo.ReservedSeatRepo) *ReservedSeatUseCase {
 	return &ReservedSeatUseCase{repo: repo}
 }
 
+func (r *ReservedSeatUseCase) Remove(id uint) (err error) {
+	err = r.repo.DeleteBySeatID(id)
+	return
+}
+
 func (r *ReservedSeatUseCase) Search(param payload.ReservedSeatSearchRequest) (result []entity.ReservedSeat, err error) {
 	result, err = r.repo.Search(param)
 	return

@@ -65,9 +65,20 @@ func (r *ReservedSeatRepo) CleanExpiredSeats(expiredBefore time.Time) error {
 	return nil
 
 }
+
 func (r *ReservedSeatRepo) Delete(id uint) (err error) {
 	log := config.GetLogger()
-	query := r.db.Model(&entity.ReservedSeat{}).Where("id = ?", id).Delete(&entity.ReservedSeat{})
+	query := r.db.Model(&entity.ReservedSeat{}).Where(" seat_id = ?", id).Delete(&entity.ReservedSeat{})
+	if query.Error != nil {
+		log.Error("Error deleting reserved seat: ", query.Error)
+	}
+	err = query.Error
+	return err
+}
+
+func (r *ReservedSeatRepo) DeleteBySeatID(id uint) (err error) {
+	log := config.GetLogger()
+	query := r.db.Model(&entity.ReservedSeat{}).Where(" seat_id = ?", id).Delete(&entity.ReservedSeat{})
 	if query.Error != nil {
 		log.Error("Error deleting reserved seat: ", query.Error)
 	}

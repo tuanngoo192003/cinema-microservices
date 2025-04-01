@@ -1,8 +1,8 @@
 {
   "common": {
-    "start_at": "Start at: ",
-    "end_at": "End at: ",
-    "seat_left": "Seats left: "
+    "start_at": "Start at ",
+    "end_at": "End at ",
+    "seat_left": "Seats left "
   },
   "footer": {
     "footer_slogan": "Your best movie experience",

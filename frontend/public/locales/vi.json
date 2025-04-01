@@ -1,8 +1,8 @@
 {
   "common": {
-    "start_at": "Bắt đầu lúc: ",
-    "end_at": "Kết thúc khi: ",
-    "seat_left": "Số ghế còn lại: "
+    "start_at": "Bắt đầu lúc ",
+    "end_at": "Kết thúc khi ",
+    "seat_left": "Số ghế còn lại "
   },
   "footer": {
     "footer_slogan": "Trải nghiệm phim ảnh tốt nhất của bạn",

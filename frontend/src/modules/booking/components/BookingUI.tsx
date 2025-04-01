@@ -28,10 +28,11 @@ import { ConfirmBookingUI } from "./ConfirmBookingUI.tsx";
 import SeatUI from "./SeatUI.tsx";
 import useModal from "../../core/hooks/useModal.ts";
 import { IBookingParam, IChoosedSeat, IMovieSchedule, ISeat } from "../models/booking.ts";
-import { useBooking } from "../hooks/index.ts";
+import { useBooking, useReservedSeat } from "../hooks/index.ts";
 import { useParams } from "react-router-dom";
 import { LoadingPage } from "../../core/components/LoadingPage.tsx";
 import { useAuth } from "../../user/hooks";
+import { IReservedSeatParam } from "../models/reserved_seat.ts";
 
 const BookingUI: React.FC = () => {
   const { t } = useTranslation();
@@ -47,6 +48,7 @@ const BookingUI: React.FC = () => {
 
   const [choose, setChoosed] = useState<IChoosedSeat[]>([]);
   const [seats, setSeats] = useState<ISeat[]>([]);
+  const { reservedSeat, handleReservedSeat, handleGetResevedSeat, handleRemoveReservedSeat } = useReservedSeat()
 
   useEffect(() => {
     handleGetMovieDetails(movieId);
@@ -95,9 +97,21 @@ const BookingUI: React.FC = () => {
         seatPrice: seat.price,
       };
 
-      return prevChose.some((seat) => seat.seatId === newSeat.seatId)
-        ? prevChose.filter((seat) => seat.seatId !== newSeat.seatId)
-        : [...prevChose, newSeat];
+      const param = {
+        scheduleId: movieSchedule?.id,
+        seatId: newSeat.seatId,
+        userId: profile?.id,
+      } as IReservedSeatParam
+
+      const seatExists = prevChose.some((seat) => seat.seatId === newSeat.seatId);
+
+      if (seatExists) {
+        handleRemoveReservedSeat(newSeat.seatId);
+        return prevChose.filter((seat) => seat.seatId !== newSeat.seatId);
+      } else {
+        handleReservedSeat(param);
+        return [...prevChose, newSeat];
+      }
     });
   };
 
@@ -109,7 +123,7 @@ const BookingUI: React.FC = () => {
       total_price: totalPrice,
       status: 'CONFIRMED'
     } as IBookingParam
-    
+
     handleBooking(bookingParam, movieId)
   };
 

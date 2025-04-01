@@ -12,6 +12,8 @@ export interface IMovieSelect {
     movieId: number
     movieName: string 
     moviePrice: number 
+    duration: number 
+    releaseDate: Date 
 }
 
 export interface ICreateMovieParam {

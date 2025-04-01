@@ -27,9 +27,9 @@ func (h *MoviesHandler) GetAllMovies(c *gin.Context) {
 	log := config.GetLogger()
 
 	var movies []payload.MovieSelectResponse
-	if err := h.db.Model(&entity.Movie{}).Select(`movie_id, movie_name, movie_price`).Find(&movies).Error; err != nil {
+	if err := h.db.Model(&entity.Movie{}).Select(`movie_id, movie_name, movie_price, duration, release_date `).Find(&movies).Error; err != nil {
 		log.Error(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"erorr": err.Error()}})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error()}})
 		return
 	}
 

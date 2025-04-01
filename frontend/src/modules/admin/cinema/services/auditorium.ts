@@ -3,7 +3,7 @@ import {
   IAuditorium,
   IAuditoriumParam,
   IAuditoriumSelect,
-} from "../models/auditorium";
+} from "../models/auditorium_admin";
 import api from "../../../core/services/axios";
 
 export const CreateAuditorium

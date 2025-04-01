@@ -84,7 +84,7 @@ const MovieDetailsUI: React.FC = () => {
                     {t("labels.titles.movie_genre")} : {movie?.movieGenre}
                   </Title>
                   <Title level={5} style={{ marginBottom: "0.25rem" }}>
-                    {t("labels.titles.release_date")} : {movie?.releaseDate}
+                    {t("labels.titles.release_date")} : {movie?.releaseDate.split("T")[0]}
                   </Title>
                   <Title level={5} style={{ marginTop: "0.25rem" }}>
                     {t("labels.titles.duration")} : {movie?.duration}p

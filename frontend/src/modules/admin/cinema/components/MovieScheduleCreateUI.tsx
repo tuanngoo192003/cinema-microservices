@@ -2,13 +2,24 @@ import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useMovie, useMovieSchedule } from "../hooks"
 import { ICreateMovieScheduleParam } from "../models/schedule"
-import { Button, Card, DatePicker, Form, Layout, Typography } from "antd"
+import { Button, Card, DatePicker, Form, Layout, TimePicker, Typography } from "antd"
 import { Content } from "antd/es/layout/layout"
 import "../../../../App.css";
 import { useNavigate } from "react-router-dom"
 import { ADMIN_MOVIE_SCHEDULES } from "../../../core/constants/redirectURI"
 import MovieSelectUI from "./MovieSelectUI"
 import AuditoriumSelectUI from "./AuditoriumSelectUI"
+import dayjs from "dayjs"
+
+interface IMovieScheduleForm {
+    movieId: number
+    auditoriumId: number
+    startDate: Date
+    startAt: dayjs.Dayjs | null
+    endAt: dayjs.Dayjs | null
+    scheduleStatus: string
+    moviePrice: number
+}
 
 const MovieScheduleCreateUI: React.FC = () => {
     const { t } = useTranslation()
@@ -17,7 +28,10 @@ const MovieScheduleCreateUI: React.FC = () => {
     const { movieList } = useMovie()
     const [movieId, setMovieId] = useState<number>(0)
     const [moviePrice, setMoviePrice] = useState<number>(0)
+    const [currentMovieDuration, setCurrentMovieDuration] = useState<number>(0)
+    const [currentMovieReleaseDate, setCurrentMovieReleaseDate] = useState<Date | null>(null)
     const [auditoriumId, setAuditoriumId] = useState<number>(0)
+    const [endAt, setEndAt] = useState<dayjs.Dayjs | null>(null)
 
     const backToListSchedule = () => {
         navigate(ADMIN_MOVIE_SCHEDULES)
@@ -25,9 +39,10 @@ const MovieScheduleCreateUI: React.FC = () => {
 
     const handleSelectMovie = (movieId: number) => {
         setMovieId(movieId)
-        const moviePrice = movieList.find(m => m.movieId == movieId)?.moviePrice
-        console.log(movieList)
-        setMoviePrice(moviePrice as unknown as number)
+        const movie = movieList.find(m => m.movieId == movieId)
+        setCurrentMovieDuration(movie?.duration as unknown as number)
+        setMoviePrice(movie?.moviePrice as unknown as number)
+        setCurrentMovieReleaseDate(movie?.releaseDate as unknown as Date)
     }
 
     const handleSelectAuditorium = (auditoriumId: number) => {
@@ -40,14 +55,30 @@ const MovieScheduleCreateUI: React.FC = () => {
         handleCreateMovieSchedule(values);
     }
 
-    const onFinish = (values: ICreateMovieScheduleParam) => {
-        values.scheduleStatus = "FINAL"
-        values.movieId = movieId
-        values.auditoriumId = auditoriumId
-        values.moviePrice = moviePrice
-        console.log("Success", values);
-        console.log(values)
-        handleCreateMovieSchedule(values);
+    const updateEndAt = (values: dayjs.Dayjs) => {
+        setEndAt(values.add(currentMovieDuration, 'minute'))
+    }
+
+    const onFinish = (values: IMovieScheduleForm) => {
+        const startDateOnly = dayjs(values.startDate).startOf('day');
+        const computedStartDate = values.startAt
+            ? startDateOnly.hour(values.startAt.hour()).minute(values.startAt.minute()).second(values.startAt.second()).toDate()
+            : startDateOnly.toDate();
+
+        const computedEndDate = endAt
+            ? startDateOnly.hour(endAt.hour()).minute(endAt.minute()).second(endAt.second()).toDate()
+            : startDateOnly.toDate();
+
+        const param = {
+            movieId: movieId,
+            auditoriumId: auditoriumId,
+            startAt: computedStartDate,
+            endAt: computedEndDate,
+            scheduleStatus: "FINAL",
+            moviePrice: moviePrice
+        } as ICreateMovieScheduleParam
+        console.log(param)
+        //handleCreateMovieSchedule(param);
     };
 
     return (
@@ -97,27 +128,51 @@ const MovieScheduleCreateUI: React.FC = () => {
                             </Form.Item>
                             <Form.Item
                                 label={t("labels.start_date")}
-                                name="startAt"
+                                name="startDate"
                                 rules={[
                                     {
                                         required: true,
                                         message: t("messages.required.start_date"),
+                                    },
+                                    {
+                                        validator: (_, value) => {
+                                            if (!value) {
+                                                return Promise.reject(new Error('Start date is required'));
+                                            }
+
+                                            const releaseDate = currentMovieReleaseDate ? dayjs(currentMovieReleaseDate) : null;
+
+                                            console.log(releaseDate)
+                                            console.log(value)
+                                            if (releaseDate && value.isAfter(releaseDate, 'day')) {
+                                                return Promise.resolve(); 
+                                            }
+
+                                            return Promise.reject(
+                                                new Error(`Start date cannot be before the movie release date (${releaseDate?.format('YYYY-MM-DD')})`)
+                                            );
+                                        },
                                     },
                                 ]}
                             >
                                 <DatePicker className="app-input" />
                             </Form.Item>
                             <Form.Item
-                                label={t("labels.end_date")}
-                                name="endAt"
+                                label={t("labels.start_at")}
+                                name="startAt"
                                 rules={[
                                     {
                                         required: true,
-                                        message: t("messages.required.end_date"),
+                                        message: t("messages.required.start_at"),
                                     },
                                 ]}
                             >
-                                <DatePicker className="app-input" />
+                                <TimePicker className="app-input" onChange={updateEndAt} />
+                            </Form.Item>
+                            <Form.Item
+                                label={t("labels.end_at")}
+                            >
+                                <TimePicker className="app-input" value={endAt ? endAt : undefined} disabled></TimePicker>
                             </Form.Item>
                             <Form.Item>
                                 <Button className="app-btn" htmlType="submit" block>

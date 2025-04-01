@@ -6,6 +6,7 @@ import (
 	"cinema-service/internal/handlers/payload"
 	"cinema-service/internal/usecase"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +17,31 @@ type ReservedSeatHandler struct {
 
 func NewReservedSeatHandler(useCase *usecase.ReservedSeatUseCase) *ReservedSeatHandler {
 	return &ReservedSeatHandler{useCase}
+}
+
+func (h *ReservedSeatHandler) Remove(c *gin.Context) {
+	log := config.GetLogger()
+
+	id := c.Param("id")
+	if id == "" {
+		log.Info("ReservedSeat id is not found!")
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": "ReservedSeat id is not found!"}})
+		return
+	}
+
+	idNumber, err := strconv.Atoi(id)
+	if err != nil {
+		log.Info(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error()}})
+		return
+	}
+
+	err = h.useCase.Remove(uint(idNumber))
+	if err != nil {
+		log.Info(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error()}})
+		return
+	}
 }
 
 func (h *ReservedSeatHandler) Search(c *gin.Context) {

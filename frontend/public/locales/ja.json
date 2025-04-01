@@ -1,8 +1,8 @@
 {
   "common": {
-    "start_at": "開始時間: ",
-    "end_at": "終了時間: ",
-    "seat_left": "空いている席: "
+    "start_at": "開始時間 ",
+    "end_at": "終了時間 ",
+    "seat_left": "空いている席 "
   },
   "footer": {
     "footer_slogan": "あなたの最高の映画体験",

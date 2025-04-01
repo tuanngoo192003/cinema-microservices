@@ -99,6 +99,7 @@ CREATE TABLE seats (
     schedule_id INT REFERENCES movie_schedule(schedule_id), 
     auditorium_id INT REFERENCES auditoriums(auditorium_id) ON DELETE CASCADE,
     price FLOAT,
+    user_id INT,
     seat_code VARCHAR(5),
     current_status seat_status_enum DEFAULT 'AVAILABLE',
     is_deleted BOOLEAN DEFAULT FALSE,

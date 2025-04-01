@@ -17,7 +17,6 @@ type ReservedSeatRequest struct {
 	UserID     uint `json:"userId"`
 }
 
-
 type ReservedSeatSearchRequest struct {
 	UserID     uint `form:"userId"`
 	SeatID     uint `form:"seatId"`

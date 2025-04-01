@@ -13,6 +13,7 @@ import { AuditoriumContextProvider } from "./modules/admin/cinema/context/Audito
 import { AdminMovieContextProvider } from "./modules/admin/cinema/context/AdminMovieContextProvider.tsx";
 import { AdminMovieScheduleContextProvider } from "./modules/admin/cinema/context/AdminMovieScheduleContextProvider.tsx";
 import BookingContextProvider from "./modules/booking/context/BookingContextProvider.tsx";
+import ReservedSeatContextProvider from "./modules/booking/context/ReservedSeatContextProvider.tsx";
 
 const App: React.FC = () => (
     <>
@@ -24,13 +25,15 @@ const App: React.FC = () => (
                             <MovieContextProvider>
                                 <MovieScheduleContextProvider>
                                     <BookingContextProvider>
-                                        <AuditoriumContextProvider>
-                                            <AdminMovieScheduleContextProvider>
-                                                <AdminMovieContextProvider>
-                                                    <AppRouter />
-                                                </AdminMovieContextProvider>
-                                            </AdminMovieScheduleContextProvider>
-                                        </AuditoriumContextProvider>
+                                        <ReservedSeatContextProvider>
+                                            <AuditoriumContextProvider>
+                                                <AdminMovieScheduleContextProvider>
+                                                    <AdminMovieContextProvider>
+                                                        <AppRouter />
+                                                    </AdminMovieContextProvider>
+                                                </AdminMovieScheduleContextProvider>
+                                            </AuditoriumContextProvider>
+                                        </ReservedSeatContextProvider>
                                     </BookingContextProvider>
                                 </MovieScheduleContextProvider>
                             </MovieContextProvider>
