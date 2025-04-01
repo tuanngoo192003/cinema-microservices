@@ -10,6 +10,6 @@ import (
 func RegisterRouter(group *gin.RouterGroup, appContext appctx.AppContext) {
 	booking := group.Group("/booking")
 
-	booking.POST("", transport.HanleCreateBookingRequest(appContext))
-	booking.GET("/user/:id", transport.HandleGetMyBooking(appContext))
+	booking.POST("", transport.HandleCreateBookingRequest(appContext))
+	booking.GET("/:id", transport.HandleGetMyBooking(appContext))
 }

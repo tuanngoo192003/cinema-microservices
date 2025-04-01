@@ -9,6 +9,7 @@ import (
 type Movie struct {
 	MovieID        uint      `gorm:"column:movie_id;primaryKey;not null"`
 	MovieName      string    `gorm:"column:movie_name"`
+	MoviePrice     float64   `gorm:"column:movie_price"`
 	Duration       int       `column:"column:duration"`
 	ImageURL       string    `gorm:"column:image_url"`
 	Description    string    `gorm:"column:description"`

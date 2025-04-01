@@ -178,7 +178,32 @@ server {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://cinemaservice:8001/cinema/auditorium/ ;
+        proxy_pass   http://cinemaservice:8001/cinema/auditoriums/ ;
+    }
+
+    location /cinema/auditoriums/all {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+
+        if ($request_method = 'GET') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+        }
+
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/cinema/auditoriums/all ;
     }
 
     location /cinema/seats {
@@ -231,6 +256,31 @@ server {
         proxy_pass   http://cinemaservice:8001/cinema/seats/available ;
     }
 
+    location /cinema/seats/reservations {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+
+        if ($request_method ~* "(GET|POST|PUT)") {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+        }
+
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/cinema/seats/reservations ;
+    }
+
     location /cinema/seats/reservations/ {
         if ($request_method = 'OPTIONS') {
             add_header 'Access-Control-Allow-Origin' '*';
@@ -243,10 +293,10 @@ server {
             return 204;
         }
 
-        if ($request_method = 'GET') {
+        if ($request_method ~* "(GET|POST|PUT|DELETE)") {
             add_header 'Access-Control-Allow-Origin' '*';
             add_header 'Access-Control-Allow-Credentials' 'true';
-            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, DELETE, OPTIONS';
             add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
         }
 
@@ -306,7 +356,32 @@ server {
         proxy_pass   http://cinemaservice:8001/cinema/movies/ ;
     }
 
-    location /cinema/movie-schedules {
+    location /cinema/movies/all {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+
+        if ($request_method = 'GET') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+        }
+
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/cinema/movies/all ;
+    }
+
+    location /cinema/schedules {
         if ($request_method = 'OPTIONS') {
             add_header 'Access-Control-Allow-Origin' '*';
             add_header 'Access-Control-Allow-Credentials' 'true';
@@ -331,7 +406,7 @@ server {
         proxy_pass   http://cinemaservice:8001/cinema/movie-schedules ;
     }
 
-    location /cinema/movie-schedules/ {
+    location /cinema/schedules/ {
         if ($request_method = 'OPTIONS') {
             add_header 'Access-Control-Allow-Origin' '*';
             add_header 'Access-Control-Allow-Credentials' 'true';
@@ -356,6 +431,31 @@ server {
         proxy_pass   http://cinemaservice:8001/cinema/movie-schedules/ ;
     }
 
+    location /cinema/schedules/details/ {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+
+        if ($request_method = 'GET') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+        }
+
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://cinemaservice:8001/cinema/movie-schedules/details/ ;
+    }
+
     location /booking/ {
         if ($request_method = 'OPTIONS') {
             add_header 'Access-Control-Allow-Origin' '*';
@@ -378,10 +478,10 @@ server {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://bookingservice:8002/booking/ ;
+        proxy_pass   http://bookingservice:8002/api/v1/booking/ ;
     }
 
-    location /bookings {
+    location /booking {
         if ($request_method = 'OPTIONS') {
             add_header 'Access-Control-Allow-Origin' '*';
             add_header 'Access-Control-Allow-Credentials' 'true';
@@ -403,7 +503,32 @@ server {
         access_by_lua_block {
             require("auth").check_jwt_role()
         }
-        proxy_pass   http://bookingservice:8002/bookings ;
+        proxy_pass   http://bookingservice:8002/api/v1/booking ;
+    }
+
+    location /upload {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+
+        if ($request_method ~* "(GET|POST|PUT)") {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
+        }
+
+        access_by_lua_block {
+            require("auth").check_jwt_role()
+        }
+        proxy_pass   http://userservice:8000/upload ;
     }
 
     error_page 404 /index.html ;

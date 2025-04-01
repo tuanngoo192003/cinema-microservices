@@ -1,6 +1,8 @@
 package payload
 
-import "reflect"
+import (
+	"reflect"
+)
 
 type PaginationResponse[T any] struct {
 	Page        int   `json:"page"`

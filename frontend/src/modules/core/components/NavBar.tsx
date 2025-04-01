@@ -1,14 +1,13 @@
-import {Header} from "antd/es/layout/layout";
+import { Header } from "antd/es/layout/layout";
 import * as React from "react";
 import "../../../App.css"
-import {Menu} from "antd";
+import { Menu } from "antd";
 import reactLogo from "../../../assets/react.svg";
-import {Link} from "react-router-dom";
-import {LanguagePicker} from "./LanguagePicker.tsx";
-import {useTranslation} from "react-i18next";
-import {Profile} from "./Profile.tsx";
-import {useEffect, useState} from "react";
-import {HOME} from "../constants/redirectURI.ts";
+import { Link } from "react-router-dom";
+import { LanguagePicker } from "./LanguagePicker.tsx";
+import { useTranslation } from "react-i18next";
+import { Profile } from "./Profile.tsx";
+import { HOME } from "../constants/redirectURI.ts";
 
 interface IMainLayoutProps {
     children: React.ReactNode;
@@ -16,13 +15,7 @@ interface IMainLayoutProps {
 
 export const NavBar = ({ children }: IMainLayoutProps) => {
     const { t } = useTranslation();
-    const [isUserLogin, setIsUserLogin] = useState<boolean>(false);
 
-    // Check profile existence on component mount
-    useEffect(() => {
-        const profile = localStorage.getItem("profile");
-        setIsUserLogin(!!profile);
-    }, []);
     return (
         <>
             <Header className="app-header">
@@ -42,10 +35,10 @@ export const NavBar = ({ children }: IMainLayoutProps) => {
                         <Link to={HOME}>{t('labels.menu.contact')}</Link>
                     </Menu.Item>
                     <Menu.Item key="4">
-                        <LanguagePicker/>
+                        <LanguagePicker />
                     </Menu.Item>
                     <Menu.Item key="5">
-                        <Profile avatarURL="sadfasfd" isUserLogin={isUserLogin}/>
+                        <Profile />
                     </Menu.Item>
                 </Menu>
             </Header>

@@ -1,6 +1,4 @@
-import { useSnackbar } from "notistack";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { GetMovieByID, GetMovieListApi } from "../services";
 import { IMovie, IMovieItem } from "../models/movie";
 import { IPagination } from "../../core/models/core";

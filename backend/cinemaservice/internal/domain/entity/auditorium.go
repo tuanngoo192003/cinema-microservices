@@ -9,7 +9,8 @@ import (
 type Auditorium struct {
 	AuditoriumID   uint      `gorm:"column:auditorium_id;primaryKey;not null"`
 	AuditoriumName string    `gorm:"column:auditorium_name"`
-	Capacity       uint      `gorm:"column:capacity"`
+	Rows           uint      `gorm:"column:rows"`
+	Cols           uint      `gorm:"column:cols"`
 	CreatedAt      time.Time `gorm:"column:created_at;autoCreateTime"`
 	LastModifiedAt time.Time `gorm:"column:last_modified_at; autoUpdateTime"`
 	LastModifiedBy string    `gorm:"column:last_modified_by"`

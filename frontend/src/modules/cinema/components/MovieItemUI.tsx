@@ -6,10 +6,14 @@ import {useTranslation} from "react-i18next";
 import Title from "antd/es/typography/Title";
 import {MOVIE_DETAILS_FORMAT_URI} from "../../core/constants/redirectURI.ts";
 import { IMovieItem } from "../models/movie.ts";
-
+import { useNavigate } from "react-router-dom";
 
 export const MovieItemUI: React.FC<IMovieItem> = ({ movieId, movieName, duration, imageURL, movieGenre }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const navigateTo = () => {
+        navigate(MOVIE_DETAILS_FORMAT_URI(movieId))
+    };
     return (
         <>
             <Layout>
@@ -36,7 +40,7 @@ export const MovieItemUI: React.FC<IMovieItem> = ({ movieId, movieName, duration
                                 {t("labels.titles.duration")} : {duration}p
                             </Title>
                         </div>
-                        <Button className="app-btn" style={{ marginTop: "1rem" }}>
+                        <Button className="app-btn" style={{ marginTop: "1rem" }} onClick={navigateTo}>
                             {t("labels.buttons.buy_ticket")}
                         </Button>
                     </div>

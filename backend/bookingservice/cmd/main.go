@@ -23,6 +23,7 @@ func main() {
 	}
 
 	connectionString := "mongodb+srv://dinhson1032001:BbRMG8pePswTpbUd@dihson103.pckvrmm.mongodb.net/?retryWrites=true&w=majority&appName=dihson103"
+	// connectionString := "mongodb://bookingdb:27017/bookingservicedb"
 	client, err := database.GetMongoDbClient(connectionString)
 	if err != nil {
 		log.Fatal("❌ Error:", err)

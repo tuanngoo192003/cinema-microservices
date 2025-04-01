@@ -53,37 +53,37 @@ func (h *AuthHandler) GetAllUsers(c *gin.Context) {
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return 
+		return
 	}
 
 	c.JSON(http.StatusOK, payload.PaginationResponse[payload.UserResponse]{
-		Page: page,
-		Perpage: perpage, 
-		Data: users,
+		Page:        page,
+		Perpage:     perpage,
+		Data:        users,
 		TotalRecord: count,
-		TotalPage: int64(totalPage),
+		TotalPage:   int64(totalPage),
 	})
 }
 
 func (h *AuthHandler) GetUserById(c *gin.Context) {
 	log := config.GetLogger()
-	
+
 	var user entity.User
-	if err := h.db.GORM.Where(`user_id = ? `, c.Param("id")).Find(&user).Error; err != nil {
+	if err := h.db.GORM.Where(`user_id = ? `, c.Param("id")).Preload("Roles").Find(&user).Error; err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return	
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"id": user.UserID,
-		"firstName": user.FirstName,
-		"lastName": user.LastName,
-		"email": user.Email,
+		"id":          user.UserID,
+		"firstName":   user.FirstName,
+		"lastName":    user.LastName,
+		"email":       user.Email,
 		"dateOfBirth": user.DateOfBirth,
 		"phoneNumber": user.PhoneNumber,
-		"role": user.Roles.RoleName,
-		"avatar": user.Avatar,
+		"role":        user.Roles.RoleName,
+		"avatar":      user.Avatar,
 	})
 }
 
@@ -94,7 +94,7 @@ func (h *AuthHandler) UpdateUser(c *gin.Context) {
 	if err := c.ShouldBindJSON(&user); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return	
+		return
 	}
 
 	tx, err := h.db.DB.Begin()
@@ -104,7 +104,7 @@ func (h *AuthHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	defer func(){
+	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
 			log.Error("Transaction failed")
@@ -113,18 +113,33 @@ func (h *AuthHandler) UpdateUser(c *gin.Context) {
 	}()
 	var userUpdate entity.User
 
-	if user.Avatar != "" { userUpdate.Avatar = user.Avatar }
-	if user.Email != "" { userUpdate.Email = user.Email }	
-	if user.Status != "" { userUpdate.Status = user.Status }
-	if user.FirstName != "" { userUpdate.FirstName = user.FirstName }
-	if user.LastName != "" { userUpdate.LastName = user.LastName }
-	if user.PhoneNumber != "" { userUpdate.PhoneNumber = user.PhoneNumber }
-	if user.DateOfBirth != "" { userUpdate.DateOfBirth = user.DateOfBirth }
-	if user.IsDeleted {	userUpdate.IsDeleted = user.IsDeleted }
+	if user.Avatar != "" {
+		userUpdate.Avatar = user.Avatar
+	}
+	if user.Email != "" {
+		userUpdate.Email = user.Email
+	}
+	if user.Status != "" {
+		userUpdate.Status = user.Status
+	}
+	if user.FirstName != "" {
+		userUpdate.FirstName = user.FirstName
+	}
+	if user.LastName != "" {
+		userUpdate.LastName = user.LastName
+	}
+	if user.PhoneNumber != "" {
+		userUpdate.PhoneNumber = user.PhoneNumber
+	}
+	if user.DateOfBirth != "" {
+		userUpdate.DateOfBirth = user.DateOfBirth
+	}
+	if user.IsDeleted {
+		userUpdate.IsDeleted = user.IsDeleted
+	}
 
-	if err := h.db.GORM.Model(entity.User{}).Where(`user_id = ?`, user.UserID).Updates(&userUpdate).Error; 
-	err != nil {
-		log.Error(err.Error())	
+	if err := h.db.GORM.Model(entity.User{}).Where(`user_id = ?`, user.UserID).Updates(&userUpdate).Error; err != nil {
+		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -145,7 +160,7 @@ func (h *AuthHandler) CreateUser(c *gin.Context) {
 	if err := c.ShouldBindJSON(&user); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return	
+		return
 	}
 
 	tx, err := h.db.DB.Begin()
@@ -155,7 +170,7 @@ func (h *AuthHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	defer func(){
+	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
 			log.Error("Transaction failed")
@@ -174,10 +189,9 @@ func (h *AuthHandler) CreateUser(c *gin.Context) {
 	if err := tx.QueryRow(`
 		INSERT INTO users(username, password, status, email, first_name, last_name, date_of_birth, phone_number)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id	
-		`, user.Username, passwordHashed, user.Status, user.Email, user.FirstName, user.LastName, user.DateOfBirth, user.PhoneNumber). 
-		Scan(&id); 
-	err != nil {
-		log.Error(err.Error())	
+		`, user.Username, passwordHashed, user.Status, user.Email, user.FirstName, user.LastName, user.DateOfBirth, user.PhoneNumber).
+		Scan(&id); err != nil {
+		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -192,9 +206,9 @@ func (h *AuthHandler) CreateUser(c *gin.Context) {
 }
 
 func (h *AuthHandler) IsUserExist(c *gin.Context) {
-	log := config.GetLogger()	
+	log := config.GetLogger()
 
-	var username string 
+	var username string
 	if err := h.db.GORM.
 		Model(entity.User{}).Select("username").Where("user_id = ?", c.Param("id")).First(&username).Error; err != nil {
 		log.Info(err.Error())
@@ -207,9 +221,3 @@ func (h *AuthHandler) IsUserExist(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"existed": false})
 	}
 }
-
-
-
-
-
-

@@ -12,6 +12,7 @@ func SetupMovieRouter(db *gorm.DB, router *gin.RouterGroup) {
 	h := handlers.NewMoviesHandler(db)
 	movieGroup.GET("", h.ListMovies)
 	movieGroup.GET("/:id", h.GetMovieByID)
+	movieGroup.GET("/all", h.GetAllMovies)
 	movieGroup.POST("", h.CreateMovie)
 	movieGroup.PUT("", h.UpdateMovie)
 }

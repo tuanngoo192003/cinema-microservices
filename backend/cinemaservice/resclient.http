@@ -1,4 +1,4 @@
-POST http://localhost:80/cinemaservice/info/auditoriums/create HTTP/1.1
+POST http://localhost:80/cinemaservice/info/auditoriums HTTP/1.1
 Content-Type: application/json
 
 {  
@@ -13,32 +13,28 @@ Content-Type: application/json
 
 
 ###
-PUT http://localhost:80/cinemaservice/info/auditoriums/update HTTP/1.1
+@id = 1
+PUT http://localhost:80/cinemaservice/info/auditoriums/99 HTTP/1.1
 Content-Type: application/json
 
 {
-   "id": 2,
-    "auditoriumName": "conga",
-    "capacity": 250,
-    "createdAt": "2025-03-15T19:31:21.718333033Z",
-    "lastModifiedAt": "2025-03-15T19:31:21.718333033Z",
+    
+    "capacity": 98,
     "lastModifiedBy": "fd",
     "createdBy": "system",
     "isDeleted": false
 }
 ###
-GET http://localhost:80/cinemaservice/info/auditoriums/search?isDelete=false&auditoriumName= HTTP/1.1
-
+GET http://localhost:80/cinemaservice/info/auditoriums
 
 // MOVIES
 
 ###
-GET http://localhost:80/cinemaservice/info/movies/search?isDelete=false&movieName=The HTTP/1.1
+GET http://localhost:80/cinemaservice/info/movies HTTP/1.1
 
 ###
-POST http://localhost:80/cinemaservice/info/movies/create HTTP/1.1
+POST http://localhost:80/cinemaservice/info/movies HTTP/1.1
 Content-Type: application/json
-
 {
    "movieName": "The numb",
     "description": "The Avengers is a team of superheroes, appearing in American comic books published by Marvel Comics.",
@@ -49,11 +45,13 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:80/cinemaservice/info/movies/update HTTP/1.1
+
+@id = 1
+PUT http://localhost:80/cinemaservice/info/movies/{{id}} HTTP/1.1
 Content-Type: application/json
 
 {
-   "id": 1,
+    
     "description": "The Avengers is a team of superheroes, appearing in American comic books published by Marvel Comics.",
     "releaseDate": "2025-03-15T19:31:21.718333033Z",
     "lastModifiedBy": "admin",
@@ -61,68 +59,72 @@ Content-Type: application/json
 }
 /// SCHEDULES
 ###
-POST http://localhost:80/cinemaservice/info/schedule/create HTTP/1.1
+POST http://localhost:80/cinemaservice/info/schedule HTTP/1.1
 Content-Type: application/json
 
 {
    "auditoriumId": 1,
     "movieId": 1,
-    "showTime": "2025-03-15T19:31:21.718333033Z",
-    "createdAt": "2025-03-15T19:31:21.718333033Z",
-    "lastModifiedAt": "2025-03-15T19:31:21.718333033Z",
+    "endAt": "2025-03-31T19:52:21.718333033Z",
+    "startAt": "2025-03-31T19:50:21.718333033Z",
     "lastModifiedBy": "admin",
     "createdBy": "system",
-    "isDeleted": false
+    "scheduleStatus": "active"
 }
 
 ###
-PUT http://localhost:80/cinemaservice/info/schedule/update HTTP/1.1
+@id = 1
+PUT http://localhost:80/cinemaservice/info/schedule/2 HTTP/1.1
 Content-Type: application/json
 
 {
-   "id": 1,
-    "auditoriumId": 1,
     "movieId": 1,
-    "lastModifiedBy": "tao",
-
+    "lastModifiedBy": "tao"
 }
 
 ###
-GET http://localhost:80/cinemaservice/info/schedule/search?isDelete=false  HTTP/1.1
-
-
+GET http://localhost:80/cinemaservice/info/schedule?isDelete=false&&perpage=10  HTTP/1.1
 
 // SEATS
 ###
-POST http://localhost:80/cinemaservice/info/seats/create HTTP/1.1
+POST http://localhost:80/cinemaservice/info/seats HTTP/1.1
 Content-Type: application/json
 
 {
-    "auditoriumId": 1,
+    "auditoriumId": 2,
    "seatCode": "A1",
     "lastModifiedBy": "admin",
     "createdBy": "system",
+    "currentStatus": "Available"
 }
 
 ###
-PUT http://localhost:80/cinemaservice/info/seats/update HTTP/1.1
+@id = 1
+PUT http://localhost:80/cinemaservice/info/seats/{{id}} HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": 1,
+
      "auditoriumId": 1,
      "seatCode": "A1",
-     "lastModifiedBy": "tao",
+     "lastModifiedBy": "tao"
 }
 
 ###
-GET http://localhost:80/cinemaservice/info/seats/search?authoriumId=2  HTTP/1.1
+GET http://localhost:80/cinemaservice/info/seats?auditoriumId=2  HTTP/1.1
 
 
 
 
-
-
+//RESERVED SEATS
+###
+POST http://localhost:80/cinemaservice/info/reservedSeats HTTP/1.1
+Content-Type: application/json
+{
+    "scheduleId": 2,
+    "seatId": 11,
+    "userId":1
+}
 
 
 
