@@ -336,6 +336,7 @@ func setSeatsResponse(seats []entity.Seat) []payload.SeatInfoResponse {
 	for _, s := range seats {
 		seatResponse := payload.SeatInfoResponse{
 			ID:       int(s.SeatID),
+			UserID:   int(s.UserID),
 			SeatCode: s.SeatCode,
 			Price:    s.Price,
 			Status:   s.CurrentStatus,

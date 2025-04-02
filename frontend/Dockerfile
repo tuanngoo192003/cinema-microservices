@@ -11,12 +11,18 @@ RUN npm install --frozen-lockfile
 COPY . .
 RUN npm run build
 
-# Step 2: Use an empty stage to only keep built files
-FROM alpine AS deploy
+# Step 2: Use Node base image again for serving the app
+FROM node:20-alpine AS deploy
 
 WORKDIR /app
-COPY --from=build /app/dist .  
+
+# Copy the built files from the build stage
+COPY --from=build /app/dist .
+
+# Install 'serve' to serve the static files
+RUN npm install -g serve
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "echo 'Frontend build is ready. Serve it with Nginx.' && sleep infinity"]
+# Command to serve the app using the 'serve' package
+CMD ["serve", "-s", ".", "-l", "3000"]

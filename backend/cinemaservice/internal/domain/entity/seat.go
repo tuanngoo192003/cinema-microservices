@@ -8,6 +8,7 @@ import (
 
 type Seat struct {
 	SeatID         uint      `gorm:"column:seat_id;primaryKey;not null"`
+	UserID         uint      `gorm:"column:user_id"`
 	ScheduleID     uint      `gorm:"column:schedule_id"`
 	AuditoriumID   uint      `gorm:"column:auditorium_id"`
 	SeatCode       string    `gorm:"column:seat_code"`

@@ -1,6 +1,18 @@
 package models
 
 type BookingCreate struct {
-	ScheduleID int   `json:"schedule_id"`
-	SeatIDs    []int `json:"seat_ids"`
+	MovieID        int     `json:"movieId"`
+	MovieName      string  `json:"movieName"`
+	Description    string  `json:"description"`
+	AuditoriumName string  `json:"auditoriumName"`
+	ReleaseDate    string  `json:"releaseDate"`
+	StartAt        string  `json:"startAt"`
+	EndAt          string  `json:"endAt"`
+	MoviePrice     float64 `json:"moviePrice"`
+	MovieGenre     string  `json:"movieGenre"`
+	UserID         int     `json:"userId"`
+	ScheduleID     int     `json:"scheduleId"`
+	SeatIDs        []int   `json:"seatIds"`
+	TotalPrice     float64 `json:"totalPrice"`
+	Status         string  `json:"status"`
 }

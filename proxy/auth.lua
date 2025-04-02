@@ -13,6 +13,7 @@ local permissions = {
     ["/cinema/auditoriums/all"] = { permission = "READ_AUDITORIUMS", role = { "ADMIN", "MANAGER" } },
     ["/cinema/auditoriums/{id}"] = { permission = "READ_AUDITORIUM", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
     ["/cinema/seats"] = { permission = "READ_SEATS", role = { "ADMIN", "CUSTOMER" } },
+    ["/cinema/seats/booked"] = { permission = "READ_SEATS", role = { "ADMIN", "CUSTOMER" } },
     ["/cinema/seats/{id}"] = { permission = "READ_SEAT", role = { "ADMIN", "MANAGER", "CUSTOMER" } }, 
     ["/cinema/seats/available"] = { permission = "READ_SEAT", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
     ["/cinema/seats/reservations/{id}"] = { permission = "WRITE_SEAT_RESERVE", role = { "ADMIN", "MANAGER", "CUSTOMER" } },

@@ -24,7 +24,7 @@ interface IMovieScheduleForm {
 const MovieScheduleCreateUI: React.FC = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { /* handleCreateMovieSchedule */ } = useMovieSchedule()
+    const {  handleCreateMovieSchedule  } = useMovieSchedule()
     const { movieList } = useMovie()
     const [movieId, setMovieId] = useState<number>(0)
     const [moviePrice, setMoviePrice] = useState<number>(0)
@@ -77,8 +77,7 @@ const MovieScheduleCreateUI: React.FC = () => {
             scheduleStatus: "FINAL",
             moviePrice: moviePrice
         } as ICreateMovieScheduleParam
-        console.log(param)
-        //handleCreateMovieSchedule(param);
+        handleCreateMovieSchedule(param);
     };
 
     return (

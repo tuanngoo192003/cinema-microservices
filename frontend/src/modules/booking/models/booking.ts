@@ -7,10 +7,19 @@ export interface IChoosedSeat {
   }
 
 export interface IBookingParam {
-    user_id: number 
-    schedule_id: number 
-    seat_ids: number[] 
-    total_price: number 
+    userId: number 
+    movieId: number 
+    movieName: string 
+    description: string 
+    auditoriumName: string 
+    releaseDate: string 
+    startAt: string 
+    endAt: string
+    moviePrice: number 
+    movieGenre: string  
+    scheduleId: number 
+    seatIds: number[] 
+    totalPrice: number 
     status: string 
 }
 
@@ -53,6 +62,7 @@ export interface IMovie {
 
 export interface ISeat {
     id: number;
+    userId: number;
     seatCode: string;
     price: number
     status: "AVAILABLE" | "RESERVED" | "BOOKED" | "CHOOSED";

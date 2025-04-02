@@ -27,3 +27,7 @@ type Schedule struct {
 	Auditorium     Auditorium     `gorm:"foreignKey:AuditoriumID;references:ID;constraint:OnDelete:CASCADE;"`
 	ReservedSeat   []ReservedSeat `gorm:"foreignKey:ScheduleID;references:ID;constraint:OnDelete:CASCADE;"`
 }
+
+func (Schedule) TableName() string {
+	return "movie_schedule"
+}

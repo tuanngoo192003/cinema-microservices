@@ -14,7 +14,7 @@ type IBookingCreateRepository interface {
 }
 
 type IValidateBookingRequestRepository interface {
-	ValidateBookingRequest(
+	SetSeatStatusRequest(
 		ctx context.Context,
 		bookingRequest client_models.ValidateBookingRequest,
 	) (*client_models.ValidateBookingResponse, error)
@@ -56,8 +56,6 @@ func (biz *bookingCreateBiz) Invoke(
 	input *helper.BookingCreateInput,
 ) (*helper.BookingCreateOutput, error) {
 
-	userID := 1
-
 	// isValid, err := biz.repositories.validateUserRepository.ValidateUserById(ctx, userID)
 	// if err != nil {
 	// 	return nil, err
@@ -67,39 +65,46 @@ func (biz *bookingCreateBiz) Invoke(
 	// 	return nil, common.NewUnauthorized(nil, "Invalid userID", "Call user service, userID not valid", "UserNotValid")
 	// }
 
-	// validateBookingRequest := client_models.ValidateBookingRequest{
-	// 	UserID:     userID,
-	// 	ScheduleID: input.Data.ScheduleID,
-	// 	SeatIDs:    input.Data.SeatIDs,
-	// }
+	validateBookingRequest := client_models.ValidateBookingRequest{
+		UserID:     input.Data.UserID,
+		ScheduleID: input.Data.ScheduleID,
+		SeatIDs:    input.Data.SeatIDs,
+		Token:      input.Token,
+	}
 
-	// movie, err := biz.repositories.validateBookingRequestRepository.ValidateBookingRequest(ctx, validateBookingRequest)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	_, err := biz.repositories.validateBookingRequestRepository.SetSeatStatusRequest(ctx, validateBookingRequest)
+	if err != nil {
+		return nil, err
+	}
 
 	now := time.Now()
 
+	layout := "2006-01-02T15:04:05"
+
+	t, err := time.Parse(layout, input.Data.ReleaseDate)
+	if err != nil {
+		return nil, err
+	}
+
 	createData := models.Booking{
-		UserID:     userID,
+		UserID:     input.Data.UserID,
 		ScheduleID: input.Data.ScheduleID,
-		TotalPrice: 45,
+		TotalPrice: input.Data.TotalPrice,
 		SeatIDs:    input.Data.SeatIDs,
-		Status:     "Pending",
+		Status:     input.Data.Status,
 		CreatedAt:  now,
 		UpdatedAt:  now,
-		UpdatedBy:  1,
+		UpdatedBy:  input.Data.UserID,
 		Movie: client_models.Movie{
-			MovieId:        1,                 // movie.Data.MovieId
-			ReleaseDate:    now,               // movie.Data.ReleaseDate
-			MovieName:      "Test movie name", // movie.Data.MovieName
-			Price:          1111,              // movie.Data.Price
-			StartAt:        "09.00",           // movie.Data.StartAt
-			EndAt:          "11.00",           // movie.Data.EndAt
-			MovieGenre:     "Test genre",      // movie.Data.MovieGenre
-			Description:    "Test",            // movie.Data.Description
-			ImageURL:       "link",            // movie.Data.ImageURL
-			AuditoriumName: "P10",             // movie.Data.AuditoriumName
+			MovieId:        input.Data.MovieID,
+			ReleaseDate:    t,
+			MovieName:      input.Data.MovieName,
+			Price:          input.Data.MoviePrice,
+			StartAt:        input.Data.StartAt,
+			EndAt:          input.Data.StartAt,
+			MovieGenre:     input.Data.MovieGenre,
+			Description:    input.Data.Description,
+			AuditoriumName: input.Data.AuditoriumName,
 		},
 	}
 

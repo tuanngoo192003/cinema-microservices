@@ -9,7 +9,8 @@ import (
 )
 
 type BookingCreateInput struct {
-	Data *models.BookingCreate
+	Data  *models.BookingCreate
+	Token string
 }
 
 func GetBookingCreateInput(c *gin.Context) (*BookingCreateInput, error) {
@@ -20,7 +21,8 @@ func GetBookingCreateInput(c *gin.Context) (*BookingCreateInput, error) {
 	}
 
 	return &BookingCreateInput{
-		Data: &data,
+		Data:  &data,
+		Token: c.GetHeader("Authorization"),
 	}, nil
 }
 

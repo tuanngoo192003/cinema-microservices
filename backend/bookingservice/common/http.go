@@ -5,14 +5,15 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
 )
 
 const (
-	HTTP_CLIENT_MOVIE_BASE_URL = "http://localhost:8002"
-	HTTP_CLIENT_USER_BASE_URL  = "http://localhost:8001"
+	HTTP_CLIENT_MOVIE_BASE_URL = "http://localhost/cinema"
+	HTTP_CLIENT_USER_BASE_URL  = "http://userservice:8001"
 )
 
 type APIRequest struct {
@@ -61,6 +62,7 @@ func SendRequest[T any](ctx context.Context, reqData APIRequest) (*T, error) {
 
 	var result T
 	if err := json.Unmarshal(respBody, &result); err != nil {
+		fmt.Println("Tao o day 4: ", err)
 		return nil, err
 	}
 

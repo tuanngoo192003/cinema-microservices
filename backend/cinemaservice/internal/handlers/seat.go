@@ -129,3 +129,51 @@ func (s *SeatHandler) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": response})
 }
+
+func (s *SeatHandler) SetBookedSeats(c *gin.Context) {
+	log := config.GetLogger()
+	var info payload.SetSeatRequest
+	if err := c.ShouldBindJSON(&info); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, payload.SetSeatResponse{
+			Status:  200,
+			Message: "false",
+			Data:    payload.MovieInfo{},
+		})
+		return
+	}
+
+	tx := s.db.Begin()
+	if err := tx.Error; err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, payload.SetSeatResponse{
+			Status:  200,
+			Message: "false",
+			Data:    payload.MovieInfo{},
+		})
+		return
+	}
+
+	if err := tx.Model(&entity.Seat{}).
+		Where("seat_id IN ?", info.SeatIDs).
+		Updates(map[string]interface{}{
+			"current_status": "BOOKED",
+			"user_id":        info.UserID,
+		}).Error; err != nil {
+		log.Error(err.Error())
+		tx.Rollback()
+		c.JSON(http.StatusInternalServerError, payload.SetSeatResponse{
+			Status:  http.StatusInternalServerError,
+			Message: "false",
+			Data:    payload.MovieInfo{},
+		})
+		return
+	}
+
+	tx.Commit()
+	c.JSON(http.StatusOK, payload.SetSeatResponse{
+		Status:  200,
+		Message: "true",
+		Data:    payload.MovieInfo{},
+	})
+}

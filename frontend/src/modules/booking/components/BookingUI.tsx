@@ -117,10 +117,19 @@ const BookingUI: React.FC = () => {
 
   const handleConfirmBooking = () => {
     const bookingParam = {
-      user_id: profile?.id,
-      schedule_id: movieSchedule?.id,
-      seat_ids: choose.map(s => s.seatId),
-      total_price: totalPrice,
+      userId: profile?.id,
+      movieId: movieSchedule?.movie.movieId, 
+      movieName: movieSchedule?.movie.movieName, 
+      description: movieSchedule?.movie.description, 
+      auditoriumName: movieSchedule?.auditorium.auditoriumName,  
+      releaseDate: movieSchedule?.movie.releaseDate.toISOString(),  
+      startAt: movieSchedule?.startAt.toISOString(),  
+      endAt: movieSchedule?.endAt.toISOString(), 
+      moviePrice: 0,  
+      movieGenre: movieSchedule?.movie.movieGenre,   
+      scheduleId: movieSchedule?.id,
+      seatIds: choose.map(s => s.seatId),
+      totalPrice: totalPrice,
       status: 'CONFIRMED'
     } as IBookingParam
 

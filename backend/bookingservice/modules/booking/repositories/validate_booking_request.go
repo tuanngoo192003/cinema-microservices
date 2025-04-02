@@ -6,7 +6,7 @@ import (
 )
 
 type IValidateBookingRequestClient interface {
-	ValidateBookingRequest(ctx context.Context, bookingRequest client_models.ValidateBookingRequest) (*client_models.ValidateBookingResponse, error)
+	SetSeatStatusRequest(ctx context.Context, bookingRequest client_models.ValidateBookingRequest) (*client_models.ValidateBookingResponse, error)
 }
 
 type validateBookingRequestRepository struct {
@@ -19,11 +19,11 @@ func NewValidateBookingRequestRepository(client IValidateBookingRequestClient) *
 	}
 }
 
-func (repo *validateBookingRequestRepository) ValidateBookingRequest(
+func (repo *validateBookingRequestRepository) SetSeatStatusRequest(
 	ctx context.Context,
 	bookingRequest client_models.ValidateBookingRequest,
 ) (*client_models.ValidateBookingResponse, error) {
-	movie, err := repo.client.ValidateBookingRequest(ctx, bookingRequest)
+	movie, err := repo.client.SetSeatStatusRequest(ctx, bookingRequest)
 
 	if err != nil {
 		return nil, err

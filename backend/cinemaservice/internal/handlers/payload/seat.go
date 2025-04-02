@@ -15,6 +15,7 @@ type SeatReponse struct {
 
 type SeatInfoResponse struct {
 	ID       int     `json:"id"`
+	UserID   int     `json:"userId"`
 	SeatCode string  `json:"seatCode"`
 	Price    float64 `json:"price"`
 	Status   string  `json:"status"`
@@ -36,3 +37,27 @@ type UpdateSeatRequest struct {
 	LastModifiedBy string
 }
 
+type SetSeatRequest struct {
+	ScheduleID int   `json:"schedule_id"`
+	SeatIDs    []int `json:"seat_ids"`
+	UserID     int   `json:"user_id"`
+}
+
+type SetSeatResponse struct {
+	Status  int       `json:"status"`
+	Message string    `json:"message"`
+	Data    MovieInfo `json:"data"`
+}
+
+type MovieInfo struct {
+	MovieId        int       `json:"movie_id"`
+	ReleaseDate    time.Time `json:"release_date"`
+	MovieName      string    `json:"movie_name"`
+	StartAt        string    `json:"start_at"`
+	EndAt          string    `json:"end_at"`
+	Price          float64   `json:"price"`
+	MovieGenre     string    `json:"movie_genre"`
+	Description    string    `json:"description"`
+	ImageURL       string    `json:"image_url"`
+	AuditoriumName string    `json:"auditorium_name"`
+}
