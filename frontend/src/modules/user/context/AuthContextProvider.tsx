@@ -1,22 +1,22 @@
-import {useSnackbar} from "notistack";
-import {ErrorResponse, useNavigate} from "react-router-dom";
-import React, {useState} from "react";
-import {IProfile, IUserParam} from "../models/user.ts";
+import { useSnackbar } from "notistack";
+import { ErrorResponse, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { IProfile, IUserParam } from "../models/user.ts";
 import Cookies from "js-cookie";
-import {GetProfileAPI, LoginApi, RegisterUserAPI} from "../services";
-import {HandleError} from "../../core/services/axios.ts";
-import {AxiosError} from "axios";
-import {ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY} from "../../core/constants/storage.ts";
-import {ILoginParams} from "../models/auth.ts";
-import {LoadingPage} from "../../core/components/LoadingPage.tsx";
-import {AuthContext} from "./Context.tsx";
+import { GetProfileAPI, LoginApi, RegisterUserAPI } from "../services";
+import { HandleError } from "../../core/services/axios.ts";
+import { AxiosError } from "axios";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../core/constants/storage.ts";
+import { ILoginParams } from "../models/auth.ts";
+import { LoadingPage } from "../../core/components/LoadingPage.tsx";
+import { AuthContext } from "./Context.tsx";
 import { useTranslation } from "react-i18next";
 
 interface AuthProfileProps {
     children?: React.ReactNode
 }
 
-export function AuthContextProvider({children}: AuthProfileProps) {
+export function AuthContextProvider({ children }: AuthProfileProps) {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -74,6 +74,8 @@ export function AuthContextProvider({children}: AuthProfileProps) {
                 navigate("/login");
             }, 2000);
         } catch (error) {
+            const err = HandleError(error as Error | AxiosError<ErrorResponse>);
+            enqueueSnackbar(err.errors["message"], { variant: "error" });
             console.error("Error fetching user list", error);
         } finally {
             setLoading(false);
@@ -87,7 +89,7 @@ export function AuthContextProvider({children}: AuthProfileProps) {
                 profile,
                 handleLogin,
                 handleLogout,
-                handleRegister, 
+                handleRegister,
             }}
         >
             {loading ? <LoadingPage /> : children}

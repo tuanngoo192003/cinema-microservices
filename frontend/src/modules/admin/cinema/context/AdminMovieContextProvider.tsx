@@ -3,14 +3,20 @@ import { AdminMovieContext } from "./Context";
 import { IPagination } from "../../../core/models/core";
 import { ICreateMovieParam, IMovie, IMovieSelect, IUpdateMovieParam } from "../models/movie";
 import { CreateMovie, GetAllMovies, GetMovieByID, GetMovieList, UpdateMovie } from "../services/movie";
-import { useNavigate } from "react-router-dom";
+import { ErrorResponse, useNavigate } from "react-router-dom";
 import { ADMIN_MOVIES } from "../../../core/constants/redirectURI";
+import { useSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
+import { HandleError } from "../../../core/services/axios";
+import { AxiosError } from "axios";
 
 interface MovieProps {
     children?: React.ReactNode
 }
 
 export const AdminMovieContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }: MovieProps) => {
+    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation()
     const [movies, setMovies] = useState<IPagination<IMovie> | null>(null)
     const [movieList, setMovieList] = useState<IMovieSelect[]>([])
     const [movie, setMovie] = useState<IMovie | null>(null)
@@ -59,10 +65,13 @@ export const AdminMovieContextProvider: React.FC<{ children: React.ReactNode }> 
         setLoading(true)
         try {
             await CreateMovie(body)
+            enqueueSnackbar(t('labels.success'), { variant: "success" });
             setTimeout(() => {
                 navigate(ADMIN_MOVIES)
             }, 2000)
         } catch (e) {
+            const err = HandleError(e as Error | AxiosError<ErrorResponse>);
+            enqueueSnackbar(err.errors["message"], { variant: "error" });
             console.log(e)
         } finally {
             setLoading(false)
@@ -73,6 +82,7 @@ export const AdminMovieContextProvider: React.FC<{ children: React.ReactNode }> 
         setLoading(true)
         try {
             await UpdateMovie(body)
+            enqueueSnackbar(t('labels.success'), { variant: "success" });
             setTimeout(() => {
                 navigate(ADMIN_MOVIES)
             }, 2000)

@@ -3,15 +3,20 @@ import { AdminMovieScheduleContext } from "./Context"
 import { IPagination } from "../../../core/models/core"
 import { ICreateMovieScheduleParam, IGetByIDMovieSchedule, IMovieSchedule, IUpdateMovieScheduleParam } from "../models/schedule"
 import { CreateMovieSchedule, GetMovieSchedules, GetMovieSchedulesDetails, UpdateMovieSchedule } from "../services/schedule"
-import { useNavigate } from "react-router-dom"
+import { ErrorResponse, useNavigate } from "react-router-dom"
 import { ADMIN_MOVIE_SCHEDULES } from "../../../core/constants/redirectURI"
+import { useSnackbar } from "notistack"
+import { useTranslation } from "react-i18next"
+import { HandleError } from "../../../core/services/axios"
+import { AxiosError } from "axios"
 
 interface MovieScheduleProps {
     children?: React.ReactNode
 }
 
 export const AdminMovieScheduleContextProvider: React.FC<{children: React.ReactNode}> = ({children} : MovieScheduleProps) => {
-
+    const { enqueueSnackbar } = useSnackbar();
+    const { t } = useTranslation()
     const [movieSchedules, setMovieSchedules] = useState<IPagination<IMovieSchedule> | null>(null)
     const [movieSchedule, setMovieSchedule] = useState<IGetByIDMovieSchedule | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -54,10 +59,13 @@ export const AdminMovieScheduleContextProvider: React.FC<{children: React.ReactN
         setLoading(true)
         try {
             await CreateMovieSchedule(body)
+            enqueueSnackbar(t('labels.success'), { variant: "success" });
             setTimeout(() => {
                 navigate(ADMIN_MOVIE_SCHEDULES)
             }, 2000)  
         } catch(e) {
+            const err = HandleError(e as Error | AxiosError<ErrorResponse>);
+            enqueueSnackbar(err.errors["message"], { variant: "error" });
             console.log(e)
         } finally {
             setLoading(false)
@@ -68,6 +76,7 @@ export const AdminMovieScheduleContextProvider: React.FC<{children: React.ReactN
         setLoading(true)
         try {
             await UpdateMovieSchedule(body)
+            enqueueSnackbar(t('labels.success'), { variant: "success" });
             setTimeout(() => {
                 navigate(ADMIN_MOVIE_SCHEDULES)
             }, 2000)  

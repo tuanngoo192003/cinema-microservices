@@ -25,6 +25,8 @@ import {
 } from "../constants/redirectURI.ts";
 import { Page403 } from "./403.tsx";
 
+const RequireAdmin = lazy(() => import("../../core/components/RequireAdmin.tsx"))
+const RequireLogin = lazy(() => import("../../core/components/RequireLogin.tsx"))
 const LoginUI = lazy(() => import("../../user/components/LoginUI.tsx"));
 const RegisterForm = lazy(() => import("../../user/components/RegisterUI.tsx"));
 const UserList = lazy(() => import("../../admin/user/components/UserListUI.tsx"));
@@ -46,22 +48,22 @@ const AuditoriumUpdate = lazy(
   () => import("../../admin/cinema/components/AuditoriumUpdateUI.tsx")
 );
 const MovieList = lazy(
-  () => import ("../../admin/cinema/components/MovieListUI.tsx")
+  () => import("../../admin/cinema/components/MovieListUI.tsx")
 );
 const MovieCreate = lazy(
-  () => import ("../../admin/cinema/components/MovieCreateUI.tsx")
+  () => import("../../admin/cinema/components/MovieCreateUI.tsx")
 );
 const MovieUpdate = lazy(
-  () => import ("../../admin/cinema/components/MovieUpdateUI.tsx")
+  () => import("../../admin/cinema/components/MovieUpdateUI.tsx")
 );
 const MovieScheduleList = lazy(
-  () => import ("../../admin/cinema/components/MovieScheduleListUI.tsx")
+  () => import("../../admin/cinema/components/MovieScheduleListUI.tsx")
 );
 const MovieScheduleCreate = lazy(
-  () => import ("../../admin/cinema/components/MovieScheduleCreateUI.tsx")
+  () => import("../../admin/cinema/components/MovieScheduleCreateUI.tsx")
 );
 const MovieScheduleUpdate = lazy(
-  () => import ("../../admin/cinema/components/MovieScheduleUpdateUI.tsx")
+  () => import("../../admin/cinema/components/MovieScheduleUpdateUI.tsx")
 );
 
 export const AppRouter = () => (
@@ -82,27 +84,31 @@ export const AppRouter = () => (
         <Route path={REGISTER} element={<RegisterForm />} />
         <Route path={USER_LIST} element={<UserList />} />
         <Route path={MOVIE_DETAILS} element={<MovieDetailsUI />} />
-        <Route path={BOOKING} element={<BookingUI />} />
+        <RequireLogin>
+          <Route path={BOOKING} element={<BookingUI />} />
+        </RequireLogin>
       </Route>
-      <Route
-        path="/admin/"
-        element={
-          <AdminSideBar>
-            <Outlet />
-          </AdminSideBar>
-        }
-      >
-        <Route path={ADMIN_AUDITORIUMS} element={<AuditoriumsList />} />
-        <Route path={ADMIN_AUDITORIUMS_CREATE} element={<AuditoriumCreate />} />
-        <Route path={ADMIN_AUDITORIUMS_UPDATE} element={<AuditoriumUpdate />} />
-        <Route path={ADMIN_USERS} element={<UsersList />} />
-        <Route path={ADMIN_MOVIES} element={<MovieList />} />
-        <Route path={ADMIN_MOVIES_CREATE} element={<MovieCreate />} />
-        <Route path={ADMIN_MOVIES_UPDATE} element={<MovieUpdate />} />
-        <Route path={ADMIN_MOVIE_SCHEDULES} element={<MovieScheduleList />} />
-        <Route path={ADMIN_MOVIE_SCHEDULES_CREATE} element={<MovieScheduleCreate />} />
-        <Route path={ADMIN_MOVIE_SCHEDULES_UPDATE} element={<MovieScheduleUpdate />} />
-      </Route>
+      <RequireAdmin>
+        <Route
+          path="/admin/"
+          element={
+            <AdminSideBar>
+              <Outlet />
+            </AdminSideBar>
+          }
+        >
+          <Route path={ADMIN_AUDITORIUMS} element={<AuditoriumsList />} />
+          <Route path={ADMIN_AUDITORIUMS_CREATE} element={<AuditoriumCreate />} />
+          <Route path={ADMIN_AUDITORIUMS_UPDATE} element={<AuditoriumUpdate />} />
+          <Route path={ADMIN_USERS} element={<UsersList />} />
+          <Route path={ADMIN_MOVIES} element={<MovieList />} />
+          <Route path={ADMIN_MOVIES_CREATE} element={<MovieCreate />} />
+          <Route path={ADMIN_MOVIES_UPDATE} element={<MovieUpdate />} />
+          <Route path={ADMIN_MOVIE_SCHEDULES} element={<MovieScheduleList />} />
+          <Route path={ADMIN_MOVIE_SCHEDULES_CREATE} element={<MovieScheduleCreate />} />
+          <Route path={ADMIN_MOVIE_SCHEDULES_UPDATE} element={<MovieScheduleUpdate />} />
+        </Route>
+      </RequireAdmin>
 
       <Route path="*" element={<Page404 />} />
     </Routes>

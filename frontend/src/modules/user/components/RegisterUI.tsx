@@ -20,10 +20,12 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { ACCESS_TOKEN_KEY } from "../../core/constants/storage.ts";
 import { HOME, LOGIN } from "../../core/constants/redirectURI.ts";
+import { useAuth } from "../hooks/index.ts";
 
 const RegisterForm: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { handleRegister } = useAuth();
 
   const [isUserLogin, setIsUserLogin] = useState(
     !!Cookies.get(ACCESS_TOKEN_KEY)
@@ -52,7 +54,7 @@ const RegisterForm: React.FC = () => {
   const onFinish: FormProps<IUserParam>["onFinish"] = (values) => {
     values.status = "ACTIVE";
     values.roleId = 3;
-    //handleCreateUser(values)
+    handleRegister(values)
     console.log("Success", values);
   };
   const onFinishFailed: FormProps<IUserParam>["onFinishFailed"] = (
