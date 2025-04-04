@@ -29,6 +29,6 @@ type AuditoriumWithSeatResponse struct {
 	AuditoriumID   int                `json:"auditoriumId"`
 	AuditoriumName string             `json:"auditoriumName"`
 	Rows           int                `json:"rows"`
-	Columns        int                `json:"numbers"`
+	Columns        int                `json:"columns"`
 	Seats          []SeatInfoResponse `json:"seats"`
 }

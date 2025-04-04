@@ -32,8 +32,10 @@ type Config struct {
 	}
 
 	S3 struct {
-		Region string
-		Bucket string
+		Region    string
+		Bucket    string
+		AccessKey string
+		SecretKey string
 	}
 
 	Environment string
@@ -71,7 +73,9 @@ func Load() (*Config, error) {
 
 	//S3 config
 	cfg.S3.Region = getEnv("S3_REGION", "ap-southeast-2")
-	cfg.S3.Bucket = getEnv("S3_BUKCET", "my-cinema-app-bucket")
+	cfg.S3.Bucket = getEnv("S3_BUCKET", "my-cinema-app-bucket")
+	cfg.S3.AccessKey = getEnv("AWS_ACCESS_KEY", "")
+	cfg.S3.SecretKey = getEnv("AWS_SECRET_KEY", "")
 
 	cfg.Environment = getEnv("ENV", "development")
 

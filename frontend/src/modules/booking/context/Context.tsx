@@ -1,19 +1,23 @@
 import { createContext } from "react"
-import { IBookingParam, IMovieSchedule } from "../models/booking"
+import { IBooking, IBookingParam, IMovieSchedule } from "../models/booking"
 import { IReservedSeat, IReservedSeatParam, IReservedSeatSearch } from "../models/reserved_seat"
 
 type BookingContextType = {
     movieSchedule: IMovieSchedule | null 
+    bookingInfo: IBooking | null
     loading: boolean 
     handleGetMovieDetails: (movieId: number) => Promise<void>
     handleBooking: (body: IBookingParam, id: number) => Promise<void>
+    handleGetBookingByUserID: (userId: number) => Promise<void>
 }
 
 export const BookingContext = createContext<BookingContextType>({
     movieSchedule: null,
+    bookingInfo: null,
     loading: false,
     handleGetMovieDetails: async () => {},
-    handleBooking: async () => {}
+    handleBooking: async () => {},
+    handleGetBookingByUserID: async () => {}
 })
 
 type ReservedSeatType = {

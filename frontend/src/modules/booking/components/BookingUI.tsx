@@ -27,7 +27,7 @@ import { AppFooter } from "../../core/components/AppFooter.tsx";
 import { ConfirmBookingUI } from "./ConfirmBookingUI.tsx";
 import SeatUI from "./SeatUI.tsx";
 import useModal from "../../core/hooks/useModal.ts";
-import { IBookingParam, IChoosedSeat, IMovieSchedule, ISeat } from "../models/booking.ts";
+import { IAuditorium, IBookingParam, IChoosedSeat, IMovieSchedule, ISeat } from "../models/booking.ts";
 import { useBooking, useReservedSeat } from "../hooks/index.ts";
 import { useParams } from "react-router-dom";
 import { LoadingPage } from "../../core/components/LoadingPage.tsx";
@@ -38,10 +38,14 @@ const BookingUI: React.FC = () => {
   const { t } = useTranslation();
   const { profile } = useAuth()
   const { isVisible, showModal, hideModal, isLoading } = useModal();
-  const [modalText, setModalText] = useState<string>("");
-  const { movieSchedule, loading, handleGetMovieDetails, handleBooking } = useBooking()
+  const [ modalText, setModalText ] = useState<string>("");
+  const { movieSchedule, bookingInfo, loading, handleGetMovieDetails, handleBooking, handleGetBookingByUserID } = useBooking()
   const [movieScheduleData, setMovieScheduleData] = useState<IMovieSchedule>();
   const [totalPrice, setTotalPrice] = useState<number>(0)
+  const [auditorium, setAuditorium] = useState<IAuditorium | null>(null)
+  const [numRows, setNumRows] = useState<number>(0)
+  const [numCols, setNumCols] = useState<number>(0)
+  const [isBooked, setIsBooked] = useState<boolean>(false)
 
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
@@ -50,20 +54,43 @@ const BookingUI: React.FC = () => {
   const [seats, setSeats] = useState<ISeat[]>([]);
   const { handleReservedSeat, handleRemoveReservedSeat } = useReservedSeat()
 
+  // Get BookingInfo and check if user is booked or not
+  useEffect(() => {
+    if(profile) handleGetBookingByUserID(profile.id)
+  }, [profile])
+
+  useEffect(() => {
+    if (bookingInfo) {
+      setIsBooked(true)
+    }
+  }, [bookingInfo])
+
+  // Get Movie Details data and setState
   useEffect(() => {
     handleGetMovieDetails(movieId);
   }, [movieId]);
 
   useEffect(() => {
-    if (movieSchedule) setMovieScheduleData(movieSchedule)
+    if (movieSchedule) {
+      setMovieScheduleData(movieSchedule)
+    }
   }, [movieSchedule])
 
   useEffect(() => {
     if (movieScheduleData) {
-      setSeats(movieScheduleData?.auditorium.seats)
+      setAuditorium(movieScheduleData?.auditorium)
     }
   }, [movieScheduleData])
 
+  useEffect(() => {
+    if (auditorium) {
+      setNumCols(auditorium.columns)
+      setNumRows(auditorium.rows)
+      setSeats(auditorium.seats)
+    }
+  }, [auditorium])
+
+  // handle when i seat is selected
   useEffect(() => {
     setSeats((prevSeats) =>
       prevSeats.map((seat) =>
@@ -118,15 +145,15 @@ const BookingUI: React.FC = () => {
   const handleConfirmBooking = () => {
     const bookingParam = {
       userId: profile?.id,
-      movieId: movieSchedule?.movie.movieId, 
-      movieName: movieSchedule?.movie.movieName, 
-      description: movieSchedule?.movie.description, 
-      auditoriumName: movieSchedule?.auditorium.auditoriumName,  
-      releaseDate: movieSchedule?.movie.releaseDate.toISOString(),  
-      startAt: movieSchedule?.startAt.toISOString(),  
-      endAt: movieSchedule?.endAt.toISOString(), 
-      moviePrice: 0,  
-      movieGenre: movieSchedule?.movie.movieGenre,   
+      movieId: movieSchedule?.movie.movieId,
+      movieName: movieSchedule?.movie.movieName,
+      description: movieSchedule?.movie.description,
+      auditoriumName: movieSchedule?.auditorium.auditoriumName,
+      releaseDate: movieSchedule?.movie.releaseDate.toISOString(),
+      startAt: movieSchedule?.startAt.toISOString(),
+      endAt: movieSchedule?.endAt.toISOString(),
+      moviePrice: 0,
+      movieGenre: movieSchedule?.movie.movieGenre,
       scheduleId: movieSchedule?.id,
       seatIds: choose.map(s => s.seatId),
       totalPrice: totalPrice,
@@ -136,296 +163,300 @@ const BookingUI: React.FC = () => {
     handleBooking(bookingParam, movieId)
   };
 
+  if (loading || !seats || !numCols || !numRows) {
+    return <div><LoadingPage /></div>;
+  }
+
   return (
     <>
-      {loading ? (<LoadingPage />) : (
-        <Layout>
-          <Content>
-            <Row
-              gutter={[0, 0]}
-              justify="center"
-              align="middle"
+      <Layout>
+        <Content>
+          <Row
+            gutter={[0, 0]}
+            justify="center"
+            align="middle"
+            style={{
+              marginLeft: "10rem",
+              marginRight: "10rem",
+              minHeight: "100vh",
+              display: "flex",
+            }}
+          >
+            <Col
+              xs={24}
+              md={16}
               style={{
-                marginLeft: "10rem",
-                marginRight: "10rem",
-                minHeight: "100vh",
                 display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Col
-                xs={24}
-                md={16}
+              <Card
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  background: "#FFFFFF",
+                  height: "80vh",
+                  width: "100vw",
+                  padding: "1rem",
                 }}
               >
-                <Card
+                {/* Legend */}
+                <div
                   style={{
-                    background: "#FFFFFF",
-                    height: "80vh",
-                    width: "100vw",
-                    padding: "1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "1rem",
+                    marginBottom: "2rem",
                   }}
                 >
-                  {/* Legend */}
                   <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "1rem",
-                      marginBottom: "2rem",
+                      position: "relative",
+                      width: "2rem",
+                      height: "2rem",
                     }}
                   >
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "2rem",
-                        height: "2rem",
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faCouch}
-                        style={{ fontSize: "2rem", color: "#bcb7b3" }}
-                      />
-                      <p className="chair-text">A</p>
-                    </div>
-                    <p>{t("labels.available")}</p>
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "2rem",
-                        height: "2rem",
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faCouch}
-                        style={{ fontSize: "2rem", color: "#50a3ba" }}
-                      />
-                      <p className="chair-text" style={{ color: "black" }}>
-                        R
-                      </p>
-                    </div>
-                    <p>{t("labels.reserved")}</p>
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "2rem",
-                        height: "2rem",
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faCouch}
-                        style={{ fontSize: "2rem", color: "#9f1f1f" }}
-                      />
-                      <p className="chair-text" style={{ color: "white" }}>
-                        B
-                      </p>
-                    </div>
-                    <p>{t("labels.booked")}</p>
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "2rem",
-                        height: "2rem",
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faCouch}
-                        style={{ fontSize: "2rem", color: "#b8ba50" }}
-                      />
-                      <p className="chair-text" style={{ color: "white" }}>
-                        C
-                      </p>
-                    </div>
-                    <p>{t("labels.your_choices")}</p>
+                    <FontAwesomeIcon
+                      icon={faCouch}
+                      style={{ fontSize: "2rem", color: "#bcb7b3" }}
+                    />
+                    <p className="chair-text">A</p>
                   </div>
-
-                  {/* Seats Layout */}
+                  <p>{t("labels.available")}</p>
                   <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginBottom: "1rem",
+                      position: "relative",
+                      width: "2rem",
+                      height: "2rem",
                     }}
                   >
-                    {/* Curved Screen */}
-                    <svg
-                      width="100%"
-                      height="80"
-                      viewBox="0 0 800 80"
-                      preserveAspectRatio="none"
-                    >
-                      <path
-                        d="M 0 60 Q 400 0, 800 60"
-                        stroke="gray"
-                        fill="rgba(200, 200, 200, 0.5)"
-                        strokeWidth="4"
-                      />
-                    </svg>
+                    <FontAwesomeIcon
+                      icon={faCouch}
+                      style={{ fontSize: "2rem", color: "#50a3ba" }}
+                    />
+                    <p className="chair-text" style={{ color: "black" }}>
+                      R
+                    </p>
                   </div>
+                  <p>{t("labels.reserved")}</p>
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "2rem",
+                      height: "2rem",
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCouch}
+                      style={{ fontSize: "2rem", color: "#9f1f1f" }}
+                    />
+                    <p className="chair-text" style={{ color: "white" }}>
+                      B
+                    </p>
+                  </div>
+                  <p>{t("labels.booked")}</p>
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "2rem",
+                      height: "2rem",
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCouch}
+                      style={{ fontSize: "2rem", color: "#b8ba50" }}
+                    />
+                    <p className="chair-text" style={{ color: "white" }}>
+                      C
+                    </p>
+                  </div>
+                  <p>{t("labels.your_choices")}</p>
+                </div>
 
-                  {/* Seats Layout */}
-                  <div style={{ width: "100%" }}>
-                    <Row gutter={[4, 4]} justify="center">
-                      {seats.map(seat => {
-                        return (
-                          <SeatUI
-                            handleOnclick={appendSeat}
-                            seat={seat}
-                          />
-                        );
-                      })}
-                    </Row>
-                  </div>
-                </Card>
-              </Col>
-              <Col
-                xs={24}
-                md={8}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Card style={{ background: "#FFFFFF", height: "80vh" }}>
-                  <Row gutter={[16, 0]} justify="center" align="middle">
-                    <Col xs={24} md={10}>
-                      <Image
-                        src={chinatsu}
-                        alt={chinatsu}
-                        style={{
-                          borderRadius: "12px",
-                          height: "11rem", // Set an absolute height
-                          objectFit: "contain", // Ensures the entire image fits inside
-                          backgroundColor: "#fff", // White background for missing parts
-                          display: "block",
-                        }}
-                      />
-                    </Col>
-                    <Col xs={24} md={14}>
-                      <div>
-                        <Title level={3}>{movieScheduleData?.movie.movieName}</Title>
-                        <Title
-                          level={5}
-                          style={{ marginBottom: 0, whiteSpace: "nowrap" }}
-                        >
-                          {t("labels.titles.movie_genre")} : {movieScheduleData?.movie.movieGenre}
-                        </Title>
-                        <Title
-                          level={5}
-                          style={{ marginTop: 4, whiteSpace: "nowrap" }}
-                        >
-                          <FontAwesomeIcon icon={faClock} /> &nbsp;{" "}
-                          {t("labels.titles.duration")} :{" "}
-                          {movieScheduleData?.movie.duration}
-                        </Title>
-                      </div>
-                    </Col>
+                {/* Seats Layout */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  {/* Curved Screen */}
+                  <svg
+                    width="100%"
+                    height="80"
+                    viewBox="0 0 800 80"
+                    preserveAspectRatio="none"
+                  >
+                    <path
+                      d="M 0 60 Q 400 0, 800 60"
+                      stroke="gray"
+                      fill="rgba(200, 200, 200, 0.5)"
+                      strokeWidth="4"
+                    />
+                  </svg>
+                </div>
+
+                {/* Seats Layout */}
+                <div style={{ width: "100%" }}>
+                  <Row gutter={[4, 4]} justify="center">
+                    {Array.from({ length: numRows }).map((_, rowIndex) => (
+                      <Row gutter={[4, 4]} justify="center" key={rowIndex} style={{ width: "100%" }}>
+                        {seats
+                          .slice(rowIndex * numCols, (rowIndex + 1) * numCols) // 🔹 Get seats for this row
+                          .map((seat) => (
+                            <SeatUI key={seat.id} handleOnclick={appendSeat} seat={seat} numCols={numCols} />
+                          ))}
+                      </Row>
+                    ))}
                   </Row>
-                  <Divider dashed style={{ borderWidth: "2px" }} />
-                  <Row>
-                    <Col span={24}>
+                </div>
+              </Card>
+            </Col>
+            <Col
+              xs={24}
+              md={8}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Card style={{ background: "#FFFFFF", height: "80vh" }}>
+                <Row gutter={[16, 0]} justify="center" align="middle">
+                  <Col xs={24} md={10}>
+                    <Image
+                      src={movieScheduleData?.movie.imageURL}
+                      alt={chinatsu}
+                      style={{
+                        borderRadius: "12px",
+                        height: "11rem", // Set an absolute height
+                        objectFit: "contain", // Ensures the entire image fits inside
+                        backgroundColor: "#fff", // White background for missing parts
+                        display: "block",
+                      }}
+                    />
+                  </Col>
+                  <Col xs={24} md={14}>
+                    <div>
+                      <Title level={3}>{movieScheduleData?.movie.movieName}</Title>
+                      <Title
+                        level={5}
+                        style={{ marginBottom: 0, whiteSpace: "nowrap" }}
+                      >
+                        {t("labels.titles.movie_genre")} : {movieScheduleData?.movie.movieGenre}
+                      </Title>
+                      <Title
+                        level={5}
+                        style={{ marginTop: 4, whiteSpace: "nowrap" }}
+                      >
+                        <FontAwesomeIcon icon={faClock} /> &nbsp;{" "}
+                        {t("labels.titles.duration")} :{" "}
+                        {movieScheduleData?.movie.duration}
+                      </Title>
+                    </div>
+                  </Col>
+                </Row>
+                <Divider dashed style={{ borderWidth: "2px" }} />
+                <Row>
+                  <Col span={24}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.5rem",
+                      }}
+                    >
                       <div
                         style={{
                           display: "flex",
-                          flexDirection: "column",
-                          gap: "0.5rem",
+                          justifyContent: "space-between",
+                          alignItems: "center",
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Title level={5} style={{ marginBottom: 0 }}>
-                            <FontAwesomeIcon icon={faCalendarDay} /> &nbsp;{" "}
-                            {t("common.start_at")} :
-                          </Title>
-                          {movieScheduleData?.startAt && (
-                            <Typography.Text>
-                              {new Date(movieScheduleData.startAt).toISOString().split("T")[0]}
-                            </Typography.Text>
-                          )}
-                        </div>
-
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Title level={5} style={{ marginBottom: 0 }}>
-                            <FontAwesomeIcon icon={faTv} /> &nbsp;{" "}
-                            {t("labels.titles.auditorium")} :
-                          </Title>
+                        <Title level={5} style={{ marginBottom: 0 }}>
+                          <FontAwesomeIcon icon={faCalendarDay} /> &nbsp;{" "}
+                          {t("common.start_at")} :
+                        </Title>
+                        {movieScheduleData?.startAt && (
                           <Typography.Text>
-                            {movieScheduleData?.auditorium.auditoriumName}
+                            {new Date(movieScheduleData.startAt).toISOString().split("T")[0]}
                           </Typography.Text>
-                        </div>
-
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Title level={5} style={{ marginBottom: 0 }}>
-                            <FontAwesomeIcon icon={faBoxesStacked} /> &nbsp;{" "}
-                            {t("labels.titles.seat")} :
-                          </Title>
-                          <Typography.Text>{choose.map(c => c.seatCode).join(", ")}</Typography.Text>
-                        </div>
+                        )}
                       </div>
-                    </Col>
-                  </Row>
 
-                  <Row
-                    gutter={[16, 10]}
-                    justify="center"
-                    align="middle"
-                    style={{ marginTop: "1rem" }}
-                  >
-                    <ConfirmBookingUI
-                      movieScheduleId={movieSchedule?.id}
-                      movieName={movieSchedule?.movie.movieName}
-                      auditorium={movieSchedule?.auditorium}
-                      startAt={movieSchedule?.startAt}
-                      endAt={movieSchedule?.endAt}
-                      seat={choose}
-                      totalPrice={totalPrice}
-                      onConfirm={handleConfirmBooking}
-                    />
-                    <Button className="secondary-btn">
-                      {t("labels.buttons.back")}
-                    </Button>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-          </Content>
-          <Modal
-            title="Title"
-            open={isVisible}
-            onOk={hideModal}
-            confirmLoading={isLoading}
-            onCancel={hideModal}
-          >
-            <p>{modalText}</p>
-          </Modal>
-          <div style={{ marginTop: "-13rem" }}>
-            <AppFooter />
-          </div>
-        </Layout>
-      )}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Title level={5} style={{ marginBottom: 0 }}>
+                          <FontAwesomeIcon icon={faTv} /> &nbsp;{" "}
+                          {t("labels.titles.auditorium")} :
+                        </Title>
+                        <Typography.Text>
+                          {movieScheduleData?.auditorium.auditoriumName}
+                        </Typography.Text>
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Title level={5} style={{ marginBottom: 0 }}>
+                          <FontAwesomeIcon icon={faBoxesStacked} /> &nbsp;{" "}
+                          {t("labels.titles.seat")} :
+                        </Title>
+                        <Typography.Text>{choose.map(c => c.seatCode).join(", ")}</Typography.Text>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row
+                  gutter={[16, 10]}
+                  justify="center"
+                  align="middle"
+                  style={{ marginTop: "1rem" }}
+                >
+                  <ConfirmBookingUI
+                    movieScheduleId={movieSchedule?.id}
+                    movieName={movieSchedule?.movie.movieName}
+                    auditorium={movieSchedule?.auditorium}
+                    startAt={movieSchedule?.startAt}
+                    endAt={movieSchedule?.endAt}
+                    seat={choose}
+                    totalPrice={totalPrice}
+                    isBooked={isBooked}
+                    onConfirm={handleConfirmBooking}
+                  />
+                  <Button className="secondary-btn">
+                    {t("labels.buttons.back")}
+                  </Button>
+                </Row>
+              </Card>
+            </Col>
+          </Row>
+        </Content>
+        <Modal
+          title="Title"
+          open={isVisible}
+          onOk={hideModal}
+          confirmLoading={isLoading}
+          onCancel={hideModal}
+        >
+          <p>{modalText}</p>
+        </Modal>
+        <div style={{ marginTop: "-13rem" }}>
+          <AppFooter />
+        </div>
+      </Layout>
     </>
   );
 };

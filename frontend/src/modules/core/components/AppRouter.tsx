@@ -84,31 +84,29 @@ export const AppRouter = () => (
         <Route path={REGISTER} element={<RegisterForm />} />
         <Route path={USER_LIST} element={<UserList />} />
         <Route path={MOVIE_DETAILS} element={<MovieDetailsUI />} />
-        <RequireLogin>
-          <Route path={BOOKING} element={<BookingUI />} />
-        </RequireLogin>
+        <Route path={BOOKING} element={<RequireLogin> <BookingUI /> </RequireLogin>} />
       </Route>
-      <RequireAdmin>
-        <Route
-          path="/admin/"
-          element={
+      <Route
+        path="/admin/"
+        element={
+          <RequireAdmin>
             <AdminSideBar>
               <Outlet />
             </AdminSideBar>
-          }
-        >
-          <Route path={ADMIN_AUDITORIUMS} element={<AuditoriumsList />} />
-          <Route path={ADMIN_AUDITORIUMS_CREATE} element={<AuditoriumCreate />} />
-          <Route path={ADMIN_AUDITORIUMS_UPDATE} element={<AuditoriumUpdate />} />
-          <Route path={ADMIN_USERS} element={<UsersList />} />
-          <Route path={ADMIN_MOVIES} element={<MovieList />} />
-          <Route path={ADMIN_MOVIES_CREATE} element={<MovieCreate />} />
-          <Route path={ADMIN_MOVIES_UPDATE} element={<MovieUpdate />} />
-          <Route path={ADMIN_MOVIE_SCHEDULES} element={<MovieScheduleList />} />
-          <Route path={ADMIN_MOVIE_SCHEDULES_CREATE} element={<MovieScheduleCreate />} />
-          <Route path={ADMIN_MOVIE_SCHEDULES_UPDATE} element={<MovieScheduleUpdate />} />
-        </Route>
-      </RequireAdmin>
+          </RequireAdmin>
+        }
+      >
+        <Route path={ADMIN_AUDITORIUMS} element={<AuditoriumsList />} />
+        <Route path={ADMIN_AUDITORIUMS_CREATE} element={<AuditoriumCreate />} />
+        <Route path={ADMIN_AUDITORIUMS_UPDATE} element={<AuditoriumUpdate />} />
+        <Route path={ADMIN_USERS} element={<UsersList />} />
+        <Route path={ADMIN_MOVIES} element={<MovieList />} />
+        <Route path={ADMIN_MOVIES_CREATE} element={<MovieCreate />} />
+        <Route path={ADMIN_MOVIES_UPDATE} element={<MovieUpdate />} />
+        <Route path={ADMIN_MOVIE_SCHEDULES} element={<MovieScheduleList />} />
+        <Route path={ADMIN_MOVIE_SCHEDULES_CREATE} element={<MovieScheduleCreate />} />
+        <Route path={ADMIN_MOVIE_SCHEDULES_UPDATE} element={<MovieScheduleUpdate />} />
+      </Route>
 
       <Route path="*" element={<Page404 />} />
     </Routes>

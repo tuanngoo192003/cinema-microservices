@@ -12,7 +12,8 @@ interface ConfirmModalProps {
     startAt?: Date
     endAt?: Date
     seat: IChoosedSeat[]
-    totalPrice: number
+    totalPrice: number,
+    isBooked: boolean,
     onConfirm: () => void
 }
 
@@ -67,14 +68,14 @@ export const ConfirmBookingUI: React.FC<ConfirmModalProps> = (bookingInfo: Confi
                                 >
                                     <Typography.Title level={3}>{bookingInfo.movieName}</Typography.Title>
 
-                                    <Typography.Text strong>Start at:</Typography.Text>                                    
+                                    <Typography.Text strong>Start at:</Typography.Text>
                                     {bookingInfo?.startAt && (
                                         <Typography.Text>
                                             {new Date(bookingInfo.startAt).toISOString().split("T")[0]}
                                         </Typography.Text>
                                     )}
                                     <br />
-                                    <Typography.Text strong>End at:</Typography.Text> 
+                                    <Typography.Text strong>End at:</Typography.Text>
                                     {bookingInfo?.endAt && (
                                         <Typography.Text>
                                             {new Date(bookingInfo.endAt).toISOString().split("T")[0]}
@@ -90,9 +91,17 @@ export const ConfirmBookingUI: React.FC<ConfirmModalProps> = (bookingInfo: Confi
                                             <Typography.Text strong>Total Price:</Typography.Text> <Typography.Text>${bookingInfo.totalPrice}</Typography.Text>
                                         </Col>
                                     </Row>
-                                    <Button className="app-btn" style={{ marginTop: '2rem' }} onClick={bookingInfo.onConfirm}>
-                                        {t('labels.buttons.confirm-booking')}
-                                    </Button>
+                                    {
+                                        bookingInfo.isBooked ? (
+                                            <Button className="app-btn" style={{ marginTop: '2rem' }} onClick={bookingInfo.onConfirm}>
+                                                {t('labels.buttons.confirm-booking')}
+                                            </Button>
+                                        ) : (
+                                            <Button className="secondary-btn" style={{ marginTop: '2rem' }} disabled>
+                                                {t('labels.buttons.confirm-booking')}
+                                            </Button>
+                                        )
+                                    }
                                 </div>
                             </Col>
                         </Row>

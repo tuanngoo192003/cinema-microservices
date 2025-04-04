@@ -53,7 +53,10 @@ func (h *AuthHandler) UploadFile(c *gin.Context) {
 	})
 	if err != nil {
 		log.Error(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": "error upload object to s3"}})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{
+			"error":   err.Error(),
+			"message": "error upload object to s3",
+		}})
 		return
 	}
 

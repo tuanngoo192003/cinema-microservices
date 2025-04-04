@@ -8,20 +8,22 @@ import { useAuth } from "../../user/hooks";
 type Props = {
   handleOnclick: (seat: ISeat) => void;
   seat: ISeat;
+  numCols: number;
 };
 
-export default function SeatUI({ handleOnclick, seat }: Props) {
+export default function SeatUI({ handleOnclick, seat, numCols }: Props) {
   const { profile } = useAuth();
   const { row, col } = separateSeatCode(seat.seatCode);
 
   const isOwnedByUser = seat?.userId === profile?.id;
   const seatStatus = isOwnedByUser ? "CHOOSED" : seat?.status;
-  const isDisabled = isOwnedByUser; 
-
+  const isDisabled = isOwnedByUser;
+  console.log(numCols);
+  
   return (
     <Col
+      span={24 / numCols}
       key={seat?.id}
-      span={2}
       style={{
         textAlign: "center",
         position: "relative",
@@ -34,9 +36,9 @@ export default function SeatUI({ handleOnclick, seat }: Props) {
           position: "relative",
           display: "inline-block",
           pointerEvents: isDisabled ? "none" : "auto",
-          opacity: isDisabled ? 0.5 : 1, 
+          opacity: isDisabled ? 0.5 : 1,
         }}
-        onClick={!isDisabled ? () => handleOnclick(seat) : undefined} 
+        onClick={!isDisabled ? () => handleOnclick(seat) : undefined}
       >
         <FontAwesomeIcon
           icon={faCouch}
@@ -46,10 +48,10 @@ export default function SeatUI({ handleOnclick, seat }: Props) {
               seatStatus === "AVAILABLE"
                 ? "#bcb7b3"
                 : seatStatus === "RESERVED"
-                ? "#50a3ba"
-                : seatStatus === "CHOOSED"
-                ? "#b8ba50"
-                : "#9f1f1f",
+                  ? "#50a3ba"
+                  : seatStatus === "CHOOSED"
+                    ? "#b8ba50"
+                    : "#9f1f1f",
             cursor: isDisabled ? "not-allowed" : "pointer",
           }}
         />

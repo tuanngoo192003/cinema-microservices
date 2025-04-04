@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { BookingContext } from "./Context"
-import { IBookingParam, IMovieSchedule } from "../models/booking"
-import { Booking, GetMovieDetails } from "../services/booking"
+import { IBooking, IBookingParam, IMovieSchedule } from "../models/booking"
+import { Booking, GetBookingsOfUser, GetMovieDetails } from "../services/booking"
 import { ErrorResponse, useNavigate } from "react-router-dom"
 import { BOOKING_FORMAT_URI } from "../../core/constants/redirectURI"
 import { useSnackbar } from "notistack"
@@ -17,8 +17,21 @@ const BookingContextProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const { enqueueSnackbar } = useSnackbar();
     const { t } = useTranslation()
     const [movieSchedule, setMovieSchedule] = useState<IMovieSchedule | null>(null)
+    const [bookingInfo, setBookingInfo] = useState<IBooking | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
+
+    const handleGetBookingByUserID = async (userId: number) => {
+        setLoading(true)
+        try {
+            const res = await GetBookingsOfUser(userId)
+            setBookingInfo(res.data)
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleBooking = async (body: IBookingParam, id: number) => {
         setLoading(true)
@@ -50,7 +63,7 @@ const BookingContextProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
 
     return (
-        <BookingContext.Provider value={{ movieSchedule, loading, handleGetMovieDetails, handleBooking }}>
+        <BookingContext.Provider value={{ movieSchedule, bookingInfo, loading, handleGetMovieDetails, handleBooking, handleGetBookingByUserID }}>
             {children}
         </BookingContext.Provider>
     )
