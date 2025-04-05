@@ -4,7 +4,7 @@ import { IReservedSeat, IReservedSeatParam, IReservedSeatSearch } from "../model
 
 type BookingContextType = {
     movieSchedule: IMovieSchedule | null 
-    bookingInfo: IBooking | null
+    bookingInfo: IBooking[]
     loading: boolean 
     handleGetMovieDetails: (movieId: number) => Promise<void>
     handleBooking: (body: IBookingParam, id: number) => Promise<void>
@@ -13,7 +13,7 @@ type BookingContextType = {
 
 export const BookingContext = createContext<BookingContextType>({
     movieSchedule: null,
-    bookingInfo: null,
+    bookingInfo: [],
     loading: false,
     handleGetMovieDetails: async () => {},
     handleBooking: async () => {},

@@ -24,10 +24,22 @@ export interface IBookingParam {
 }
 
 export interface IBooking {
-    id: string
+    _id: string
     userID: number 
+    movieName: string
     scheduleID: number 
     seatIDs: number[] 
+    totalPrice: number 
+    status: string 
+}
+
+export interface IBookingDetails {
+    _id: string 
+    fullName: string 
+    movieName: string 
+    seatCodes: string 
+    startAt: string 
+    endAt: string 
     totalPrice: number 
     status: string 
 }

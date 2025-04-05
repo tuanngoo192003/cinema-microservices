@@ -18,12 +18,15 @@ import {
   HOME,
   LOGIN,
   MOVIE_DETAILS,
+  MY_BOOKING_LIST,
   PAGE403,
   PAGE404,
+  PROFILE,
   REGISTER,
   USER_LIST,
 } from "../constants/redirectURI.ts";
 import { Page403 } from "./403.tsx";
+import MyBookingListUI from "../../booking/components/MyBookingListUI.tsx";
 
 const RequireAdmin = lazy(() => import("../../core/components/RequireAdmin.tsx"))
 const RequireLogin = lazy(() => import("../../core/components/RequireLogin.tsx"))
@@ -65,6 +68,9 @@ const MovieScheduleCreate = lazy(
 const MovieScheduleUpdate = lazy(
   () => import("../../admin/cinema/components/MovieScheduleUpdateUI.tsx")
 );
+const ProfileUI = lazy(
+  () => import("../../user/components/ProfileUI.tsx")
+)
 
 export const AppRouter = () => (
   <Suspense fallback={<div>Loading...</div>}>
@@ -85,6 +91,8 @@ export const AppRouter = () => (
         <Route path={USER_LIST} element={<UserList />} />
         <Route path={MOVIE_DETAILS} element={<MovieDetailsUI />} />
         <Route path={BOOKING} element={<RequireLogin> <BookingUI /> </RequireLogin>} />
+        <Route path={PROFILE} element={<RequireLogin> <ProfileUI /> </RequireLogin>} />
+        <Route path={MY_BOOKING_LIST} element={<RequireLogin> <MyBookingListUI /> </RequireLogin>} />
       </Route>
       <Route
         path="/admin/"

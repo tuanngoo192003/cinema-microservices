@@ -6,8 +6,9 @@ export const PAGE404 = "/404";
 export const PAGE403 = "/403"
 
 /* user pages */
-export const PROFILES = "/profile";
+export const PROFILE = "/profile";
 export const USER_LIST = "/user/list";
+export const MY_BOOKING_LIST = "/user/booking"
 
 /* cinema pages */
 export const MOVIE_DETAILS_FORMAT_URI = (id: number) => `/movie/details/${id}`;
