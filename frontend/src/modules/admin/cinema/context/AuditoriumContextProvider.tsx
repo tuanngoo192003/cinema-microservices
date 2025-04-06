@@ -39,7 +39,7 @@ export const AuditoriumContextProvider: React.FC<{ children: React.ReactNode }> 
         try {
             const result = await CreateAuditorium(body);
             if (result.status == HttpStatusCode.Ok) {
-                enqueueSnackbar(t('labels.success'), { variant: "success" });
+                enqueueSnackbar(t('messages.success'), { variant: "success" });
                 navigate(ADMIN_AUDITORIUMS);
             }
         } catch (error) {

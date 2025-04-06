@@ -9,7 +9,6 @@ import {
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import reactLogo from "../../../assets/react.svg";
 import "../../../App.css"
 import { Header } from "antd/es/layout/layout";
 import { LanguagePicker } from "./LanguagePicker";
@@ -18,24 +17,9 @@ import { useTranslation } from "react-i18next";
 import { HOME } from "../constants/redirectURI";
 import { AppFooter } from "./AppFooter";
 import SubMenu from "antd/es/menu/SubMenu";
+import Title from "antd/es/typography/Title";
 
 const { Content, Sider } = Layout;
-
-// type MenuItem = Required<MenuProps>["items"][number];
-
-// function getItem(
-//   label: React.ReactNode,
-//   key: React.Key,
-//   icon?: React.ReactNode,
-//   children?: MenuItem[]
-// ): MenuItem {
-//   return {
-//     key,
-//     icon,
-//     children,
-//     label,
-//   } as MenuItem;
-// }
 
 interface Props {
   children?: React.ReactNode;
@@ -107,23 +91,23 @@ export default function AdminSideBar({ children }: Props) {
       <Header className="app-header">
         {/* Logo */}
         <div className="logo">
-          <img src={reactLogo} alt="Logo" />
+          <Title level={3} style={{ color: "#efe3d9" }}>Absolute Cinema</Title>
         </div>
         {/* Navigation Menu */}
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]} className="nav-menu">
           <Menu.Item key="1">
-            <Link to={HOME}>{t('labels.home')}</Link>
+            <Link to={HOME} style={{ color: "#efe3d9" }}>{t('labels.home')}</Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Link to={HOME}>{t('labels.menu.about')}</Link>
+            <Link to={HOME} style={{ color: "#efe3d9" }}>{t('labels.menu.about')}</Link>
           </Menu.Item>
           <Menu.Item key="3">
-            <Link to={HOME}>{t('labels.menu.contact')}</Link>
+            <Link to={HOME} style={{ color: "#efe3d9" }}>{t('labels.menu.contact')}</Link>
           </Menu.Item>
           <Menu.Item key="4">
             <LanguagePicker />
           </Menu.Item>
-          <Menu.Item key="5">
+          <Menu.Item key="5" style={{ color: "#efe3d9" }}>
             <Profile />
           </Menu.Item>
         </Menu>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useBooking } from "../hooks";
-import { IBooking } from "../models/booking";
-import { Layout, Space, Table } from "antd";
+import { IBooking, IBookingSeat } from "../models/booking";
+import { Layout, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import { Content } from "antd/es/layout/layout";
 import { useTranslation } from "react-i18next";
@@ -58,6 +58,45 @@ const MyBookingListUI: React.FC = () => {
                                 key="movieName"
                             />
                             <Table.Column
+                                title={t("labels.auditorium_name")}
+                                dataIndex="auditoriumName"
+                                key="auditoriumName"
+                            />
+                            <Table.Column
+                                title={t("labels.seats")}
+                                dataIndex="seats"
+                                key="seats"
+                                render={(seats: IBookingSeat[] | null | undefined) =>
+                                    Array.isArray(seats) && seats.length > 0
+                                        ? seats.map(seat => seat.seatCode).join(", ")
+                                        : "-"
+                                }
+                            />
+                            <Table.Column
+                                title={t("labels.date")}
+                                dataIndex="startAt"
+                                key="startAt"
+                                render={(startAt?: string) =>
+                                    startAt ? startAt.substring(0, 10) : "-"
+                                }
+                            />
+                            <Table.Column
+                                title={t("labels.start_at")}
+                                dataIndex="startAt"
+                                key="startAt"
+                                render={(startAt?: string) =>
+                                    startAt ? startAt.substring(11, 19) : "-"
+                                }
+                            />
+                            <Table.Column
+                                title={t("labels.end_at")}
+                                dataIndex="endAt"
+                                key="endAt"
+                                render={(endAt?: string) =>
+                                    endAt ? endAt.substring(11, 19) : "-"
+                                }
+                            />
+                            <Table.Column
                                 title={t("labels.total_price")}
                                 dataIndex="totalPrice"
                                 key="totalPrice"
@@ -66,16 +105,6 @@ const MyBookingListUI: React.FC = () => {
                                 title={t("labels.status")}
                                 dataIndex="status"
                                 key="status"
-                            />
-                            <Table.Column
-                                title="Action"
-                                key="action"
-                                render={() => (
-                                    <Space size="middle">
-                                        <a>{t("labels.view_detail")}</a>
-                                        <a>{t("labels.delete")}</a>
-                                    </Space>
-                                )}
                             />
                         </Table>
                     )}

@@ -27,7 +27,7 @@ import { AppFooter } from "../../core/components/AppFooter.tsx";
 import { ConfirmBookingUI } from "./ConfirmBookingUI.tsx";
 import SeatUI from "./SeatUI.tsx";
 import useModal from "../../core/hooks/useModal.ts";
-import { IAuditorium, IBookingParam, IChoosedSeat, IMovieSchedule, ISeat } from "../models/booking.ts";
+import { IAuditorium, IBookingParam, IBookingSeat, IChoosedSeat, IMovieSchedule, ISeat } from "../models/booking.ts";
 import { useBooking, useReservedSeat } from "../hooks/index.ts";
 import { useParams } from "react-router-dom";
 import { LoadingPage } from "../../core/components/LoadingPage.tsx";
@@ -38,7 +38,7 @@ const BookingUI: React.FC = () => {
   const { t } = useTranslation();
   const { profile } = useAuth()
   const { isVisible, showModal, hideModal, isLoading } = useModal();
-  const [ modalText, setModalText ] = useState<string>("");
+  const [modalText, setModalText] = useState<string>("");
   const { movieSchedule, bookingInfo, loading, handleGetMovieDetails, handleBooking, handleGetBookingByUserID } = useBooking()
   const [movieScheduleData, setMovieScheduleData] = useState<IMovieSchedule>();
   const [totalPrice, setTotalPrice] = useState<number>(0)
@@ -56,7 +56,7 @@ const BookingUI: React.FC = () => {
 
   // Get BookingInfo and check if user is booked or not
   useEffect(() => {
-    if(profile) handleGetBookingByUserID(profile.id)
+    if (profile) handleGetBookingByUserID(profile.id)
   }, [profile])
 
   useEffect(() => {
@@ -108,7 +108,7 @@ const BookingUI: React.FC = () => {
     setTotalPrice(currentPrice)
   }, [choose]);
 
-  const appendSeat = (seat: ISeat) => {
+  const appendSeat = async (seat: ISeat) => {
     if (seat.status == "BOOKED" || seat.status == "RESERVED") {
       setModalText(
         `This seat is already ${seat.status.toLocaleLowerCase()}. Please choose other seat.`
@@ -116,30 +116,74 @@ const BookingUI: React.FC = () => {
       showModal();
       return;
     }
-
+  
     setChoosed(prevChose => {
       const newSeat: IChoosedSeat = {
         seatId: seat.id,
         seatCode: seat.seatCode,
         seatPrice: seat.price,
       };
-
+  
       const param = {
         scheduleId: movieSchedule?.id,
         seatId: newSeat.seatId,
         userId: profile?.id,
-      } as IReservedSeatParam
-
+      } as IReservedSeatParam;
+  
       const seatExists = prevChose.some((seat) => seat.seatId === newSeat.seatId);
-
+  
       if (seatExists) {
         handleRemoveReservedSeat(newSeat.seatId);
         return prevChose.filter((seat) => seat.seatId !== newSeat.seatId);
       } else {
-        handleReservedSeat(param);
-        return [...prevChose, newSeat];
+        const updatedSeats = [...prevChose, newSeat];
+        const groupedSeatsByRow = groupSeatsByRow(updatedSeats);
+  
+        const isValid = groupedSeatsByRow.every(rowSeats => {
+          const sortedSeats = rowSeats.sort((a, b) => {
+            const aNumber = parseInt(a.seatCode.slice(1));
+            const bNumber = parseInt(b.seatCode.slice(1));
+            return aNumber - bNumber;
+          });
+  
+          for (let i = 1; i < sortedSeats.length; i++) {
+            const currentSeatNumber = parseInt(sortedSeats[i].seatCode.slice(1));
+            const previousSeatNumber = parseInt(sortedSeats[i - 1].seatCode.slice(1));
+  
+            if (currentSeatNumber - previousSeatNumber > 1) {
+              return false;
+            }
+          }
+          return true;
+        });
+  
+        if (isValid) {
+          handleReservedSeat(param).then((res) => {
+            if (!res) {
+              return; // Don't update state if reservation failed
+            }
+            setChoosed(updatedSeats); // Update state after successful reservation
+          });
+          return prevChose; // Return previous state immediately
+        } else {
+          setModalText("Seats must be next to each other. Please choose consecutive seats.");
+          showModal();
+          return prevChose;
+        }
       }
     });
+  };
+  
+
+  // Utility function to group seats by row
+  const groupSeatsByRow = (seats: IChoosedSeat[]) => {
+    const grouped: Record<string, IChoosedSeat[]> = {};
+    seats.forEach(seat => {
+      const row = seat.seatCode[0]; // Assuming row is the first character of the seat code (like 'A1', 'A2', etc.)
+      if (!grouped[row]) grouped[row] = [];
+      grouped[row].push(seat);
+    });
+    return Object.values(grouped);
   };
 
   const handleConfirmBooking = () => {
@@ -149,13 +193,18 @@ const BookingUI: React.FC = () => {
       movieName: movieSchedule?.movie.movieName,
       description: movieSchedule?.movie.description,
       auditoriumName: movieSchedule?.auditorium.auditoriumName,
-      releaseDate: movieSchedule?.movie.releaseDate.toISOString(),
-      startAt: movieSchedule?.startAt.toISOString(),
-      endAt: movieSchedule?.endAt.toISOString(),
+      releaseDate: movieSchedule?.movie.releaseDate,
+      startAt: movieSchedule?.startAt,
+      endAt: movieSchedule?.endAt,
       moviePrice: 0,
       movieGenre: movieSchedule?.movie.movieGenre,
       scheduleId: movieSchedule?.id,
-      seatIds: choose.map(s => s.seatId),
+      seats: choose.map(s => {
+        return {
+          seatId: s.seatId,
+          seatCode: s.seatCode,
+        } as IBookingSeat
+      }),
       totalPrice: totalPrice,
       status: 'CONFIRMED'
     } as IBookingParam
@@ -300,17 +349,15 @@ const BookingUI: React.FC = () => {
 
                 {/* Seats Layout */}
                 <div style={{ width: "100%" }}>
-                  <Row gutter={[4, 4]} justify="center">
-                    {Array.from({ length: numRows }).map((_, rowIndex) => (
-                      <Row gutter={[4, 4]} justify="center" key={rowIndex} style={{ width: "100%" }}>
-                        {seats
-                          .slice(rowIndex * numCols, (rowIndex + 1) * numCols) // 🔹 Get seats for this row
-                          .map((seat) => (
-                            <SeatUI key={seat.id} handleOnclick={appendSeat} seat={seat} numCols={numCols} />
-                          ))}
-                      </Row>
-                    ))}
-                  </Row>
+                  {Array.from({ length: numRows }).map((_, rowIndex) => (
+                    <Row gutter={[16, 16]} justify="space-between" key={rowIndex} style={{ width: "100%" }}>
+                      {seats
+                        .slice(rowIndex * numCols, (rowIndex + 1) * numCols) // 🔹 Get seats for this row
+                        .map((seat) => (
+                          <SeatUI key={seat.id} handleOnclick={appendSeat} seat={seat} numCols={numCols} />
+                        ))}
+                    </Row>
+                  ))}
                 </div>
               </Card>
             </Col>

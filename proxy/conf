@@ -352,9 +352,6 @@ server {
             add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
         }
 
-        access_by_lua_block {
-            require("auth").check_jwt_role()
-        }
         proxy_pass   http://cinemaservice:8001/cinema/movies ;
     }
 
@@ -377,9 +374,6 @@ server {
             add_header 'Access-Control-Allow-Headers' 'Authorization, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type';
         }
 
-        access_by_lua_block {
-            require("auth").check_jwt_role()
-        }
         proxy_pass   http://cinemaservice:8001/cinema/movies/ ;
     }
 

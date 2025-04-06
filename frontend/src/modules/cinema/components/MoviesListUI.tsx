@@ -1,7 +1,9 @@
 import { Tabs, Row, Col } from "antd";
 import { useEffect, useState } from "react";
-import chinatsu from "../../../assets/千夏.jpg";
-import betacinema from "../../../assets/betacinema.png";
+import kanata from "../../../assets/carousel-0.jpg";
+import ansatsu from "../../../assets/ansatsu.png";
+import john from "../../../assets/john.png";
+import kusuriya from "../../../assets/kusuriya.jpg";
 import { MovieItemUI } from "./MovieItemUI.tsx";
 import { useMovie } from "../hooks/index.ts";
 import { IMovieItem } from "../models/movie.ts";
@@ -25,16 +27,16 @@ export const MovieListUI = () => {
     const movieData = {
         "1": [
             { movieId: 1, movieName: "青いの箱", duration: 120, imageURL: "https://my-cinema-app-bucket.s3.ap-southeast-2.amazonaws.com/%E5%8D%83%E5%A4%8F.jpg", movieGenre: "Romcom" } as unknown as IMovieItem,
-            { movieId: 1, movieName: "青いの箱", duration: 90, imageURL: betacinema, movieGenre: "Horror" } as unknown as IMovieItem,
-            { movieId: 1, movieName: "青いの箱", duration: 90, imageURL: betacinema, movieGenre: "Horror" } as unknown as IMovieItem,
-            { movieId: 1, movieName: "青いの箱", duration: 90, imageURL: betacinema, movieGenre: "Horror" } as unknown as IMovieItem,
-            { movieId: 1, movieName: "青いの箱", duration: 120, imageURL: chinatsu, movieGenre: "Romcom" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "境界の彼方", duration: 90, imageURL: kanata, movieGenre: "ROMCOM" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "暗殺教室", duration: 90, imageURL: ansatsu, movieGenre: "ACTION" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "John Wick", duration: 90, imageURL: john, movieGenre: "ACTION" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "薬屋ひとりごと", duration: 120, imageURL: kusuriya, movieGenre: "MISTERY" } as unknown as IMovieItem,
         ],
         "2": [
-            { movieId: 1, movieName: "青いの箱", duration: 110, imageURL: betacinema, movieGenre: "Action" } as unknown as IMovieItem,
-            { movieId: 1, movieName: "青いの箱", duration: 100, imageURL: chinatsu, movieGenre: "Sci-fi" } as unknown as IMovieItem,
-            { movieId: 1, movieName: "青いの箱", duration: 95, imageURL: betacinema, movieGenre: "Drama" } as unknown as IMovieItem,
-            { movieId: 1, movieName: "青いの箱", duration: 130, imageURL: chinatsu, movieGenre: "Fantasy" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "境界の彼方", duration: 90, imageURL: kanata, movieGenre: "ROMCOM" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "暗殺教室", duration: 90, imageURL: ansatsu, movieGenre: "ACTION" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "John Wick", duration: 90, imageURL: john, movieGenre: "ACTION" } as unknown as IMovieItem,
+            { movieId: 1, movieName: "薬屋ひとりごと", duration: 120, imageURL: kusuriya, movieGenre: "MISTERY" } as unknown as IMovieItem,
         ],
         "3": movies?.data
     };

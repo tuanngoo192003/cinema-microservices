@@ -65,7 +65,7 @@ export const AdminMovieContextProvider: React.FC<{ children: React.ReactNode }> 
         setLoading(true)
         try {
             await CreateMovie(body)
-            enqueueSnackbar(t('labels.success'), { variant: "success" });
+            enqueueSnackbar(t('messages.success'), { variant: "success" });
             setTimeout(() => {
                 navigate(ADMIN_MOVIES)
             }, 2000)
@@ -82,7 +82,7 @@ export const AdminMovieContextProvider: React.FC<{ children: React.ReactNode }> 
         setLoading(true)
         try {
             await UpdateMovie(body)
-            enqueueSnackbar(t('labels.success'), { variant: "success" });
+            enqueueSnackbar(t('messages.success'), { variant: "success" });
             setTimeout(() => {
                 navigate(ADMIN_MOVIES)
             }, 2000)

@@ -14,13 +14,18 @@ const (
 
 type Booking struct {
 	client_models.Movie `bson:",inline"`
-	ID                  primitive.ObjectID `bson:"_id,omitempty"`
-	UserID              int                `bson:"user_id"`
-	ScheduleID          int                `bson:"schedule_id"`
-	SeatIDs             []int              `bson:"seat_ids"`
-	TotalPrice          float64            `bson:"total_price"`
-	Status              string             `bson:"status"` // PENDING, CONFIRMED, CANCELED
-	CreatedAt           time.Time          `bson:"created_at"`
-	UpdatedAt           time.Time          `bson:"updated_at"`
-	UpdatedBy           int                `bson:"updated_by"`
+	ID                  primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	UserID              int                `json:"userId" bson:"user_id"`
+	ScheduleID          int                `json:"scheduleId" bson:"schedule_id"`
+	Seats               []BookingSeats     `json:"seats" bson:"seats"`
+	TotalPrice          float64            `json:"totalPrice" bson:"total_price"`
+	Status              string             `json:"status" bson:"status"` // PENDING, CONFIRMED, CANCELED
+	CreatedAt           time.Time          `json:"created_at" bson:"created_at"`
+	UpdatedAt           time.Time          `json:"updated_at" bson:"updated_at"`
+	UpdatedBy           int                `json:"updated_by" bson:"updated_by"`
+}
+
+type BookingSeats struct {
+	SeatID   int    `json:"seatId" bson:"seat_id"`
+	SeatCode string `json:"seatCode" bson:"seat_code"`
 }

@@ -7,7 +7,7 @@ import { useAuth } from "../../user/hooks";
 import {
   ADMIN_DASHBOARD,
   LOGIN,
-  PROFILES,
+  PROFILE,
 } from "../constants/redirectURI.ts";
 import { IProfile } from "../../user/models/user.ts";
 
@@ -37,7 +37,7 @@ export const Profile: React.FC = () => {
     {
       key: "1",
       label: t("labels.menu.profile"),
-      onClick: () => navigate(PROFILES, { replace: true }),
+      onClick: () => navigate(PROFILE, { replace: true }),
     },
     ...(currentProfile?.role === "ADMIN"
       ? [
@@ -66,7 +66,7 @@ export const Profile: React.FC = () => {
           </a>
         </Dropdown>
       ) : (
-        <Link to={LOGIN}>{t("labels.login")}</Link>
+        <Link to={LOGIN} style={{color: "#efe3d9"}}>{t("labels.login")}</Link>
       )}
     </>
   );

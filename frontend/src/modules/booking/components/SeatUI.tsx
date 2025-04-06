@@ -18,7 +18,6 @@ export default function SeatUI({ handleOnclick, seat, numCols }: Props) {
   const isOwnedByUser = seat?.userId === profile?.id;
   const seatStatus = isOwnedByUser ? "CHOOSED" : seat?.status;
   const isDisabled = isOwnedByUser;
-  console.log(numCols);
   
   return (
     <Col

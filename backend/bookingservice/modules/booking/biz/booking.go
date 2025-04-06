@@ -68,7 +68,7 @@ func (biz *bookingCreateBiz) Invoke(
 	validateBookingRequest := client_models.ValidateBookingRequest{
 		UserID:     input.Data.UserID,
 		ScheduleID: input.Data.ScheduleID,
-		SeatIDs:    input.Data.SeatIDs,
+		SeatIDs:    toSeatIDs(input.Data.Seats),
 		Token:      input.Token,
 	}
 
@@ -79,7 +79,7 @@ func (biz *bookingCreateBiz) Invoke(
 
 	now := time.Now()
 
-	layout := "2006-01-02T15:04:05"
+	layout := "2006-01-02T15:04:05Z"
 
 	t, err := time.Parse(layout, input.Data.ReleaseDate)
 	if err != nil {
@@ -90,7 +90,7 @@ func (biz *bookingCreateBiz) Invoke(
 		UserID:     input.Data.UserID,
 		ScheduleID: input.Data.ScheduleID,
 		TotalPrice: input.Data.TotalPrice,
-		SeatIDs:    input.Data.SeatIDs,
+		Seats:      toSeatsModel(input.Data.Seats),
 		Status:     input.Data.Status,
 		CreatedAt:  now,
 		UpdatedAt:  now,
@@ -101,7 +101,7 @@ func (biz *bookingCreateBiz) Invoke(
 			MovieName:      input.Data.MovieName,
 			Price:          input.Data.MoviePrice,
 			StartAt:        input.Data.StartAt,
-			EndAt:          input.Data.StartAt,
+			EndAt:          input.Data.EndAt,
 			MovieGenre:     input.Data.MovieGenre,
 			Description:    input.Data.Description,
 			AuditoriumName: input.Data.AuditoriumName,
@@ -116,4 +116,18 @@ func (biz *bookingCreateBiz) Invoke(
 	return &helper.BookingCreateOutput{
 		Id: id,
 	}, nil
+}
+
+func toSeatsModel(seats []models.BookingSeatCreate) (seatModels []models.BookingSeats) {
+	for _, v := range seats {
+		seatModels = append(seatModels, models.BookingSeats(v))
+	}
+	return
+}
+
+func toSeatIDs(seats []models.BookingSeatCreate) (seatIds []int) {
+	for _, v := range seats {
+		seatIds = append(seatIds, v.SeatID)
+	}
+	return
 }

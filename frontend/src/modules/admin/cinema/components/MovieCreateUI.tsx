@@ -1,11 +1,13 @@
 import { Card, Layout, Typography, Form, FormProps, Input, InputNumber, DatePicker, Select, Upload, message, Button } from "antd";
 import { Content } from "antd/es/layout/layout";
-import React from "react";
+import React, { useState } from "react";
 import "../../../../App.css";
 import { useTranslation } from "react-i18next";
 import { useMovie } from "../hooks";
 import { ICreateMovieParam } from "../models/movie";
 import { UploadOutlined } from "@ant-design/icons";
+import { UploadFileAPI } from "../../../core/services/upload";
+import { useSnackbar } from "notistack";
 
 const { Option } = Select;
 
@@ -22,6 +24,8 @@ interface ICreateMovieProps {
 const MovieCreateUI: React.FC = () => {
     const { t } = useTranslation()
     const { handleCreateMovie } = useMovie()
+    const { enqueueSnackbar } = useSnackbar();
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     const handleImageChange = (info: any) => {
         if (info.file.status === 'done') {
@@ -45,7 +49,7 @@ const MovieCreateUI: React.FC = () => {
         const newMovie = {
             movieName: values.movieName,
             moviePrice: values.moviePrice,
-            imageURL: 'https://my-cinema-app-bucket.s3.ap-southeast-2.amazonaws.com/%E5%8D%83%E5%A4%8F.jpg',
+            imageURL: imageUrl,
             description: values.description,
             duration: values.duration,
             releaseDate: values.releaseDate.toISOString().split('T')[0],
@@ -97,15 +101,28 @@ const MovieCreateUI: React.FC = () => {
                                 <Upload
                                     className="app-input"
                                     name="image"
-                                    action="/upload" // Your upload action URL (optional for demo)
                                     listType="picture-card"
                                     beforeUpload={beforeUpload} // Validate the file before upload
                                     onChange={handleImageChange}
                                     showUploadList={false} // Set to true if you want to show uploaded images list
+                                    customRequest={({ file }) => {
+                                        UploadFileAPI(file as File)
+                                            .then((res) => {
+                                                setImageUrl(res.data.imageUrl);
+                                                enqueueSnackbar(t('messages.success'), { variant: "success" });
+                                            })
+                                            .catch((error) => {
+                                                enqueueSnackbar(error.errors["message"], { variant: "error" });
+                                            });
+                                    }}
                                 >
-                                    <div>
-                                        <UploadOutlined />
-                                    </div>
+                                    {imageUrl ? (
+                                        <img src={imageUrl} alt="Uploaded" style={{ width: '100%' }} />
+                                    ) : (
+                                        <div>
+                                            <UploadOutlined />
+                                        </div>
+                                    )}
                                 </Upload>
                             </Form.Item>
                             <Form.Item

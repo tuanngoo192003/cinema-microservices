@@ -73,12 +73,12 @@ func (h *ReservedSeatHandler) Create(c *gin.Context) {
 	log := config.GetLogger()
 	var req payload.ReservedSeatRequest
 	err := c.ShouldBindJSON(&req)
-
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	obj := entity.ReservedSeat{}
 	payload.MapStruct(req, &obj)
 	result, err := h.useCase.Create(obj)

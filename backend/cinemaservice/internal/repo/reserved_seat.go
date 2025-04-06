@@ -4,6 +4,7 @@ import (
 	"cinema-service/infra/config"
 	"cinema-service/internal/domain/entity"
 	"cinema-service/internal/handlers/payload"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -38,6 +39,21 @@ func (r *ReservedSeatRepo) Search(param payload.ReservedSeatSearchRequest) (resu
 }
 
 func (r *ReservedSeatRepo) Create(obj entity.ReservedSeat) (result entity.ReservedSeat, err error) {
+	var reservedSeats []entity.ReservedSeat
+	if errFetching := r.db.Model(&entity.ReservedSeat{}).
+		Where(` schedule_id = ? `, obj.ScheduleID).
+		Find(&reservedSeats).Error; errFetching != nil {
+		err = errFetching
+		return
+	}
+	if len(reservedSeats) > 0 {
+		for _, v := range reservedSeats {
+			if v.SeatID == obj.SeatID && v.UserID != obj.UserID {
+				err = fmt.Errorf("reservation already exists for this user and schedule")
+				return
+			}
+		}
+	}
 	query := r.db.Model(&entity.ReservedSeat{}).Create(&obj)
 	if query.Error != nil {
 		err = query.Error

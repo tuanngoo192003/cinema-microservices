@@ -7,7 +7,7 @@ local secret_key = "a-string-secret-at-least-256-bits-long"  -- Change this to a
 
 local permissions = {
     ["/users"] = { permission = "READ_USER", role = { "ADMIN", "MANAGER" } },
-    ["/users/{id}"] = { permission = "READ_USER", role = { "ADMIN", "MANAGER" } },
+    ["/users/{id}"] = { permission = "READ_USER", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
     ["/users/existed/{id}"] = { permission = "READ_USER", role = { "ADMIN", "MANAGER" } },
     ["/cinema/auditoriums"] = { permission = "READ_AUDITORIUMS", role = { "ADMIN", "MANAGER", "CUSTOMER" } },
     ["/cinema/auditoriums/all"] = { permission = "READ_AUDITORIUMS", role = { "ADMIN", "MANAGER" } },

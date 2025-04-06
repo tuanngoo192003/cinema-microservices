@@ -9,8 +9,8 @@ interface ConfirmModalProps {
     movieScheduleId?: number
     movieName?: string
     auditorium?: IAuditorium
-    startAt?: Date
-    endAt?: Date
+    startAt?: string
+    endAt?: string
     seat: IChoosedSeat[]
     totalPrice: number,
     isBooked: boolean,
@@ -92,7 +92,7 @@ export const ConfirmBookingUI: React.FC<ConfirmModalProps> = (bookingInfo: Confi
                                         </Col>
                                     </Row>
                                     {
-                                        bookingInfo.isBooked ? (
+                                        !bookingInfo.isBooked ? (
                                             <Button className="app-btn" style={{ marginTop: '2rem' }} onClick={bookingInfo.onConfirm}>
                                                 {t('labels.buttons.confirm-booking')}
                                             </Button>

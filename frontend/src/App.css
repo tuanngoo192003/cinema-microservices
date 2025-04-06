@@ -36,8 +36,8 @@
   display: flex;
   align-items: center;
   justify-content: center; /* ✅ Center everything */
-  height: 3.1rem;
-  background: #e8cab9;
+  height: 3.5rem;
+  background: #403C3AFF;
 }
 
 /* Flex container to keep logo and menu centered */
@@ -52,11 +52,8 @@
 .logo {
   display: flex;
   align-items: center;
+  margin-top: 0.6rem;
   margin-right: 1rem; /* ✅ Reduce spacing */
-}
-
-.logo img {
-  height: 2rem;
 }
 
 /* Menu */

@@ -19,3 +19,7 @@ export type IPagination<T> = {
     totalPage: number;
     totalRecord: number;
 };
+
+export type FileResponse = {
+    imageUrl: string
+}

@@ -30,7 +30,7 @@ export const MovieItemUI: React.FC<IMovieItem> = ({ movieId, movieName, duration
                     <div style={{ marginTop: "1rem" }}>
                         <div>
                             <Title level={3}>
-                                <a href={MOVIE_DETAILS_FORMAT_URI(1)}>{movieName ? movieName : "青いの箱"}</a>
+                                <a href={MOVIE_DETAILS_FORMAT_URI(movieId)}>{movieName ? movieName : "青いの箱"}</a>
                             </Title>
                             <Title level={5} style={{ marginBottom: 0 }}>
                                 {t("labels.titles.movie_genre")} : {movieGenre}

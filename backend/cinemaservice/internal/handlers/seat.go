@@ -132,6 +132,7 @@ func (s *SeatHandler) Update(c *gin.Context) {
 
 func (s *SeatHandler) SetBookedSeats(c *gin.Context) {
 	log := config.GetLogger()
+	log.Info("Tao o day")
 	var info payload.SetSeatRequest
 	if err := c.ShouldBindJSON(&info); err != nil {
 		log.Error(err.Error())

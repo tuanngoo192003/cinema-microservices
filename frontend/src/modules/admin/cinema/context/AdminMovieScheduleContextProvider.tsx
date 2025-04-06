@@ -59,7 +59,7 @@ export const AdminMovieScheduleContextProvider: React.FC<{children: React.ReactN
         setLoading(true)
         try {
             await CreateMovieSchedule(body)
-            enqueueSnackbar(t('labels.success'), { variant: "success" });
+            enqueueSnackbar(t('messages.success'), { variant: "success" });
             setTimeout(() => {
                 navigate(ADMIN_MOVIE_SCHEDULES)
             }, 2000)  
@@ -76,7 +76,7 @@ export const AdminMovieScheduleContextProvider: React.FC<{children: React.ReactN
         setLoading(true)
         try {
             await UpdateMovieSchedule(body)
-            enqueueSnackbar(t('labels.success'), { variant: "success" });
+            enqueueSnackbar(t('messages.success'), { variant: "success" });
             setTimeout(() => {
                 navigate(ADMIN_MOVIE_SCHEDULES)
             }, 2000)  

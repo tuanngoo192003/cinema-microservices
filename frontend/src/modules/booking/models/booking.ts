@@ -4,52 +4,58 @@ export interface IChoosedSeat {
     seatId: number
     seatCode: string
     seatPrice: number
-  }
+}
 
 export interface IBookingParam {
-    userId: number 
-    movieId: number 
-    movieName: string 
-    description: string 
-    auditoriumName: string 
-    releaseDate: string 
-    startAt: string 
+    userId: number
+    movieId: number
+    movieName: string
+    description: string
+    auditoriumName: string
+    releaseDate: string
+    startAt: string
     endAt: string
-    moviePrice: number 
-    movieGenre: string  
-    scheduleId: number 
-    seatIds: number[] 
-    totalPrice: number 
-    status: string 
+    moviePrice: number
+    movieGenre: string
+    scheduleId: number
+    seats: IBookingSeat[]
+    totalPrice: number
+    status: string
+}
+
+export interface IBookingSeat {
+    seatId: number
+    seatCode: string
 }
 
 export interface IBooking {
-    _id: string
-    userID: number 
+    ID: string
+    userID: number
+    movieID: number
     movieName: string
-    scheduleID: number 
-    seatIDs: number[] 
-    totalPrice: number 
-    status: string 
-}
-
-export interface IBookingDetails {
-    _id: string 
-    fullName: string 
-    movieName: string 
-    seatCodes: string 
+    releaseDate: string 
     startAt: string 
-    endAt: string 
-    totalPrice: number 
-    status: string 
+    endAt: string
+    price: number
+    movieGenre: string
+    description: string
+    imageUrl: string
+    auditoriumName: string
+    scheduleID: number
+    seats: IBookingSeat[]
+    totalPrice: number
+    status: string
+    createdAt: string
+    updatedAt: string
+    updatedBy: number
 }
 
 export interface IMovieSchedule {
     id: number
     movie: IMovie
     auditorium: IAuditorium
-    startAt: Date
-    endAt: Date
+    startAt: string
+    endAt: string
     scheduleStatus: string
     seatLeft: number
 }
@@ -64,12 +70,12 @@ export interface IAuditorium {
 
 export interface IMovie {
     movieId: number
-    movieName: string 
-    imageURL: string 
-    description: string 
-    duration: number 
-    releaseDate: Date
-    movieGenre: string 
+    movieName: string
+    imageURL: string
+    description: string
+    duration: number
+    releaseDate: string
+    movieGenre: string
 }
 
 export interface ISeat {

@@ -17,13 +17,13 @@ export const BookingContext = createContext<BookingContextType>({
     loading: false,
     handleGetMovieDetails: async () => {},
     handleBooking: async () => {},
-    handleGetBookingByUserID: async () => {}
+    handleGetBookingByUserID: async () => {},
 })
 
 type ReservedSeatType = {
     reservedSeat: IReservedSeat | null 
     loading: boolean 
-    handleReservedSeat: (body: IReservedSeatParam) => Promise<void>
+    handleReservedSeat: (body: IReservedSeatParam) => Promise<boolean>
     handleGetResevedSeat: (search: IReservedSeatSearch) => Promise<void>
     handleRemoveReservedSeat: (id: number) => Promise<void>
 }
@@ -31,7 +31,7 @@ type ReservedSeatType = {
 export const ReservedSeatContext = createContext<ReservedSeatType>({
     reservedSeat: null,
     loading: false, 
-    handleReservedSeat: async () => {},
+    handleReservedSeat: async () => true,
     handleGetResevedSeat: async () => {},
     handleRemoveReservedSeat: async () => {},
 })

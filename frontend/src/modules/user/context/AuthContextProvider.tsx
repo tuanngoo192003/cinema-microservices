@@ -69,7 +69,7 @@ export function AuthContextProvider({ children }: AuthProfileProps) {
         try {
             const response = await RegisterUserAPI(body)
             console.log(response)
-            enqueueSnackbar(t('labels.success'), { variant: "success" });
+            enqueueSnackbar(t('messages.success'), { variant: "success" });
             setTimeout(() => {
                 navigate("/login");
             }, 2000);

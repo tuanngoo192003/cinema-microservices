@@ -1,17 +1,13 @@
 import React from "react";
 import "../../../App.css";
-import { Carousel, Layout } from "antd";
+import { Carousel, Image, Layout } from "antd";
 import { Header } from "antd/es/layout/layout";
 import { AppFooter } from "../../core/components/AppFooter.tsx";
 import { MovieListUI } from "./MoviesListUI.tsx";
-
-const contentStyle: React.CSSProperties = {
-  height: "40rem",
-  color: "#fff",
-  lineHeight: "40rem",
-  textAlign: "center",
-  background: "#364d79",
-};
+import carousel0 from "../../../assets/carousel-0.jpg";
+import carousel1 from "../../../assets/carousel-1.jpg";
+import carousel2 from "../../../assets/carousel-2.jpg";
+import carousel3 from "../../../assets/carousel-3.png";
 
 const HomeUI: React.FC = () => {
   return (
@@ -22,16 +18,32 @@ const HomeUI: React.FC = () => {
         <Header style={{ height: "40rem", padding: 0, marginTop: "3.1rem" }}>
           <Carousel autoplay>
             <div>
-              <h3 style={contentStyle}>1</h3>
+              <Image
+                src={carousel0}
+                alt="Image 1"
+                style={{ height: "40rem", objectFit: "cover", width: "100%" }}
+              />
             </div>
             <div>
-              <h3 style={contentStyle}>2</h3>
+              <Image
+                src={carousel1}
+                alt="Image 2"
+                style={{ height: "40rem", objectFit: "cover", width: "100%" }}
+              />
             </div>
             <div>
-              <h3 style={contentStyle}>3</h3>
+              <Image
+                src={carousel2}
+                alt="Image 3"
+                style={{ height: "40rem", objectFit: "cover", width: "100%" }}
+              />
             </div>
             <div>
-              <h3 style={contentStyle}>4</h3>
+              <Image
+                src={carousel3}
+                alt="Image 4"
+                style={{ height: "40rem", objectFit: "cover", width: "100%" }}
+              />
             </div>
           </Carousel>
         </Header>
@@ -43,7 +55,7 @@ const HomeUI: React.FC = () => {
         <div>
           <AppFooter />
         </div>
-      </Layout>
+      </Layout >
     </>
   );
 };
