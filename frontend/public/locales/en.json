@@ -46,6 +46,7 @@
     "your_choices": "Your choices",
     "price": "Price",
     "movies": "Movies",
+    "image": "Image",
     "auditoriums": "Auditoriums",
     "start_date": "Start date",
     "end_date": "End date",
@@ -53,6 +54,7 @@
     "vietnamese": "Vietnamese",
     "japanese": "Japanese",
     "titles": {
+      "booking_list": "Booking list",
       "movie_genre": "Genre",
       "duration": "Duration",
       "release_date": "Release date",
@@ -69,7 +71,8 @@
       "back": "Back",
       "save": "Save",
       "create": "Create",
-      "confirm-booking": "Confirm"
+      "confirm-booking": "Confirm",
+      "my_bookings": "Booking list"
     },
     "menu": {
       "user_list": "User list",
@@ -97,15 +100,25 @@
   },
   "messages": {
     "required": {
-      "username": "Please input your username!",
-      "password": "Please input your password!",
-      "email": "Please input your email!",
-      "first_name": "Please input your first name!",
-      "last_name": "Please input your last name!",
-      "phone_number": "Please input your phone number!",
-      "date_of_birth": "Please input your date of birth!",
-      "success": "Successfully"
+      "username": "Username must not be empty!",
+      "password": "Password must not be empty!",
+      "email": "Email must not be empty!",
+      "first_name": "First name must not be empty!",
+      "last_name": "Last name must not be empty!",
+      "phone_number": "Phone number must not be empty!",
+      "date_of_birth": "Date of birth must not be empty!",
+      "movie_name": "Movie name must not be empty!",
+      "description": "Description must not be empty!",
+      "duration": "Movie duration must not be empty!",
+      "movie_price": "Movie price must not be empty!",
+      "release_date": "Release date must not be empty!",
+      "movie_genre": "Movie genre must not be empty!",
+      "start_date": "Start date must not be empty!",
+      "start_at": "Start time must not be empty!",
+      "success": "Success"
     },
-    "no_schedule": "No schedule available at this date!"
+    "invalid_email": "Invalid email",
+    "success": "Success",
+    "no_schedule": "No schedule for this day!"
   }
 }

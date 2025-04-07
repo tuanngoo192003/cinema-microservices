@@ -187,9 +187,9 @@ func (h *AuthHandler) CreateUser(c *gin.Context) {
 	}
 
 	if err := tx.QueryRow(`
-		INSERT INTO users(username, password, status, email, first_name, last_name, date_of_birth, phone_number)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id	
-		`, user.Username, passwordHashed, user.Status, user.Email, user.FirstName, user.LastName, user.DateOfBirth, user.PhoneNumber).
+		INSERT INTO users(username, password, status, email, first_name, last_name, date_of_birth, phone_number, role_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id	
+		`, user.Username, passwordHashed, user.Status, user.Email, user.FirstName, user.LastName, user.DateOfBirth, user.PhoneNumber, user.RoleID).
 		Scan(&id); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

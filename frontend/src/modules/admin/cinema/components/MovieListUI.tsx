@@ -9,6 +9,7 @@ import { IPagination } from "../../../core/models/core";
 import { IMovie } from "../models/movie";
 import { ADMIN_MOVIES_CREATE } from "../../../core/constants/redirectURI";
 import { UserOutlined } from "@ant-design/icons";
+import MovieUpdateUI, { IUpdateMovieProps } from "./MovieUpdateUI";
 
 const AdminMovieListUI: React.FC = () => {
     const { t } = useTranslation()
@@ -17,7 +18,7 @@ const AdminMovieListUI: React.FC = () => {
 
     // const [totalItems, setTotalItems] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [movieName, /* setMovieName */ ] = useState<string>('')
+    const [movieName, /* setMovieName */] = useState<string>('')
     const [movieGenre, /* setMovieGenre */] = useState<string>('')
     const [releaseStart, /* setReleaseStart */] = useState<Date>(() => {
         const now = new Date();
@@ -145,14 +146,27 @@ const AdminMovieListUI: React.FC = () => {
                             <Table.Column
                                 title="Action"
                                 key="action"
-                                render={() => (
-                                    <Space size="middle">
-                                        <a>{t("labels.view_detail")}</a>
-                                        <a>{t("labels.delete")}</a>
-                                    </Space>
-                                )}
+                                render={(_, record: IMovie) => {
+                                    const movieData: IUpdateMovieProps = {
+                                        id: record.movieId,
+                                        movieName: record.movieName,
+                                        imageURL: record.imageURL,
+                                        description: record.description,
+                                        duration: record.duration,
+                                        releaseDate: record.releaseDate,
+                                        movieGenre: record.movieGenre,
+                                        isDeleted: false,
+                                    };
+                                    return (
+                                        <Space size="middle">
+                                            <MovieUpdateUI movie={movieData} />
+                                            <a>{t("labels.delete")}</a>
+                                        </Space>
+                                    )
+                                }}
                             />
                         </Table>
+
                     </Content>
                 </Layout>
             )}

@@ -1,6 +1,7 @@
 
 services:
   userservice:
+    container_name: userservice-cinema-microservices
     build: backend/userservice
     env_file:
       - env/.env
@@ -10,6 +11,7 @@ services:
       - userdb
         
   userdb:
+    container_name: userdb-cinema-microservices
     image: postgres
     restart: always
     secrets:
@@ -23,6 +25,7 @@ services:
       - "5432:5432"
 
   cinemaservice:
+    container_name: cinemaservice-cinema-microservices
     build: backend/cinemaservice
     env_file:
       - env/.env
@@ -34,6 +37,7 @@ services:
       - cinemadb
  
   cinemadb:
+    container_name: cinemadb-cinema-microservices
     image: postgres
     restart: always
     secrets:
@@ -47,6 +51,7 @@ services:
       - "5433:5432"
 
   bookingservice:
+    container_name: bookingservice-cinema-microservices
     build: backend/bookingservice
     env_file:
       - env/.env
@@ -56,6 +61,7 @@ services:
       - bookingdb
 
   bookingdb:
+    container_name: bookingdb-cinema-microservices
     image: mongo
     restart: always
     volumes:
@@ -66,18 +72,15 @@ services:
       - "27017:27017"
 
   reactapp:
-    build: 
-      context: frontend
-      args:
-        - VITE_API_BASE_URL=${VITE_API_BASE_URL} 
+    container_name: reactapp-cinema-microservices
+    build: frontend
     volumes:
       - react-build:/app/dist
-    env_file:
-      - env/fe.env
     ports:
       - "3000:3000"
 
   proxy:
+    container_name: proxy-cinema-microservices
     build: proxy
     ports:
       - 80:80

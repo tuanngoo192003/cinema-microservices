@@ -6,6 +6,7 @@ import "../../../App.css";
 import chinatsu from "../../../assets/千夏.jpg";
 import { IProfile } from "../models/user";
 import { useTranslation } from "react-i18next";
+import MyBookingListUI from "../../booking/components/MyBookingListUI";
 
 const ProfileUI: React.FC = () => {
     const { t } = useTranslation();
@@ -45,8 +46,8 @@ const ProfileUI: React.FC = () => {
                         }}
                     >
                         <Image
-                            src={chinatsu}
-                            alt="profile"
+                            src={profile?.avatar}
+                            alt={chinatsu}
                             style={{
                                 borderRadius: "12px",
                                 height: "11rem",
@@ -54,15 +55,7 @@ const ProfileUI: React.FC = () => {
                                 backgroundColor: "#fff",
                             }}
                         />
-                        <Button
-                            className={"app-btn"}
-                            style={{
-                                marginLeft: "10px",
-                                width: "10rem",
-                            }}
-                        >
-                            {t("buttons.my_bookings")}
-                        </Button>
+                        <MyBookingListUI/>
                     </div>
 
                     <Form
