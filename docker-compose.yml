@@ -1,6 +1,7 @@
-version: "3.8"
+
 services:
   userservice:
+    container_name: userservice-cinema-microservices
     build: backend/userservice
     env_file:
       - env/.env
@@ -8,8 +9,9 @@ services:
       - "8000:8000"
     depends_on:
       - userdb
-  
+        
   userdb:
+    container_name: userdb-cinema-microservices
     image: postgres
     restart: always
     secrets:
@@ -23,15 +25,19 @@ services:
       - "5432:5432"
 
   cinemaservice:
+    container_name: cinemaservice-cinema-microservices
     build: backend/cinemaservice
     env_file:
       - env/.env
     ports:
-      - "8001:8000"
+      - "8001:8001"
+    volumes:
+      - cinema-sqlite-data:/root/data
     depends_on:
-      - userdb
-  
+      - cinemadb
+ 
   cinemadb:
+    container_name: cinemadb-cinema-microservices
     image: postgres
     restart: always
     secrets:
@@ -42,34 +48,44 @@ services:
       - POSTGRES_DB=cinemaservicedb
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     ports:
-      - "5433:5433"
- 
+      - "5433:5432"
+
   bookingservice:
+    container_name: bookingservice-cinema-microservices
     build: backend/bookingservice
     env_file:
       - env/.env
     ports:
-      - "8002:8000"
+      - "8002:8002"
     depends_on:
-      - userdb
+      - bookingdb
 
   bookingdb:
-    image: postgres
+    container_name: bookingdb-cinema-microservices
+    image: mongo
     restart: always
-    secrets:
-      - db-password
     volumes:
-      - booking-db-data:/var/lib/postgresql/data
+      - booking-db-data:/data/db
     environment:
-      - POSTGRES_DB=bookingservicedb
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+      - MONGO_INITDB_DATABASE=bookingservicedb
     ports:
-      - "5434:5434"
-  
+      - "27017:27017"
+
+  reactapp:
+    container_name: reactapp-cinema-microservices
+    build: frontend
+    volumes:
+      - react-build:/app/dist
+    ports:
+      - "3000:3000"
+
   proxy:
+    container_name: proxy-cinema-microservices
     build: proxy
     ports:
       - 80:80
+    volumes:
+      - react-build:/usr/share/nginx/html
     depends_on: 
       - userservice
       - cinemaservice 
@@ -79,6 +95,9 @@ volumes:
   user-db-data:
   cinema-db-data:
   booking-db-data:
+  cinema-sqlite-data:
+  react-build:
+
 secrets:
   db-password:
     file: env/db-password.txt

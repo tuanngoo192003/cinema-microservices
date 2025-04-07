@@ -1,0 +1,131 @@
+POST http://localhost:80/cinemaservice/info/auditoriums HTTP/1.1
+Content-Type: application/json
+
+{  
+    "auditoriumName": "grand Theater Hall",
+    "capacity": 250,
+    "createdAt": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedAt": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedBy": "admin",
+    "createdBy": "system",
+    "isDeleted": false
+}
+
+
+###
+@id = 1
+PUT http://localhost:80/cinemaservice/info/auditoriums/99 HTTP/1.1
+Content-Type: application/json
+
+{
+    
+    "capacity": 98,
+    "lastModifiedBy": "fd",
+    "createdBy": "system",
+    "isDeleted": false
+}
+###
+GET http://localhost:80/cinemaservice/info/auditoriums
+
+// MOVIES
+
+###
+GET http://localhost:80/cinemaservice/info/movies HTTP/1.1
+
+###
+POST http://localhost:80/cinemaservice/info/movies HTTP/1.1
+Content-Type: application/json
+{
+   "movieName": "The numb",
+    "description": "The Avengers is a team of superheroes, appearing in American comic books published by Marvel Comics.",
+    "releaseDate": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedBy": "admin",
+    "movieGenre": "Action",
+    "createdBy": "system"
+}
+
+###
+
+@id = 1
+PUT http://localhost:80/cinemaservice/info/movies/{{id}} HTTP/1.1
+Content-Type: application/json
+
+{
+    
+    "description": "The Avengers is a team of superheroes, appearing in American comic books published by Marvel Comics.",
+    "releaseDate": "2025-03-15T19:31:21.718333033Z",
+    "lastModifiedBy": "admin",
+    "movieGenre": "Action"
+}
+/// SCHEDULES
+###
+POST http://localhost:80/cinemaservice/info/schedule HTTP/1.1
+Content-Type: application/json
+
+{
+   "auditoriumId": 1,
+    "movieId": 1,
+    "endAt": "2025-03-31T19:52:21.718333033Z",
+    "startAt": "2025-03-31T19:50:21.718333033Z",
+    "lastModifiedBy": "admin",
+    "createdBy": "system",
+    "scheduleStatus": "active"
+}
+
+###
+@id = 1
+PUT http://localhost:80/cinemaservice/info/schedule/2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "movieId": 1,
+    "lastModifiedBy": "tao"
+}
+
+###
+GET http://localhost:80/cinemaservice/info/schedule?isDelete=false&&perpage=10  HTTP/1.1
+
+// SEATS
+###
+POST http://localhost:80/cinemaservice/info/seats HTTP/1.1
+Content-Type: application/json
+
+{
+    "auditoriumId": 2,
+   "seatCode": "A1",
+    "lastModifiedBy": "admin",
+    "createdBy": "system",
+    "currentStatus": "Available"
+}
+
+###
+@id = 1
+PUT http://localhost:80/cinemaservice/info/seats/{{id}} HTTP/1.1
+Content-Type: application/json
+
+{
+
+     "auditoriumId": 1,
+     "seatCode": "A1",
+     "lastModifiedBy": "tao"
+}
+
+###
+GET http://localhost:80/cinemaservice/info/seats?auditoriumId=2  HTTP/1.1
+
+
+
+
+//RESERVED SEATS
+###
+POST http://localhost:80/cinemaservice/info/reservedSeats HTTP/1.1
+Content-Type: application/json
+{
+    "scheduleId": 2,
+    "seatId": 11,
+    "userId":1
+}
+
+
+
+

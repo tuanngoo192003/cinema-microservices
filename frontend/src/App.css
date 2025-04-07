@@ -1,42 +1,284 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Oxanium:wght@200..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+  --default-background: #efe3d9;
+  --default-btn-bg-hover: #5d3723;
+  --default-btn-bg: #865437;
+  --default-btn-text: #efe7e0;
+  --default-text: #190b06;
+  --default-link: #bcb7b3;
+  --default-link-hover: #787573;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  background: var(--default-background);
+}
+#root * { /* Apply to all elements inside root */
+  font-family: "Nunito", "Oxanium", "Raleway", sans-serif !important;
+}
+
+/* Centered container */
+.default-center-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Navigation bar */
+.app-header {
+  position: fixed;  /* Fixes the header at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ Center everything */
+  height: 3.5rem;
+  background: #403C3AFF;
+}
+
+/* Flex container to keep logo and menu centered */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ Keep logo & menu in the middle */
+  width: auto;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  margin-top: 0.6rem;
+  margin-right: 1rem; /* ✅ Reduce spacing */
+}
+
+/* Menu */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ Center items */
+  background: transparent;
+  height: 100%;
+}
+
+.nav-menu .ant-menu-item {
+  background: transparent !important;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin: 0 0.5rem; /* ✅ Reduce spacing between menu items */
+}
+
+.nav-menu .ant-menu-item a {
+  color: var(--default-text);
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-menu .ant-menu-item:hover a {
+  color: var(--default-btn-bg-hover);
+}
+
+.side-menu {
+  background-color: #403C3AFF;
+}
+
+.side-menu .ant-menu-item {
+  color: #fff !important; /* White text */
+}
+
+.side-menu .ant-menu-item:hover {
+  background-color: #2a2a3e !important; /* Slightly lighter on hover */
+}
+
+.side-menu .ant-menu-item-selected {
+  background-color: #4a4a6e !important; /* Selected item background */
+  color: #fff !important;
+}
+
+.app-theme {
+  background: var(--default-background);
+}
+
+/* Button */
+.app-btn {
+  background: var(--default-btn-bg);
+  color: var(--default-btn-text);
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.app-btn:hover {
+  background-color: var(--default-btn-bg-hover) !important;
+  color: var(--default-btn-text) !important;
+}
+
+.secondary-btn {
+  background: var(--default-link);
+  color: var(--default-btn-text);
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.secondary-btn:hover {
+  background-color: var(--default-link-hover) !important;
+  color: var(--default-btn-text) !important;
+}
+
+/* Input */
+.app-input {
+  background: #fbfbfb !important;
+}
+
+.app-input:hover,
+.app-input:focus,
+.app-input:active {
+  border-color: var(--default-btn-bg-hover) !important;
+  background: #fbfbfb !important;
+  outline: none !important; /* Remove the blue outline */
+  box-shadow: none !important;
+}
+
+/* Checkbox */
+.app-checkbox .ant-checkbox-inner {
+  border-color: var(--default-btn-bg-hover) !important;
+}
+
+.app-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--default-btn-bg-hover) !important;
+  border-color: var(--default-btn-bg-hover) !important;
+}
+
+/* Link */
+.app-link {
+  color: var(--default-link);
+}
+
+.app-link:hover {
+  color: var(--default-link-hover);
+}
+
+/* Icon */
+.icon-default {
+  background: var(--default-btn-bg);
+  color: var(--default-btn-text); /* Ensures the icon is visible */
+  border-radius: 50%; /* Makes it a circle */
+  display: flex; /* Centers the icon */
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* Adjust the size as needed */
+  height: 40px; /* Should be equal to width for a perfect circle */
+  font-size: 20px; /* Adjust icon size */
+  transition: background-color 0.5s ease;
+}
+
+.icon-default:hover {
+  background-color: var(--default-btn-bg-hover) !important;
+  color: var(--default-btn-text) !important;
+}
+
+.chair-text {
+  position: absolute;
+  font-size: 0.8rem;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-weight: bold;
+}
+
+/* Card */
+.app-card{
+  width: 70%;
+}
+
+.booking-card{
+  background: var(--default-link);
+  transition: background-color 0.5s ease;
+}
+
+.booking-card:hover{
+  background: var(--default-link-hover);
+}
+
+/* Footer Styles */
+.app-footer {
+  background: var(--default-btn-bg);
+  color: var(--default-text);
+  padding: 3rem 0;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.footer-brand .footer-title {
+  color: var(--default-btn-bg-hover);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.footer-text {
+  color: var(--default-link);
 }
 
-.card {
-  padding: 2em;
+.footer-links {
+  text-align: center;
 }
 
-.read-the-docs {
-  color: #888;
+.footer-link {
+  display: block;
+  color: var(--default-text);
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
 }
+
+.footer-link:hover {
+  color: var(--default-link-hover);
+}
+
+/* Social Media Icons */
+.footer-socials {
+  text-align: center;
+}
+
+.social-icon {
+  font-size: 24px;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Icon Hover Effects */
+.facebook:hover {
+  transform: scale(1.1);
+  color: #1877F2;
+}
+
+.instagram:hover {
+  transform: scale(1.1);
+  color: #E1306C;
+}
+
+.youtube:hover {
+  transform: scale(1.1);
+  color: #FF0000;
+}
+
+/* Copyright */
+.footer-copyright {
+  text-align: center;
+  margin-top: 2rem;
+  border-top: 1px solid var(--default-link);
+  padding-top: 1rem;
+  color: var(--default-link);
+}
+
