@@ -46,6 +46,7 @@
     "your_choices": "選んだ席",
     "price": "定価",
     "movies": "映画",
+    "image": "映像",
     "auditoriums": "スクリーン番号",
     "start_date": "始める日",
     "end_date": "終了の日",
@@ -53,6 +54,7 @@
     "vietnamese": "ベトナム語",
     "japanese": "日本語",
     "titles": {
+      "booking_list": "ブッキングのリスト",
       "movie_genre": "ジャンル",
       "duration": "上映時間",
       "release_date": "公開日",
@@ -69,7 +71,8 @@
       "back": "戻る",
       "save": "保存",
       "create": "作成",
-      "confirm-booking": "確認する"
+      "confirm-booking": "確認する",
+      "my_bookings": "ブッキングのリスト"
     },
     "menu": {
       "user_list": "ユーザー名簿",
@@ -97,15 +100,25 @@
   },
   "messages": {
     "required": {
-      "username": "ユーザー名を入力してください!",
-      "password": "パスワードを入力してください!",
-      "email": "メールを入力してください!",
-      "first_name": "名字を入力してください!",
-      "last_name": "姓名を入力してください!",
-      "phone_number": "電話番号を入力してください!",
-      "date_of_birth": "生年月日を入力してください!",
+      "username": "ユーザー名は必須です！",
+      "password": "パスワードは必須です！",
+      "email": "メールアドレスは必須です！",
+      "first_name": "名は必須です！",
+      "last_name": "姓は必須です！",
+      "phone_number": "電話番号は必須です！",
+      "date_of_birth": "生年月日は必須です！",
+      "movie_name": "映画のタイトルは必須です！",
+      "description": "説明は必須です！",
+      "duration": "上映時間は必須です！",
+      "movie_price": "映画の料金は必須です！",
+      "release_date": "公開日は必須です！",
+      "movie_genre": "ジャンルは必須です！",
+      "start_date": "開始日は必須です！",
+      "start_at": "開始時刻は必須です！",
       "success": "成功しました"
     },
-    "no_schedule": "この日はスケジュールがありません!"
+    "invalid_email": "無効なメールアドレス",
+    "success": "成功しました",
+    "no_schedule": "この日のスケジュールはありません！"
   }
 }

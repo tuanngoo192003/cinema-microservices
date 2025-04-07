@@ -46,6 +46,7 @@
     "your_choices": "Ghế đã chọn",
     "price": "Giá tiển",
     "movies": "Phim",
+    "image": "Ảnh",
     "auditoriums": "Phòng chiếu",
     "start_date": "Bắt đầu từ ngày",
     "end_date": "Kết thúc tại",
@@ -69,7 +70,8 @@
       "back": "Quay lại",
       "save": "Lưu",
       "create": "Tạo",
-      "confirm-booking": "Xác nhận"
+      "confirm-booking": "Xác nhận",
+      "my_bookings": "Danh sách đặt vé"
     },
     "menu": {
       "user_list": "Danh sách người dùng",
@@ -87,6 +89,7 @@
     "auditoriums": "Danh sách phòng chiếu"
   },
   "titles": {
+    "booking_list": "Danh sách booking",
     "movie_genre": "Thể loại",
     "duration": "Thời lượng",
     "user_list": "Danh sách người dùng",
@@ -104,8 +107,18 @@
       "last_name": "Tên riêng không được để trống!",
       "phone_number": "Tên đăng nhập không được để trống!",
       "date_of_birth": "Ngày tháng năm sinh không được để trống!",
+      "movie_name": "Tên phim không được để trống",
+      "description": "Mô tả không được để trống",
+      "duration": "Thời lượng phim không được để trống",
+      "movie_price": "Giá phim không được để trống",
+      "release_date": "Ngày ra mắt không được để trống",
+      "movie_genre": "Thể loại phim không được để trống",
+      "start_date": "Ngày bắt đầu không được để trống",
+      "start_at": "Thời điểm bắt đầu không được để trống",
       "success": "Thành công"
     },
+    "invalid_email": "email không hợp lệ",
+    "success": "Thành công",
     "no_schedule": "Không có lịch chiếu vào ngày này!"
   }
 }

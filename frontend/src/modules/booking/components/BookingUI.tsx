@@ -61,7 +61,10 @@ const BookingUI: React.FC = () => {
 
   useEffect(() => {
     if (bookingInfo) {
-      setIsBooked(true)
+      const filtered = bookingInfo.filter(b => b.userID == profile?.id)
+      if (filtered.length > 0) {
+        setIsBooked(true)
+      }
     }
   }, [bookingInfo])
 

@@ -302,6 +302,7 @@ func (h *MovieScheduleHander) GetMovieScheduleDetails(c *gin.Context) {
 	var seats []entity.Seat
 	if err := h.db.Model(&entity.Seat{}).Where(" auditorium_id = ? ", movieSchedule.AuditoriumID).
 		Where(" schedule_id = ?  ", movieSchedule.ScheduleID).
+		Order(" seat_id ASC ").
 		Find(&seats).Error; err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": gin.H{"error": err.Error}})

@@ -46,7 +46,7 @@ export const MovieListUI = () => {
             {loading ? (
                 <LoadingPage />
             ) : (
-                <Tabs style={{ marginTop: "5rem" }} defaultActiveKey="1" onChange={setActiveTab} centered>
+                <Tabs style={{ marginTop: "3rem" }} defaultActiveKey="1" onChange={setActiveTab} centered>
                     <TabPane tab="Category 1" key="1">
                         <Row gutter={[40, 50]} style={{ marginLeft: "20rem", marginRight: "20rem" }}>
                             {movieData["1"].map((movie, index) => (

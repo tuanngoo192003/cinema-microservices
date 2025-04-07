@@ -32,7 +32,7 @@ export interface IUpdateMovieParam {
     imageURL: string 
     description: string 
     duration: number 
-    releaseDate: Date
+    releaseDate: string
     movieGenre: string 
     isDeleted: boolean
 }
