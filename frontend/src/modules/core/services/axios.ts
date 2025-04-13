@@ -5,7 +5,7 @@ import {IRefreshingTokenParam} from "../../user/models/auth.ts";
 import {RefreshTokenApi} from "../../user/services";
 
 const api = axios.create({
-  baseURL: 'http://192.168.2.5:80',
+  baseURL: '',
 })
 
 export type ErrorResponse = {

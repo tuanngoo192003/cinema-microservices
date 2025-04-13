@@ -10,6 +10,13 @@ import { ADMIN_MOVIE_SCHEDULES } from "../../../core/constants/redirectURI"
 import MovieSelectUI from "./MovieSelectUI"
 import AuditoriumSelectUI from "./AuditoriumSelectUI"
 import dayjs from "dayjs"
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+const timeZone = 'Asia/Bangkok'
 
 interface IMovieScheduleForm {
     movieId: number
@@ -24,7 +31,7 @@ interface IMovieScheduleForm {
 const MovieScheduleCreateUI: React.FC = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const {  handleCreateMovieSchedule  } = useMovieSchedule()
+    const { handleCreateMovieSchedule } = useMovieSchedule()
     const { movieList } = useMovie()
     const [movieId, setMovieId] = useState<number>(0)
     const [moviePrice, setMoviePrice] = useState<number>(0)
@@ -60,15 +67,25 @@ const MovieScheduleCreateUI: React.FC = () => {
     }
 
     const onFinish = (values: IMovieScheduleForm) => {
-        const startDateOnly = dayjs(values.startDate).startOf('day');
+        const startDateOnly = dayjs(values.startDate).tz(timeZone).startOf('day')
+
         const computedStartDate = values.startAt
-            ? startDateOnly.hour(values.startAt.hour()).minute(values.startAt.minute()).second(values.startAt.second()).toDate()
-            : startDateOnly.toDate();
+            ? startDateOnly
+                .hour(values.startAt.hour())
+                .minute(values.startAt.minute())
+                .second(values.startAt.second())
+                .tz(timeZone)
+                .format() // ➜ e.g., "2025-04-15T20:00:00+07:00"
+            : startDateOnly.tz(timeZone).format()
 
         const computedEndDate = endAt
-            ? startDateOnly.hour(endAt.hour()).minute(endAt.minute()).second(endAt.second()).toDate()
-            : startDateOnly.toDate();
-
+            ? startDateOnly
+                .hour(endAt.hour())
+                .minute(endAt.minute())
+                .second(endAt.second())
+                .tz(timeZone)
+                .format()
+            : startDateOnly.tz(timeZone).format()
         const param = {
             movieId: movieId,
             auditoriumId: auditoriumId,
@@ -144,7 +161,7 @@ const MovieScheduleCreateUI: React.FC = () => {
                                             console.log(releaseDate)
                                             console.log(value)
                                             if (releaseDate && value.isAfter(releaseDate, 'day')) {
-                                                return Promise.resolve(); 
+                                                return Promise.resolve();
                                             }
 
                                             return Promise.reject(

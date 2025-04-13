@@ -117,6 +117,7 @@ export default function AdminSideBar({ children }: Props) {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        collapsedWidth={0}
       >
         <div className="demo-logo-vertical" />
         <Menu

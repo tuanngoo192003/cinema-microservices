@@ -47,10 +47,9 @@ const MovieScheduleListUI: React.FC = () => {
                         paddingLeft: "3rem",
                         paddingRight: "3rem",
                         minHeight: "100vh",
-                        overflow: "hidden",
                     }}
                 >
-                    <Content>
+                    <Content style={{ overflow: "auto" }}>
                         <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
                             {t('labels.titles.list_movie_schedules')}
                         </Typography.Title>
@@ -95,11 +94,21 @@ const MovieScheduleListUI: React.FC = () => {
                                 title={t("labels.start_at")}
                                 dataIndex="startAt"
                                 key="startAt"
+                                render={(startAt) => {
+                                    return (<>
+                                        {startAt.split('T')[0]} {startAt.split('T')[1].slice(0, 8)}
+                                    </>)
+                                }}
                             />
                             <Table.Column
                                 title={t("labels.end_at")}
                                 dataIndex="endAt"
                                 key="endAt"
+                                render={(endAt) => {
+                                    return (<>
+                                        {endAt.split('T')[0]} {endAt.split('T')[1].slice(0, 8)}
+                                    </>)
+                                }}
                             />
                             <Table.Column
                                 title={t("labels.schedule_status")}

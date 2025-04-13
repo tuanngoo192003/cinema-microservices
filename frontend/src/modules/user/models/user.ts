@@ -22,3 +22,15 @@ export type IUserParam = {
     avatar: string;
 }
 
+export type IUpdateUserParam = {
+    userId: number;
+    email: string;
+    status: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    phoneNumber: string;
+    avatar: string;
+    isDeleted: boolean;
+}
+

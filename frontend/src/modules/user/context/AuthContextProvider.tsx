@@ -1,9 +1,9 @@
 import { useSnackbar } from "notistack";
 import { ErrorResponse, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import { IProfile, IUserParam } from "../models/user.ts";
+import { IProfile, IUpdateUserParam, IUserParam } from "../models/user.ts";
 import Cookies from "js-cookie";
-import { GetProfileAPI, LoginApi, RegisterUserAPI } from "../services";
+import { GetProfileAPI, LoginApi, RegisterUserAPI, UpdateProfileAPI } from "../services";
 import { HandleError } from "../../core/services/axios.ts";
 import { AxiosError } from "axios";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../core/constants/storage.ts";
@@ -82,6 +82,22 @@ export function AuthContextProvider({ children }: AuthProfileProps) {
         }
     }
 
+    const handleUpdateProfile = async (body: IUpdateUserParam) => {
+        try {
+            await UpdateProfileAPI(body)
+            enqueueSnackbar(t('messages.success'), { variant: "success" });
+            setTimeout(() => {
+                navigate("/profile");
+            }, 2000);
+        } catch (error) {
+            const err = HandleError(error as Error | AxiosError<ErrorResponse>);
+            enqueueSnackbar(err.errors["message"], { variant: "error" });
+            console.error("Error updating profile", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <AuthContext.Provider
             value={{
@@ -90,6 +106,7 @@ export function AuthContextProvider({ children }: AuthProfileProps) {
                 handleLogin,
                 handleLogout,
                 handleRegister,
+                handleUpdateProfile
             }}
         >
             {loading ? <LoadingPage /> : children}

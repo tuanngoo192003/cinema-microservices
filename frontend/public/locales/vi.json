@@ -50,6 +50,11 @@
     "auditoriums": "Phòng chiếu",
     "start_date": "Bắt đầu từ ngày",
     "end_date": "Kết thúc tại",
+    "seats": "Ghế",
+    "date": "Ngày",
+    "total_price": "Tổng giá",
+    "status": "Trạng thái",
+    "full_name": "Họ và tên",
     "english": "Tiếng Anh",
     "vietnamese": "Tiếng Việt",
     "japanese": "Tiếng Nhật",
@@ -96,7 +101,8 @@
     "preview": "Xem trước",
     "auditorium_create": "Tạo phòng chiếu phim",
     "movie_create": "Tạo phim",
-    "movie_schedule_create": "Tạo lịch chiếu phim"
+    "movie_schedule_create": "Tạo lịch chiếu phim",
+    "movie_update": "Cập nhật phim"
   },
   "messages": {
     "required":{

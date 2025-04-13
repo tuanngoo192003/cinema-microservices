@@ -59,10 +59,9 @@ const AdminMovieListUI: React.FC = () => {
                         paddingLeft: "3rem",
                         paddingRight: "3rem",
                         minHeight: "100vh",
-                        overflow: "hidden",
                     }}
                 >
-                    <Content>
+                    <Content style={{ overflow: "auto" }}>
                         <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
                             {t('labels.titles.list_movies')}
                         </Typography.Title>
@@ -125,6 +124,11 @@ const AdminMovieListUI: React.FC = () => {
                                 title={t("labels.release_date")}
                                 dataIndex="releaseDate"
                                 key="releaseDate"
+                                render={(date) => {
+                                    return (<>
+                                        {date.split('T')[0]}
+                                    </>)
+                                }}
                             />
                             <Table.Column
                                 title={t("labels.movie_genre")}

@@ -50,6 +50,11 @@
     "auditoriums": "Auditoriums",
     "start_date": "Start date",
     "end_date": "End date",
+    "seats": "Seats",
+    "date": "Date",
+    "total_price": "Total price",
+    "status": "Status",
+    "full_name": "Full name",
     "english": "English",
     "vietnamese": "Vietnamese",
     "japanese": "Japanese",
@@ -96,7 +101,8 @@
     "preview": "Preview",
     "auditorium_create": "Create auditorium",
     "movie_create": "Create movie",
-    "movie_schedule_create": "Create movie schedule"
+    "movie_schedule_create": "Create movie schedule",
+    "movie_update": "Update movie"
   },
   "messages": {
     "required": {

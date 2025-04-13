@@ -50,6 +50,11 @@
     "auditoriums": "スクリーン番号",
     "start_date": "始める日",
     "end_date": "終了の日",
+    "seats": "席のコード",
+    "date": "日付",
+    "total_price": "合計",
+    "status": "ステータス",
+    "full_name": "名字とした名前",
     "english": "英語",
     "vietnamese": "ベトナム語",
     "japanese": "日本語",
@@ -96,7 +101,8 @@
     "preview": "プレビュー",
     "auditorium_create": "スクリーンを作成する",
     "movie_create": "映画を作成する",
-    "movie_schedule_create": "映画のスケジュールを作成する"
+    "movie_schedule_create": "映画のスケジュールを作成する",
+    "movie_update": "映画の情報を管理"
   },
   "messages": {
     "required": {

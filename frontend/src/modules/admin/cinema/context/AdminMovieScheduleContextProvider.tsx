@@ -58,6 +58,7 @@ export const AdminMovieScheduleContextProvider: React.FC<{children: React.ReactN
     const handleCreateMovieSchedule = async (body: ICreateMovieScheduleParam) => {
         setLoading(true)
         try {
+            console.log(body)
             await CreateMovieSchedule(body)
             enqueueSnackbar(t('messages.success'), { variant: "success" });
             setTimeout(() => {

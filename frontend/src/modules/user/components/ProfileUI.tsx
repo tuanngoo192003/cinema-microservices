@@ -1,29 +1,73 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../hooks";
-import { Button, Form, Image, Input, Layout, Card } from "antd";
+import { Button, Form, Input, message, Layout, Card, Upload, DatePicker } from "antd";
 import { Content } from "antd/es/layout/layout";
 import "../../../App.css";
-import chinatsu from "../../../assets/千夏.jpg";
-import { IProfile } from "../models/user";
+import { IProfile, IUpdateUserParam } from "../models/user";
 import { useTranslation } from "react-i18next";
 import MyBookingListUI from "../../booking/components/MyBookingListUI";
+import { UploadFileAPI } from "../../core/services/upload";
+import { UploadOutlined } from "@ant-design/icons";
+import { useSnackbar } from "notistack";
+import dayjs from "dayjs";
 
 const ProfileUI: React.FC = () => {
     const { t } = useTranslation();
-    const { profile } = useAuth();
+    const { profile, handleUpdateProfile } = useAuth();
     const [form] = Form.useForm<IProfile>();
     const [profileInfo, setProfileInfo] = useState<IProfile | null>(null);
+    const [avatar, setAvatar] = useState<string>('');
+    const { enqueueSnackbar } = useSnackbar();
+
+    const handleImageChange = (info: any) => {
+        if (info.file.status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
+    };
+
+    const beforeUpload = (file: any) => {
+        const isImage = file.type.startsWith('image/');
+        if (!isImage) {
+            message.error(t('messages.invalidImage'));
+        }
+        return isImage;
+    };
 
     useEffect(() => {
         if (profile) {
             setProfileInfo(profile);
-            form.setFieldsValue(profile);
+            form.setFieldsValue({
+                id: profile.id,
+                firstName: profile.firstName,
+                lastName: profile.lastName,
+                email: profile.email,
+                dateOfBirth: dayjs(profile.dateOfBirth) as unknown as string,
+                phoneNumber: profile.phoneNumber,
+                role: profile.role,
+                avatar: profile.avatar
+            });
         }
+        console.log(profile)
+
     }, [profile]);
 
     const handleSubmit = (values: IProfile) => {
-        console.log("Updated values:", values);
-        // TODO: Call your update API or action here
+        const dateOfBirth = values.dateOfBirth as unknown as Date
+
+        const body = {
+            userId: profile?.id,
+            email: values.email,
+            status: '',
+            firstName: values.firstName,
+            lastName: values.lastName,
+            dateOfBirth: dateOfBirth.toISOString().split('T')[0],
+            phoneNumber: values.phoneNumber,
+            avatar: avatar,
+            isDeleted: false,
+        } as IUpdateUserParam
+        handleUpdateProfile(body)
     };
 
     return (
@@ -45,17 +89,52 @@ const ProfileUI: React.FC = () => {
                             marginBottom: "1rem",
                         }}
                     >
-                        <Image
-                            src={profile?.avatar}
-                            alt={chinatsu}
-                            style={{
-                                borderRadius: "12px",
-                                height: "11rem",
-                                objectFit: "contain",
-                                backgroundColor: "#fff",
+                        <Upload
+                            className="app-input"
+                            name="image"
+                            listType="picture-card"
+                            beforeUpload={beforeUpload} // Validate the file before upload
+                            onChange={handleImageChange}
+                            showUploadList={false} // Set to true if you want to show uploaded images list
+                            customRequest={({ file }) => {
+                                UploadFileAPI(file as File)
+                                    .then((res) => {
+                                        setAvatar(res.data.imageUrl);
+                                        enqueueSnackbar(t('messages.success'), { variant: "success" });
+                                    })
+                                    .catch((error) => {
+                                        enqueueSnackbar(error.errors["message"], { variant: "error" });
+                                    });
                             }}
-                        />
-                        <MyBookingListUI/>
+                        >
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                {profile?.avatar ? (
+                                    <img
+                                        src={profile?.avatar}
+                                        alt={avatar as string}
+                                        style={{
+                                            width: 80,
+                                            height: 80,
+                                            objectFit: "cover",
+                                            borderRadius: 8
+                                        }}
+                                    />
+                                ) : (
+                                    <img
+                                        src={avatar as string}
+                                        alt={profile?.avatar}
+                                        style={{
+                                            width: 80,
+                                            height: 80,
+                                            objectFit: "cover",
+                                            borderRadius: 8
+                                        }}
+                                    />
+                                )}
+                                <UploadOutlined style={{ fontSize: 24, cursor: "pointer" }} />
+                            </div>
+                        </Upload>
+                        <MyBookingListUI />
                     </div>
 
                     <Form
@@ -70,6 +149,7 @@ const ProfileUI: React.FC = () => {
                         >
                             <Form.Item
                                 name="firstName"
+                                key="firstName"
                                 rules={[{ required: true, message: t("messages.required") }]}
                                 style={{ display: "inline-block", width: "48%", marginRight: "4%" }}
                             >
@@ -77,6 +157,7 @@ const ProfileUI: React.FC = () => {
                             </Form.Item>
                             <Form.Item
                                 name="lastName"
+                                key="lastName"
                                 rules={[{ required: true, message: t("messages.required") }]}
                                 style={{ display: "inline-block", width: "48%" }}
                             >
@@ -87,6 +168,7 @@ const ProfileUI: React.FC = () => {
                         <Form.Item
                             label={t("labels.email")}
                             name="email"
+                            key="email"
                             rules={[{ required: true, type: "email", message: t("messages.invalid_email") }]}
                         >
                             <Input placeholder="example@email.com" />
@@ -95,13 +177,15 @@ const ProfileUI: React.FC = () => {
                         <Form.Item
                             label={t("labels.date_of_birth")}
                             name="dateOfBirth"
+                            key="dateOfBirth"
                         >
-                            <Input disabled />
+                            <DatePicker className="app-input" />
                         </Form.Item>
 
                         <Form.Item
                             label={t("labels.phone_number")}
                             name="phoneNumber"
+                            key="phoneNumber"
                         >
                             <Input />
                         </Form.Item>

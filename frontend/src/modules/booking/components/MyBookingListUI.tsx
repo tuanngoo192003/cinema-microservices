@@ -63,6 +63,7 @@ const MyBookingListUI: React.FC = () => {
                 onOk={handleOk}
                 confirmLoading={confirmLoading}
                 onCancel={handleCancel}
+                width="90%"
             >
                 <Layout
                     className="app-theme"
