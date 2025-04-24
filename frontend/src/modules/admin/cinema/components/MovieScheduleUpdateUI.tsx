@@ -222,6 +222,124 @@ const MovieScheduleUpdateUI: React.FC = () => {
                     </Content>
                 </Layout>
             </Modal>
+            <Button className="app-btn" onClick={showModal}>
+                {t("labels.view_detail")}
+            </Button>
+            <Modal
+                title="Movie Ticket"
+                open={open}
+                onOk={handleOk}
+                confirmLoading={confirmLoading}
+                onCancel={handleCancel}
+            >
+                <Layout
+                    style={{
+                        minHeight: "90vh",
+                        overflow: "hidden",
+                        paddingBottom: "3rem",
+                    }}
+                >
+                    <Content>
+                        <Card>
+                            <Typography.Title
+                                style={{ textAlign: "center", marginBottom: "24px" }}
+                            >
+                                {t('titles.movie_schedule_create')}
+                            </Typography.Title>
+                            <Form
+                                name="basic"
+                                layout="vertical"
+                                initialValues={{ remember: true }}
+                                onFinish={onFinish}
+                                autoComplete="off"
+                            >
+                                <Form.Item
+                                    label={t("labels.movies")}
+                                    name="movie"
+                                    rules={[
+                                        {
+                                            required: false,
+                                        },
+                                    ]}
+                                >
+                                    <MovieSelectUI onSelectMovie={handleSelectMovie} />
+                                </Form.Item>
+                                <Form.Item
+                                    label={t("labels.auditoriums")}
+                                    name="auditorium"
+                                    rules={[
+                                        {
+                                            required: false,
+                                        },
+                                    ]}
+                                >
+                                    <AuditoriumSelectUI onSelectAuditorium={handleSelectAuditorium} />
+                                </Form.Item>
+                                <Form.Item
+                                    label={t("labels.start_date")}
+                                    name="startDate"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: t("messages.required.start_date"),
+                                        },
+                                        {
+                                            validator: (_, value) => {
+                                                if (!value) {
+                                                    return Promise.reject(new Error('Start date is required'));
+                                                }
+
+                                                const releaseDate = currentMovieReleaseDate ? dayjs(currentMovieReleaseDate) : null;
+                                                if (releaseDate && value.isAfter(releaseDate, 'day')) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                return Promise.reject(
+                                                    new Error(`Start date cannot be before the movie release date (${releaseDate?.format('YYYY-MM-DD')})`)
+                                                );
+                                            },
+                                        },
+                                    ]}
+                                >
+                                    <DatePicker className="app-input" />
+                                </Form.Item>
+                                <Form.Item
+                                    label={t("labels.start_at")}
+                                    name="startAt"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: t("messages.required.start_at"),
+                                        },
+                                    ]}
+                                >
+                                    <TimePicker className="app-input" onChange={updateEndAt} />
+                                </Form.Item>
+                                <Form.Item
+                                    label={t("labels.end_at")}
+                                >
+                                    <TimePicker className="app-input" value={endAt ? endAt : undefined} disabled></TimePicker>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button className="app-btn" htmlType="submit" block>
+                                        {t("labels.buttons.create")}
+                                    </Button>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button className="app-btn">
+                                        {t("labels.buttons.save_as_draft")}
+                                    </Button>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button className="secondary-btn" onClick={backToListSchedule}>
+                                        {t("labels.buttons.back")}
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        </Card>
+                    </Content>
+                </Layout>
+            </Modal>
         </>
     )
 }

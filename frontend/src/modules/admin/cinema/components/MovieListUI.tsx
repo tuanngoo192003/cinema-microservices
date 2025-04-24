@@ -171,6 +171,7 @@ const AdminMovieListUI: React.FC = () => {
                             />
                         </Table>
 
+
                     </Content>
                 </Layout>
             )}

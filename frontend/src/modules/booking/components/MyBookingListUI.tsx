@@ -151,6 +151,78 @@ const MyBookingListUI: React.FC = () => {
                     </Content>
                 </Layout>
             </Modal>
+                        {/* User Table */}
+                        {loading ? (
+                            <LoadingPage />
+                        ) : (
+                            <Table<IBooking>
+                                style={{ marginTop: "2rem" }}
+                                loading={loading}
+                                dataSource={bookingList || []}
+                                rowKey="id"
+                                onRow={(record) => ({
+                                    onClick: () => console.log("Row clicked:", record),
+                                })}
+                            >
+                                <Table.Column
+                                    title={t("labels.movie_name")}
+                                    dataIndex="movieName"
+                                    key="movieName"
+                                />
+                                <Table.Column
+                                    title={t("labels.auditorium_name")}
+                                    dataIndex="auditoriumName"
+                                    key="auditoriumName"
+                                />
+                                <Table.Column
+                                    title={t("labels.seats")}
+                                    dataIndex="seats"
+                                    key="seats"
+                                    render={(seats: IBookingSeat[] | null | undefined) =>
+                                        Array.isArray(seats) && seats.length > 0
+                                            ? seats.map(seat => seat.seatCode).join(", ")
+                                            : "-"
+                                    }
+                                />
+                                <Table.Column
+                                    title={t("labels.date")}
+                                    dataIndex="startAt"
+                                    key="startAt"
+                                    render={(startAt?: string) =>
+                                        startAt ? startAt.substring(0, 10) : "-"
+                                    }
+                                />
+                                <Table.Column
+                                    title={t("labels.start_at")}
+                                    dataIndex="startAt"
+                                    key="startAt"
+                                    render={(startAt?: string) =>
+                                        startAt ? startAt.substring(11, 19) : "-"
+                                    }
+                                />
+                                <Table.Column
+                                    title={t("labels.end_at")}
+                                    dataIndex="endAt"
+                                    key="endAt"
+                                    render={(endAt?: string) =>
+                                        endAt ? endAt.substring(11, 19) : "-"
+                                    }
+                                />
+                                <Table.Column
+                                    title={t("labels.total_price")}
+                                    dataIndex="totalPrice"
+                                    key="totalPrice"
+                                />
+                                <Table.Column
+                                    title={t("labels.status")}
+                                    dataIndex="status"
+                                    key="status"
+                                />
+                            </Table>
+                        )}
+                    </Content>
+                </Layout>
+            </Modal>
         </>
     )
 }
