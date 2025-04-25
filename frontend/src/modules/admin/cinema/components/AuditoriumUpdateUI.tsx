@@ -35,8 +35,10 @@ export default function AuditoriumUpdateUI() {
   //const [auditoriumId, setAuditoriumId] = useState<number>(0);
   const { t } = useTranslation()
   //const { id } = useParams<{ id: string }>();
+  //const { id } = useParams<{ id: string }>();
   const [rowCount, setRowCount] = useState<number>(1);
   const [colCount, setColCount] = useState<number>(1);
+  //const [loading, setLoading] = useState(true);
   //const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const navigate = useNavigate();
@@ -83,6 +85,60 @@ export default function AuditoriumUpdateUI() {
 
   return (
     <>
+      <Button className="app-btn" onClick={showModal}>
+        {t("labels.view_detail")}
+      </Button>
+      <Modal
+        title="Movie Ticket"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <Layout
+          style={{
+            minHeight: "90vh",
+            overflow: "hidden",
+            paddingBottom: "3rem",
+          }}
+        >
+          <Content>
+            <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
+              Update Auditorium
+            </Typography.Title>
+            <Form
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 14 }}
+              layout="vertical"
+              style={{ maxWidth: 1000 }}
+            >
+              <Form.Item label="Auditorium's name">
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </Form.Item>
+              <Form.Item label="Rows number">
+                <InputNumber
+                  min={1}
+                  max={26}
+                  value={rowCount}
+                  onChange={(value) => setRowCount(value || 1)}
+                />
+              </Form.Item>
+              <Form.Item label="Columns number">
+                <InputNumber
+                  min={1}
+                  max={50}
+                  value={colCount}
+                  onChange={(value) => setColCount(value || 1)}
+                />
+              </Form.Item>
+            </Form>
+            <SeatListUI columns={columns} rows={rows} />
+            <Button className="app-btn" onClick={handleCreate}>
+              {t('labels.button.save')}
+            </Button>
+          </Content>
+        </Layout>
+      </Modal>
       <Button className="app-btn" onClick={showModal}>
         {t("labels.view_detail")}
       </Button>

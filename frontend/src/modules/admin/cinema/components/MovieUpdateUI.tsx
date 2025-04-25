@@ -134,7 +134,7 @@ const MovieUpdateUI: React.FC<MovieUpdateUIProps> = ({ movie }) => {
                             <Typography.Title
                                 style={{ textAlign: "center", marginBottom: "24px" }}
                             >
-                                {t('titles.auditorium_create')}
+                                {t('titles.movie_update')}
                             </Typography.Title>
                             <Form
                                 form={form}
@@ -146,7 +146,7 @@ const MovieUpdateUI: React.FC<MovieUpdateUIProps> = ({ movie }) => {
                                 autoComplete="off"
                             >
                                 <Form.Item
-                                    label={t('labels.image_url')}
+                                    label={t('labels.image')}
                                     name="imageURL"
                                     rules={[{ required: false }]}
                                 >

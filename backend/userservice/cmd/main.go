@@ -4,10 +4,9 @@ import (
 	_ "io"
 	_ "io/ioutil"
 	"net/http"
+	"user-service/adapter/controller"
 	"user-service/infra/config"
 	"user-service/infra/database"
-	"user-service/infra/router"
-	"user-service/internal/handlers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -46,12 +45,10 @@ func main() {
 	r.Use(gin.Recovery())
 	r.Use(gin.Logger())
 
-	authHandler := handlers.NewAuthHandler(db, cfg.JWT.Secret)
-	/* apis of userservice */
-	router.AuthApis(authHandler, r, cfg)
-	router.UserApis(authHandler, r, cfg)
-	router.UploadApis(authHandler, r, cfg)
-	userServiceHealth(authHandler, r, cfg)
+	/* apis */
+	buildController(r, cfg, db, cfg.JWT.Secret)
+
+	userServiceHealth(r)
 
 	sererAddr := cfg.Server.Host + ":" + cfg.Server.Port
 	log.Infof("UserService started on %s and listening...", sererAddr)
@@ -68,7 +65,13 @@ func main() {
 	log.Info("UserService started and listening...")
 }
 
-func userServiceHealth(authHandler *handlers.AuthHandler, r *gin.Engine, cfg *config.Config) {
+func buildController(r *gin.Engine, cfg *config.Config, db *database.Database, jwtSecret string) {
+	controller.NewAuthController(r, cfg, db, jwtSecret)
+	controller.NewUserController(r, cfg, db)
+	controller.NewS3Controller(r)
+}
+
+func userServiceHealth(r *gin.Engine) {
 	protected := r.Group("/")
 	{
 		protected.GET("", GetServiceInfo)

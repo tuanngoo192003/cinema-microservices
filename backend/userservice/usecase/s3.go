@@ -1,4 +1,4 @@
-package payload
+package usecase
 
 import "mime/multipart"
 

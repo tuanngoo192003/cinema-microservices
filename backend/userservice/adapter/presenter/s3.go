@@ -1,4 +1,4 @@
-package handlers
+package presenter
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"user-service/infra/config"
-	"user-service/internal/handlers/payload"
+	"user-service/usecase"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -14,10 +14,10 @@ import (
 	"github.com/google/uuid"
 )
 
-func (h *AuthHandler) UploadFile(c *gin.Context) {
+func UploadFile(c *gin.Context) {
 	log := config.GetLogger()
 	client := config.GetClient()
-	var req payload.UploadFileRequest
+	var req usecase.UploadFileRequest
 	if err := c.ShouldBind(&req); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"errors": gin.H{"error": err.Error()}})
@@ -61,5 +61,5 @@ func (h *AuthHandler) UploadFile(c *gin.Context) {
 	}
 
 	fileURL := fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", client.Bucket, *client.Client.Config.Region, fileKey)
-	c.JSON(http.StatusOK, gin.H{"data": payload.UploadFileResponse{Url: fileURL}})
+	c.JSON(http.StatusOK, gin.H{"data": usecase.UploadFileResponse{Url: fileURL}})
 }

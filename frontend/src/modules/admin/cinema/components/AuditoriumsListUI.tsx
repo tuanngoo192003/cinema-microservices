@@ -47,10 +47,9 @@ export default function AuditoriumsListUI() {
               paddingLeft: "3rem",
               paddingRight: "3rem",
               minHeight: "100vh",
-              overflow: "hidden",
             }}
           >
-            <Content>
+            <Content style={{overflow: "auto"}}>
               <Typography.Title style={{ textAlign: "center", marginBottom: "24px" }}>
                 {t('labels.titles.list_auditorium')}
               </Typography.Title>

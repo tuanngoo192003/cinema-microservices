@@ -1,6 +1,6 @@
 import api from "../../core/services/axios.ts"
 import { ILoginParams, ILoginResponse, IRefreshingTokenParam, IRefreshTokenResponse } from "../models/auth.ts";
-import { IProfile, IUserParam } from "../models/user.ts";
+import { IProfile, IUpdateUserParam, IUserParam } from "../models/user.ts";
 import { IResponse } from "../../core/models/core.ts";
 
 export const LoginApi
@@ -60,10 +60,10 @@ export const RegisterUserAPI
     }
 
 export const UpdateProfileAPI
-    = async (body: IProfile, id: number): Promise<void> => {
+    = async (body: IUpdateUserParam): Promise<void> => {
         return new Promise((resolve, reject) => {
             api
-                .put(`/users/${id}`, body)
+                .put(`/users`, body)
                 .then((res) => {
                     resolve(res.data)
                 })

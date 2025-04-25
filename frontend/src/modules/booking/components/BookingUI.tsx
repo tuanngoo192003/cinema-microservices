@@ -20,7 +20,6 @@ import {
   faTv,
   faBoxesStacked,
 } from "@fortawesome/free-solid-svg-icons";
-import chinatsu from "../../../assets/千夏.jpg";
 import Title from "antd/es/typography/Title";
 import { useTranslation } from "react-i18next";
 import { AppFooter } from "../../core/components/AppFooter.tsx";
@@ -378,7 +377,6 @@ const BookingUI: React.FC = () => {
                   <Col xs={24} md={10}>
                     <Image
                       src={movieScheduleData?.movie.imageURL}
-                      alt={chinatsu}
                       style={{
                         borderRadius: "12px",
                         height: "11rem", // Set an absolute height

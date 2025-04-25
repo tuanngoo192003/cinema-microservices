@@ -314,6 +314,8 @@ func (h *MovieScheduleHander) GetMovieScheduleDetails(c *gin.Context) {
 		Movie: payload.MovieResponse{
 			MovieID:     movieSchedule.Movie.MovieID,
 			MovieName:   movieSchedule.Movie.MovieName,
+			ImageURL:    movieSchedule.Movie.ImageURL,
+			Duration:    movieSchedule.Movie.Duration,
 			MoviePrice:  movieSchedule.Movie.MoviePrice,
 			Description: movieSchedule.Movie.Description,
 			ReleaseDate: movieSchedule.Movie.ReleaseDate,

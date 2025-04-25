@@ -1,4 +1,4 @@
-package payload
+package common
 
 type PaginationResponse[T any] struct {
 	Page        int   `json:"page"`

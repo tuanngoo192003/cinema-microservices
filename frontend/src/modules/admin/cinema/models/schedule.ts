@@ -24,8 +24,8 @@ export interface IMovieSchedule {
 export interface ICreateMovieScheduleParam {
     movieId: number
     auditoriumId: number 
-    startAt: Date 
-    endAt: Date 
+    startAt: string 
+    endAt: string 
     scheduleStatus: string 
     moviePrice: number
 }
