@@ -1,5 +1,5 @@
 
-# 🎬 Cinema Microservices Project
+# 🎬 Absolute Cinema 
 
 ## Project structure
  - This is a side project for learning purpose.
@@ -49,7 +49,7 @@ https://i.postimg.cc/jjNMLN88/TALE-Trang-1.jpg
 - Upload avatar
 - View booked tickets
 
-### Admin Panel
+### Admin 
 
 - CRUD movies
 - CRUD auditoriums
